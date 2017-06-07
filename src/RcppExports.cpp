@@ -5,14 +5,15 @@
 
 using namespace Rcpp;
 
-// factorial
-int factorial(int num);
-RcppExport SEXP rtensorflow_factorial(SEXP numSEXP) {
+// neural_net
+int neural_net(NumericVector input, int n_hidden);
+RcppExport SEXP rtensorflow_neural_net(SEXP inputSEXP, SEXP n_hiddenSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type num(numSEXP);
-    rcpp_result_gen = Rcpp::wrap(factorial(num));
+    Rcpp::traits::input_parameter< NumericVector >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< int >::type n_hidden(n_hiddenSEXP);
+    rcpp_result_gen = Rcpp::wrap(neural_net(input, n_hidden));
     return rcpp_result_gen;
 END_RCPP
 }
