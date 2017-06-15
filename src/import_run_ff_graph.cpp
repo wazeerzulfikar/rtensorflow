@@ -170,5 +170,5 @@ int c_import_run_ff_graph(std::string path, IntegerVector inp) {
   
   TF_DeleteGraph(graph);
   
-  return *((float*) output_contents);
+  return *((int*) output_contents);
 }
