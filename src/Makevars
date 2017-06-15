@@ -1,1 +1,1 @@
-PKG_LIBS += -ltensorflow
+PKG_LIBS = -ltensorflow

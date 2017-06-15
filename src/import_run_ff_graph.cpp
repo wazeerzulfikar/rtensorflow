@@ -54,24 +54,20 @@ TF_Buffer* read_file(std::string path){
 
 // [[Rcpp::export]]
 
-int c_import_ff_graph(std::string path) {
+int c_import_run_ff_graph(std::string path, IntegerVector inp) {
   
   TF_Buffer* graph_def = read_file(path); 
   if (graph_def == nullptr){
     return 1;
   }
   TF_Graph* graph = TF_NewGraph();
-  
   TF_Status* status = TF_NewStatus();
-  TF_SessionOptions * options = TF_NewSessionOptions();
+  TF_ImportGraphDefOptions* graph_options = TF_NewImportGraphDefOptions();
+  TF_GraphImportGraphDef(graph,graph_def, graph_options, status);
+  TF_DeleteImportGraphDefOptions(graph_options);
   
-  TF_Session * session = TF_NewSession( graph, options, status );
-  
-  TF_ImportGraphDefOptions* opts = TF_NewImportGraphDefOptions();
-  
-  TF_GraphImportGraphDef(graph,graph_def, opts, status);
-  
-  TF_DeleteImportGraphDefOptions(opts);
+  TF_SessionOptions* sess_options = TF_NewSessionOptions();
+  TF_Session* session = TF_NewSession( graph, sess_options, status );
   
   if (TF_GetCode(status)!=TF_OK){
     printf("Error importing graph");
@@ -80,9 +76,9 @@ int c_import_ff_graph(std::string path) {
   
   printf("Sucessfully imported graph\n");
   
-  
-  TF_Operation * input = TF_GraphOperationByName(graph,"input");
-  TF_Operation * output = TF_GraphOperationByName(graph,"output");
+  //Get handle to input and output node
+  TF_Operation* input = TF_GraphOperationByName(graph,"input");
+  TF_Operation* output = TF_GraphOperationByName(graph,"output");
   
   std::vector<TF_Operation*> targets;
   
@@ -91,24 +87,42 @@ int c_import_ff_graph(std::string path) {
   std::vector<TF_Output> outputs_;
   std::vector<TF_Tensor*> output_values_;
   
+  //Set which ops whose outputs we are interested in
   TF_Output o;
   o.index = 0;
   o.oper = output;
   outputs_.push_back(o);
   
+  //Set the ops whose input will be fed
   TF_Output i;
   i.index = 0;
   i.oper = input;
   inputs_.push_back(i);
   
-  float inp[3] = {1,2,3};
+  if(inp.size()!=3){
+    cout<<"Wrong size of Input"<<endl;
+    return -1;
+  }
+  
+  //Copied contents of Integer Vector into C++ array. TF_NewTensor does not support vectors.
+  int size = 0;
+  size = inp.size();
+  int c_inp[size];
+  memset(c_inp, 0, sizeof(c_inp));
+  
+  int iter;
+  for(iter=0;iter<inp.size();iter++){
+    c_inp[iter] = inp[iter];
+  }
+  
   int64_t dimens[2] = {1,3};
   const int64_t* dim = dimens;
   TF_Tensor* feed = TF_NewTensor(
-    TF_FLOAT, dim, 2, inp, sizeof(inp),
+    TF_INT32, dim, 2, c_inp, sizeof(c_inp),
     &tensor_deallocator,
     nullptr);
   
+  //Queue the feed to be fed to network
   input_values_.push_back(feed);
   
   //Run
@@ -142,13 +156,11 @@ int c_import_ff_graph(std::string path) {
     return 1;
   }
   
+  //Get data from output tensor
   TF_Tensor* out = output_values_[0];
   void* output_contents = TF_TensorData(out);
   
-  //cout <<"Output size: "<< output_values_.size() <<endl;
-  // cout <<"Output value: "<< *output_contents <<endl;
-  
-  printf("Output Value: %f\n", *((float*) output_contents));
+  printf("Output Value: %i\n", *((int*) output_contents));
   
   TF_CloseSession( session, status );
   TF_DeleteSession( session, status );

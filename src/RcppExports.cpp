@@ -5,14 +5,25 @@
 
 using namespace Rcpp;
 
-// c_import_ff_graph
-int c_import_ff_graph(std::string path);
-RcppExport SEXP rtensorflow_c_import_ff_graph(SEXP pathSEXP) {
+// c_import_run_ff_graph
+int c_import_run_ff_graph(std::string path, IntegerVector inp);
+RcppExport SEXP rtensorflow_c_import_run_ff_graph(SEXP pathSEXP, SEXP inpSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(c_import_ff_graph(path));
+    Rcpp::traits::input_parameter< IntegerVector >::type inp(inpSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_import_run_ff_graph(path, inp));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"rtensorflow_c_import_run_ff_graph", (DL_FUNC) &rtensorflow_c_import_run_ff_graph, 2},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_rtensorflow(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
