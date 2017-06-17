@@ -5,6 +5,17 @@
 
 using namespace Rcpp;
 
+// c_build_run_ff_graph
+int c_build_run_ff_graph(IntegerVector inp);
+RcppExport SEXP rtensorflow_c_build_run_ff_graph(SEXP inpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type inp(inpSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_build_run_ff_graph(inp));
+    return rcpp_result_gen;
+END_RCPP
+}
 // c_import_run_ff_graph
 int c_import_run_ff_graph(std::string path, IntegerVector inp);
 RcppExport SEXP rtensorflow_c_import_run_ff_graph(SEXP pathSEXP, SEXP inpSEXP) {
@@ -19,6 +30,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"rtensorflow_c_build_run_ff_graph", (DL_FUNC) &rtensorflow_c_build_run_ff_graph, 1},
     {"rtensorflow_c_import_run_ff_graph", (DL_FUNC) &rtensorflow_c_import_run_ff_graph, 2},
     {NULL, NULL, 0}
 };

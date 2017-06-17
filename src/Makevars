@@ -1,1 +1,2 @@
 PKG_LIBS = -ltensorflow
+PKG_CPPFLAGS+= -std=c++11
