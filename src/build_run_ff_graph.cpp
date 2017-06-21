@@ -124,6 +124,11 @@ int c_build_run_ff_graph(IntegerVector inp) {
   i.oper = input;
   inputs_.push_back(i);
   
+  if(inp.size()!=3){
+    cout<<"Wrong size of Input"<<endl;
+    return -1;
+  }
+  
   //Fill int array with input values
   int* c_inp = new int[inp.size()];
   int iter;

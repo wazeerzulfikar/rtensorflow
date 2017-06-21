@@ -58,7 +58,7 @@ int c_import_run_ff_graph(std::string path, IntegerVector inp) {
   
   TF_Buffer* graph_def = read_file(path); 
   if (graph_def == nullptr){
-    return 1;
+    return -1;
   }
   TF_Graph* graph = TF_NewGraph();
   
