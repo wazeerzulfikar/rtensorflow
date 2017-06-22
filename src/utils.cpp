@@ -80,6 +80,43 @@ void setOutputs(std::vector<TF_Operation*> outputs){
   output_values_.resize(outputs_.size(), nullptr);
 }
 
+TF_Tensor* getIntTensor(int* arr,std::vector<int64_t> dimensions){
+  int no_dims = dimensions.size();
+  int64_t length=1;
+  int64_t* dim = new int64_t[dimensions.size()];
+  for(int i=0;i<dimensions.size();i++){
+    length *= dimensions.at(i);
+    dim[i] = dimensions.at(i);
+  }
+  const int numBytes = sizeof(int);
+  return TF_NewTensor(
+    TF_INT32, dim, no_dims, arr, numBytes*length,
+    &tensor_deallocator,
+    nullptr);
+}
+
+TF_Tensor* parseIntInputs(IntegerVector inp,std::vector<int64_t> dimensions){
+  int* c_inp = new int[inp.size()];
+  for(int iter=0;iter<inp.size();iter++){
+    c_inp[iter] = inp[iter];
+  }
+  return getIntTensor(c_inp,dimensions);
+}
+
+TF_Tensor* ones(std::vector<int64_t> dimensions){
+  //Function for returning a Tensor of required dimension, filled with 1's
+  int no_dims = dimensions.size();
+  int64_t length=1;
+  for(int i=0;i<dimensions.size();i++){
+    length *= dimensions.at(i);
+  }
+  int* arr = new int[length];
+  for(int i=0;i<length;i++){
+    arr[i] = 1;
+  }
+  return getIntTensor(arr,dimensions);
+}
+
 void setPointers(){
   targets_ptr = targets.empty() ? nullptr : &targets[0];
   
@@ -96,9 +133,9 @@ void runSession(TF_Session* session, TF_Status* status){
                  outputs_ptr, output_values_ptr, outputs_.size(),  // Outputs
                  targets_ptr, targets.size(),  // Operations
                  nullptr, status );
-};
+}
 
-int getOutputs(){
+int getIntOutputs(){
   TF_Tensor* out = output_values_[0];
   void* output_contents = TF_TensorData(out);
   return *((int*) output_contents);

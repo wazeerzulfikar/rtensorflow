@@ -22,8 +22,14 @@ void setInputs(std::vector<std::pair<TF_Operation*,TF_Tensor*>> inputs);
 
 void setOutputs(std::vector<TF_Operation*> outputs);
 
+TF_Tensor* getIntTensor(int* arr,std::vector<int64_t> dimensions);
+
+TF_Tensor* parseIntInputs(IntegerVector inp, std::vector<int64_t> dimensions);
+
+TF_Tensor* ones(std::vector<int64_t> dimensions);
+
 void setPointers();
 
-int getOutputs();
+int getIntOutputs();
 
 void runSession(TF_Session* session, TF_Status* status);

@@ -32,21 +32,6 @@ TF_Operation* MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Statu
   return TF_FinishOperation(desc, status);
 }
 
-static TF_Tensor* ones(int row, int col){
-  //Function for returning a Tensor of required dimension, filled with 1's
-  int* arr = new int[row*col];
-  for(int i=0;i<row*col;i++){
-    arr[i] = 1;
-  }
-  const int64_t dim[2] = {row,col};
-  const int numBytes = sizeof(int);
-  return TF_NewTensor(
-    TF_INT32, dim, 2, arr, numBytes*row*col,
-    &tensor_deallocator,
-    nullptr);
-  
-}
-
 // [[Rcpp::export]]
 
 int c_build_run_ff_graph(IntegerVector inp) {
@@ -55,9 +40,9 @@ int c_build_run_ff_graph(IntegerVector inp) {
   
   TF_Status* status = TF_NewStatus();
   TF_Graph* graph = TF_NewGraph();
-  TF_SessionOptions * options = TF_NewSessionOptions();
+  TF_SessionOptions* options = TF_NewSessionOptions();
   
-  TF_Session * session = TF_NewSession(graph, options, status);
+  TF_Session* session = TF_NewSession(graph, options, status);
   
   if (TF_GetCode(status)!=TF_OK){
     printf("Error instantiating variables");
@@ -68,10 +53,10 @@ int c_build_run_ff_graph(IntegerVector inp) {
   
   TF_Operation* input = Placeholder(graph, status);
   
-  TF_Operation* w1 = Constant(ones(3,4),graph,status, "w1");
-  TF_Operation* b1 = Constant(ones(4,1),graph,status, "b1");
-  TF_Operation* w2 = Constant(ones(4,1),graph,status, "w2");
-  TF_Operation* b2 = Constant(ones(1,1),graph,status, "b2");
+  TF_Operation* w1 = Constant(ones({3,4}),graph,status, "w1");
+  TF_Operation* b1 = Constant(ones({4,1}),graph,status, "b1");
+  TF_Operation* w2 = Constant(ones({4,1}),graph,status, "w2");
+  TF_Operation* b2 = Constant(ones({1,1}),graph,status, "b2");
   
   TF_Operation* hidden_matmul = MatMul(input,w1,graph,status,"hidden_matmul");
   TF_Operation* hidden = Add(hidden_matmul, b1, graph, status, "hidden");
@@ -93,19 +78,7 @@ int c_build_run_ff_graph(IntegerVector inp) {
     return -1;
   }
   
-  //Fill int array with input values
-  int* c_inp = new int[inp.size()];
-  int iter;
-  for(iter=0;iter<inp.size();iter++){
-    c_inp[iter] = inp[iter];
-  }
-  
-  int64_t dim[2] = {1,3};
-  bool deallocator_called = false;
-  TF_Tensor* feed = TF_NewTensor(
-    TF_INT32, dim, 2, c_inp, sizeof(c_inp),
-    &tensor_deallocator,
-    &deallocator_called);
+  TF_Tensor* feed = parseIntInputs(inp,{1,3});
     
   setInputs({{input,feed}});
 
@@ -117,7 +90,7 @@ int c_build_run_ff_graph(IntegerVector inp) {
     
   runSession(session,status);
     
-  int out = getOutputs();
+  int out = getIntOutputs();
   
   printf("Output Value: %i\n", out);
   

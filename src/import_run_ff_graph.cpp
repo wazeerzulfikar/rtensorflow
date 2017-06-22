@@ -11,15 +11,10 @@ int c_import_run_ff_graph(std::string path, IntegerVector inp) {
     return -1;
   }
   TF_Graph* graph = TF_NewGraph();
-  
   TF_Status* status = TF_NewStatus();
-  TF_SessionOptions * options = TF_NewSessionOptions();
-  
-  TF_Session * session = TF_NewSession( graph, options, status );
   
   TF_ImportGraphDefOptions* opts = TF_NewImportGraphDefOptions();
-  
-  TF_GraphImportGraphDef(graph,graph_def, opts, status);
+  TF_GraphImportGraphDef(graph, graph_def, opts, status);
   
   TF_DeleteImportGraphDefOptions(opts);
   
@@ -28,10 +23,14 @@ int c_import_run_ff_graph(std::string path, IntegerVector inp) {
     return -1;
   }
   
+  TF_SessionOptions* options = TF_NewSessionOptions();
+  
+  TF_Session* session = TF_NewSession(graph, options, status);
+
   printf("Sucessfully imported graph\n");
   
-  TF_Operation * input = TF_GraphOperationByName(graph,"input");
-  TF_Operation * output = TF_GraphOperationByName(graph,"output");
+  TF_Operation* input = TF_GraphOperationByName(graph,"input");
+  TF_Operation* output = TF_GraphOperationByName(graph,"output");
   
   setOutputs({output});
   
@@ -40,17 +39,7 @@ int c_import_run_ff_graph(std::string path, IntegerVector inp) {
     return -1;
   }
   
-  int* c_inp = new int[inp.size()];
-  int iter;
-  for(iter=0;iter<inp.size();iter++){
-    c_inp[iter] = inp[iter];
-  }
-  
-  const int64_t dim[2] = {1,3};
-  TF_Tensor* feed = TF_NewTensor(
-    TF_INT32, dim, 2, c_inp, sizeof(c_inp),
-    &tensor_deallocator,
-    nullptr);
+  TF_Tensor* feed = parseIntInputs(inp,{1,3});
   
   setInputs({{input,feed}});
 
@@ -62,7 +51,7 @@ int c_import_run_ff_graph(std::string path, IntegerVector inp) {
   
   runSession(session,status);
   
-  int out = getOutputs();
+  int out = getIntOutputs();
   
   printf("Output Value: %i\n", out);
   
@@ -71,7 +60,6 @@ int c_import_run_ff_graph(std::string path, IntegerVector inp) {
     cout << TF_Message(status);
     return 1;
   }
-  
   
   TF_CloseSession( session, status );
   TF_DeleteSession( session, status );
