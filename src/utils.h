@@ -30,6 +30,16 @@ TF_Tensor* ones(std::vector<int64_t> dimensions);
 
 void setPointers();
 
+void runSession(TF_Session* session, TF_Status* status);
+
 int getIntOutputs();
 
-void runSession(TF_Session* session, TF_Status* status);
+// Operation Helpers
+
+TF_Operation* Placeholder(TF_Graph* graph, TF_Status* status, const char* name="input" );
+
+TF_Operation* Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, const char* name="const");
+
+TF_Operation* Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, const char* name="add");
+
+TF_Operation* MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status, const char* name="matmul");

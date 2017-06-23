@@ -2,36 +2,6 @@
 using namespace Rcpp;
 #include "utils.h"
 
-TF_Operation* Placeholder(TF_Graph* graph, TF_Status* status, const char* name="input" ){
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Placeholder", name);
-  TF_SetAttrType(desc,"dtype",TF_INT32);
-  return TF_FinishOperation(desc, status);
-}
-
-TF_Operation* Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, const char* name="const"){
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Const", name);
-  TF_SetAttrTensor(desc, "value", tensor, status);
-  if(TF_GetCode(status)!=TF_OK){
-    return nullptr;
-  }
-  TF_SetAttrType(desc,"dtype",TF_TensorType(tensor));
-  return TF_FinishOperation(desc, status);
-}
-
-TF_Operation* Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, const char* name="add"){
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Add", name);
-  TF_AddInput(desc, {l,0});
-  TF_AddInput(desc, {r,0});
-  return TF_FinishOperation(desc, status);
-}
-
-TF_Operation* MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status, const char* name="matmul"){
-  TF_OperationDescription* desc = TF_NewOperation(graph,"MatMul", name);
-  TF_AddInput(desc, {l,0});
-  TF_AddInput(desc, {r,0});
-  return TF_FinishOperation(desc, status);
-}
-
 // [[Rcpp::export]]
 
 int c_build_run_ff_graph(IntegerVector inp) {
