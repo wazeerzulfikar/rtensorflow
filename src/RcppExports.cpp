@@ -90,6 +90,55 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Placeholder
+std::string Placeholder(std::string op_name);
+RcppExport SEXP rtensorflow_Placeholder(SEXP op_nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(Placeholder(op_name));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Constant
+std::string Constant(std::vector<int64_t> dim, std::string op_name);
+RcppExport SEXP rtensorflow_Constant(SEXP dimSEXP, SEXP op_nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<int64_t> >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(Constant(dim, op_name));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Add
+std::string Add(std::string l_op, std::string r_op, std::string op_name);
+RcppExport SEXP rtensorflow_Add(SEXP l_opSEXP, SEXP r_opSEXP, SEXP op_nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type l_op(l_opSEXP);
+    Rcpp::traits::input_parameter< std::string >::type r_op(r_opSEXP);
+    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(Add(l_op, r_op, op_name));
+    return rcpp_result_gen;
+END_RCPP
+}
+// MatMul
+std::string MatMul(std::string l_op, std::string r_op, std::string op_name);
+RcppExport SEXP rtensorflow_MatMul(SEXP l_opSEXP, SEXP r_opSEXP, SEXP op_nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type l_op(l_opSEXP);
+    Rcpp::traits::input_parameter< std::string >::type r_op(r_opSEXP);
+    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(MatMul(l_op, r_op, op_name));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_c_build_run_ff_graph", (DL_FUNC) &rtensorflow_c_build_run_ff_graph, 1},
@@ -100,6 +149,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_runSession", (DL_FUNC) &rtensorflow_runSession, 0},
     {"rtensorflow_printOutput", (DL_FUNC) &rtensorflow_printOutput, 0},
     {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
+    {"rtensorflow_Placeholder", (DL_FUNC) &rtensorflow_Placeholder, 1},
+    {"rtensorflow_Constant", (DL_FUNC) &rtensorflow_Constant, 2},
+    {"rtensorflow_Add", (DL_FUNC) &rtensorflow_Add, 3},
+    {"rtensorflow_MatMul", (DL_FUNC) &rtensorflow_MatMul, 3},
     {NULL, NULL, 0}
 };
 

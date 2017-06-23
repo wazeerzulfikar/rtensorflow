@@ -6,6 +6,7 @@ TF_Status* status;
 TF_Graph* graph;
 TF_SessionOptions* options;
 TF_Session* session;
+std::map <string,TF_Operation*> op_list;
 
 // [[Rcpp::export]]
 int instantiateSessionVariables(){
@@ -99,11 +100,46 @@ int printOutput(){
 // [[Rcpp::export]]
 int deleteSessionVariables() {
 
-  TF_DeleteSession( session, status );
+  TF_DeleteSession(session, status);
   TF_DeleteStatus(status);
   TF_DeleteGraph(graph);
   
   return 0;
 }
+
+//Graph Building Functions
+
+// [[Rcpp::export]]
+std::string Placeholder(std::string op_name){
+  TF_Operation* op = Placeholder(graph, status, op_name.c_str());
+  op_list.emplace(op_name,op);
+  return op_name;
+}
+
+// [[Rcpp::export]]
+std::string Constant(std::vector<int64_t> dim, std::string op_name){
+  TF_Operation* op = Constant(ones(dim),graph,status, op_name.c_str());
+  op_list.emplace(op_name,op);
+  return op_name;
+}
+
+// [[Rcpp::export]]
+std::string Add(std::string l_op, std::string r_op, std::string op_name){
+  TF_Operation* l = op_list.at(l_op);
+  TF_Operation* r = op_list.at(r_op);
+  TF_Operation* op = Add(l, r, graph, status, op_name.c_str());
+  op_list.emplace(op_name,op);
+  return op_name;
+}
+
+// [[Rcpp::export]]
+std::string MatMul(std::string l_op, std::string r_op, std::string op_name){
+  TF_Operation* l = op_list.at(l_op);
+  TF_Operation* r = op_list.at(r_op);
+  TF_Operation* op = MatMul(l, r, graph, status, op_name.c_str());
+  op_list.emplace(op_name,op);
+  return op_name;
+}
+
 
 

@@ -33,3 +33,19 @@ deleteSessionVariables <- function() {
     .Call('rtensorflow_deleteSessionVariables', PACKAGE = 'rtensorflow')
 }
 
+Placeholder <- function(op_name) {
+    .Call('rtensorflow_Placeholder', PACKAGE = 'rtensorflow', op_name)
+}
+
+Constant <- function(dim, op_name) {
+    .Call('rtensorflow_Constant', PACKAGE = 'rtensorflow', dim, op_name)
+}
+
+Add <- function(l_op, r_op, op_name) {
+    .Call('rtensorflow_Add', PACKAGE = 'rtensorflow', l_op, r_op, op_name)
+}
+
+MatMul <- function(l_op, r_op, op_name) {
+    .Call('rtensorflow_MatMul', PACKAGE = 'rtensorflow', l_op, r_op, op_name)
+}
+

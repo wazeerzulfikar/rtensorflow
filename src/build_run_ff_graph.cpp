@@ -24,9 +24,9 @@ int c_build_run_ff_graph(IntegerVector inp) {
   TF_Operation* input = Placeholder(graph, status);
   
   TF_Operation* w1 = Constant(ones({3,4}),graph,status, "w1");
-  TF_Operation* b1 = Constant(ones({4,1}),graph,status, "b1");
+  TF_Operation* b1 = Constant(ones({4,}),graph,status, "b1");
   TF_Operation* w2 = Constant(ones({4,1}),graph,status, "w2");
-  TF_Operation* b2 = Constant(ones({1,1}),graph,status, "b2");
+  TF_Operation* b2 = Constant(ones({1,}),graph,status, "b2");
   
   TF_Operation* hidden_matmul = MatMul(input,w1,graph,status,"hidden_matmul");
   TF_Operation* hidden = Add(hidden_matmul, b1, graph, status, "hidden");

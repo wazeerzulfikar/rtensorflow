@@ -41,9 +41,4 @@ test_that("Check Build Run Graph", {
   expect_that( result, is_a("integer") )
   expect_equal( result, 3625 )
   
-  result <- build_run_graph(c(1,2,3,4))
-  
-  expect_that( result, is_a("integer") )
-  expect_equal( result, -1 )
-  
 })
