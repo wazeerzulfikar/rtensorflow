@@ -102,14 +102,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // Constant
-std::string Constant(std::vector<int64_t> dim, std::string op_name);
-RcppExport SEXP rtensorflow_Constant(SEXP dimSEXP, SEXP op_nameSEXP) {
+std::string Constant(IntegerVector val, std::vector<int64_t> dim, std::string op_name);
+RcppExport SEXP rtensorflow_Constant(SEXP valSEXP, SEXP dimSEXP, SEXP op_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type val(valSEXP);
     Rcpp::traits::input_parameter< std::vector<int64_t> >::type dim(dimSEXP);
     Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(Constant(dim, op_name));
+    rcpp_result_gen = Rcpp::wrap(Constant(val, dim, op_name));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -150,7 +151,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_printOutput", (DL_FUNC) &rtensorflow_printOutput, 0},
     {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
     {"rtensorflow_Placeholder", (DL_FUNC) &rtensorflow_Placeholder, 1},
-    {"rtensorflow_Constant", (DL_FUNC) &rtensorflow_Constant, 2},
+    {"rtensorflow_Constant", (DL_FUNC) &rtensorflow_Constant, 3},
     {"rtensorflow_Add", (DL_FUNC) &rtensorflow_Add, 3},
     {"rtensorflow_MatMul", (DL_FUNC) &rtensorflow_MatMul, 3},
     {NULL, NULL, 0}

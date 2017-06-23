@@ -28,10 +28,10 @@ build_run_graph <- function(feed){
   
   input <- Placeholder("input")
   
-  w1 <- Constant(c(3,4),"w1")
-  b1 <- Constant(c(4),"b1")
-  w2 <- Constant(c(4,1),"w2")
-  b2 <- Constant(c(1),"b2")
+  w1 <- Constant(rep(1,12),c(3,4),"w1")
+  b1 <- Constant(rep(1,4),c(4),"b1")
+  w2 <- Constant(rep(1,4),c(4,1),"w2")
+  b2 <- Constant(rep(1,1),c(1),"b2")
   
   hidden_matmul <- MatMul(input,w1,"hidden_matmul")
   hidden <-  Add(hidden_matmul, b1, "hidden")

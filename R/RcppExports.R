@@ -37,8 +37,8 @@ Placeholder <- function(op_name) {
     .Call('rtensorflow_Placeholder', PACKAGE = 'rtensorflow', op_name)
 }
 
-Constant <- function(dim, op_name) {
-    .Call('rtensorflow_Constant', PACKAGE = 'rtensorflow', dim, op_name)
+Constant <- function(val, dim, op_name) {
+    .Call('rtensorflow_Constant', PACKAGE = 'rtensorflow', val, dim, op_name)
 }
 
 Add <- function(l_op, r_op, op_name) {

@@ -117,8 +117,9 @@ std::string Placeholder(std::string op_name){
 }
 
 // [[Rcpp::export]]
-std::string Constant(std::vector<int64_t> dim, std::string op_name){
-  TF_Operation* op = Constant(ones(dim),graph,status, op_name.c_str());
+std::string Constant(IntegerVector val, std::vector<int64_t> dim, std::string op_name){
+  TF_Tensor* val_t = parseIntInputs(val,dim);
+  TF_Operation* op = Constant(val_t,graph,status, op_name.c_str());
   op_list.emplace(op_name,op);
   return op_name;
 }
