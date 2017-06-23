@@ -5,7 +5,31 @@ c_build_run_ff_graph <- function(inp) {
     .Call('rtensorflow_c_build_run_ff_graph', PACKAGE = 'rtensorflow', inp)
 }
 
-c_import_run_ff_graph <- function(path, inp) {
-    .Call('rtensorflow_c_import_run_ff_graph', PACKAGE = 'rtensorflow', path, inp)
+instantiateSessionVariables <- function() {
+    .Call('rtensorflow_instantiateSessionVariables', PACKAGE = 'rtensorflow')
+}
+
+loadGraphFromFile <- function(path) {
+    .Call('rtensorflow_loadGraphFromFile', PACKAGE = 'rtensorflow', path)
+}
+
+feedInput <- function(op_name, inp) {
+    .Call('rtensorflow_feedInput', PACKAGE = 'rtensorflow', op_name, inp)
+}
+
+setOutput <- function(op_name) {
+    .Call('rtensorflow_setOutput', PACKAGE = 'rtensorflow', op_name)
+}
+
+runSession <- function() {
+    .Call('rtensorflow_runSession', PACKAGE = 'rtensorflow')
+}
+
+printOutput <- function() {
+    .Call('rtensorflow_printOutput', PACKAGE = 'rtensorflow')
+}
+
+deleteSessionVariables <- function() {
+    .Call('rtensorflow_deleteSessionVariables', PACKAGE = 'rtensorflow')
 }
 

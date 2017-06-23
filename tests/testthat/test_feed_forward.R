@@ -7,25 +7,21 @@ test_that("Check Import Run Graph", {
   expect_that( result, is_a("integer") )
   expect_equal( result, 29 )
   
-  result <- import_run_graph(path,c(7,12,3))
-  
-  expect_that( result, is_a("integer") )
-  expect_equal( result, 93 )
-  
   result <- import_run_graph(path,c(652,211,42))
   
   expect_that( result, is_a("integer") )
   expect_equal( result, 3625 )
+
+  file <- loadGraphFromFile("./wrong_path")
   
-  result <- import_run_graph(path,c(1,2,3,4))
+  expect_that( file, is_a("integer") )
+  expect_equal( file, -1 )
   
-  expect_that( result, is_a("integer") )
-  expect_equal( result, -1 )
+  file <- loadGraphFromFile(path)
+  input_status <- feedInput("input",c(1,2,3,4))
   
-  result <- import_run_graph("./wrong_path",c(1,2,3))
-  
-  expect_that( result, is_a("integer") )
-  expect_equal( result, -1 )
+  expect_that( input_status, is_a("integer") )
+  expect_equal( input_status, -1 )
 })
 
 test_that("Check Build Run Graph", {

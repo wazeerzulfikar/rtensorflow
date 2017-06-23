@@ -105,7 +105,6 @@ TF_Tensor* parseIntInputs(IntegerVector inp,std::vector<int64_t> dimensions){
 
 TF_Tensor* ones(std::vector<int64_t> dimensions){
   //Function for returning a Tensor of required dimension, filled with 1's
-  int no_dims = dimensions.size();
   int64_t length=1;
   for(int i=0;i<dimensions.size();i++){
     length *= dimensions.at(i);
