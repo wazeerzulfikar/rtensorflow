@@ -3,3 +3,7 @@
 .RData
 .Ruserdata
 rtensorflow.Rproj
+autoscan.log
+config.log
+config.status
+autom4te.cache

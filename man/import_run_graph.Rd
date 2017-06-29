@@ -4,12 +4,12 @@
 \alias{import_run_graph}
 \title{Import and Run Graph}
 \usage{
-import_run_graph(path, input)
+import_run_graph(path, feed)
 }
 \arguments{
 \item{path}{Path to the graph, "/tests/models/feed_forward_graph.pb"}
 
-\item{imput}{Integer vector of size 3, feed for the network}
+\item{feed}{Integer vector of size 3, feed for the network}
 }
 \value{
 Output Value of Network
