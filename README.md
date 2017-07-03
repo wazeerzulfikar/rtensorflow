@@ -1,9 +1,6 @@
-# rtensorflow
-Native R API for tensorflow. Wrapped over core of tensorflow which is exposed through a C API.
+# <img alt="TensorFlow" src="https://www.tensorflow.org/images/tf_logo_transp.png" width="170" padding-right="10"/> R Binding
 
-# <img alt="TensorFlow" src="https://www.tensorflow.org/images/tf_logo_transp.png" width="170"/> R Binding
-
-TensorFlow Rust provides idiomatic R language
+RTensorFlow provides idiomatic R language
 bindings for [TensorFlow](http://tensorflow.org).
 
 **Notice:** This project is still under active development and not guaranteed to have a
