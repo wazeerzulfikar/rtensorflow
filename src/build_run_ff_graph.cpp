@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 
-int c_build_run_ff_graph(IntegerVector inp) {
+int c_build_run_ff_graph(NumericVector inp) {
   // Builds and runs a simple feedforward network. Input layer with 3 neurons, hidden layer 
   // with 4 and a single output neuron. 
   
@@ -48,7 +48,7 @@ int c_build_run_ff_graph(IntegerVector inp) {
     return -1;
   }
   
-  TF_Tensor* feed = parseIntInputs(inp,{1,3});
+  TF_Tensor* feed = parseInputs(inp,{1,3},"int32");
     
   setInputs({{input,feed}});
 
@@ -69,6 +69,8 @@ int c_build_run_ff_graph(IntegerVector inp) {
     return 1;
   }
     
+  TF_DeleteTensor(feed);
+  
   TF_CloseSession( session, status );
   TF_DeleteSession( session, status );
     

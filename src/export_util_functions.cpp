@@ -48,7 +48,7 @@ int loadGraphFromFile(std::string path){
 }
 
 // [[Rcpp::export]]
-int feedInput(std::string op_name, IntegerVector inp) {
+int feedInput(std::string op_name, NumericVector inp, std::string type) {
   const char* op_name_ptr = op_name.c_str();
   TF_Operation* input = TF_GraphOperationByName(graph,op_name_ptr);
   if(inp.size()!=3){
@@ -56,7 +56,7 @@ int feedInput(std::string op_name, IntegerVector inp) {
     return -1;
   }
   
-  TF_Tensor* feed = parseIntInputs(inp,{1,3});
+  TF_Tensor* feed = parseInputs(inp,{1,3},type);
   
   setInputs({{input,feed}});
   
@@ -76,11 +76,18 @@ int setOutput(std::string op_name){
 int runSession(){
   printf("Running the Session.. \n");
   setPointers();
+  
+  if (TF_GetCode(status)!=TF_OK){
+    printf("Error running session\n");
+    cout << TF_Message(status) << endl;
+    return -1;
+  }
+  
   runSession(session,status);
   
   if (TF_GetCode(status)!=TF_OK){
-    printf("Error running session");
-    cout << TF_Message(status);
+    printf("Error running session\n");
+    cout << TF_Message(status) << endl;
     return -1;
   }
   
@@ -90,10 +97,18 @@ int runSession(){
 }
 
 // [[Rcpp::export]]
-int printOutput(){
+int printIntOutputs(){
   int out = getIntOutputs();
   
   printf("Output Value: %i\n", out);
+  return out;
+}
+
+// [[Rcpp::export]]
+double printDoubleOutputs(){
+  double out = getDoubleOutputs();
+  
+  printf("Output Value: %f\n", out);
   return out;
 }
 
@@ -110,15 +125,15 @@ int deleteSessionVariables() {
 //Graph Building Functions
 
 // [[Rcpp::export]]
-std::string Placeholder(std::string op_name){
-  TF_Operation* op = Placeholder(graph, status, op_name.c_str());
+std::string Placeholder(std::string op_name, std::string dtype){
+  TF_Operation* op = Placeholder(graph, status, op_name.c_str(), dtype);
   op_list.emplace(op_name,op);
   return op_name;
 }
 
 // [[Rcpp::export]]
-std::string Constant(IntegerVector val, std::vector<int64_t> dim, std::string op_name){
-  TF_Tensor* val_t = parseIntInputs(val,dim);
+std::string Constant(NumericVector val, std::vector<int64_t> dim, std::string op_name, std::string type){
+  TF_Tensor* val_t = parseInputs(val,dim,type);
   TF_Operation* op = Constant(val_t,graph,status, op_name.c_str());
   op_list.emplace(op_name,op);
   return op_name;

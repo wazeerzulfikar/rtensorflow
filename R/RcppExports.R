@@ -13,8 +13,8 @@ loadGraphFromFile <- function(path) {
     .Call('rtensorflow_loadGraphFromFile', PACKAGE = 'rtensorflow', path)
 }
 
-feedInput <- function(op_name, inp) {
-    .Call('rtensorflow_feedInput', PACKAGE = 'rtensorflow', op_name, inp)
+feedInput <- function(op_name, inp, type) {
+    .Call('rtensorflow_feedInput', PACKAGE = 'rtensorflow', op_name, inp, type)
 }
 
 setOutput <- function(op_name) {
@@ -25,20 +25,24 @@ runSession <- function() {
     .Call('rtensorflow_runSession', PACKAGE = 'rtensorflow')
 }
 
-printOutput <- function() {
-    .Call('rtensorflow_printOutput', PACKAGE = 'rtensorflow')
+printIntOutputs <- function() {
+    .Call('rtensorflow_printIntOutputs', PACKAGE = 'rtensorflow')
+}
+
+printDoubleOutputs <- function() {
+    .Call('rtensorflow_printDoubleOutputs', PACKAGE = 'rtensorflow')
 }
 
 deleteSessionVariables <- function() {
     .Call('rtensorflow_deleteSessionVariables', PACKAGE = 'rtensorflow')
 }
 
-Placeholder <- function(op_name) {
-    .Call('rtensorflow_Placeholder', PACKAGE = 'rtensorflow', op_name)
+Placeholder <- function(op_name, dtype) {
+    .Call('rtensorflow_Placeholder', PACKAGE = 'rtensorflow', op_name, dtype)
 }
 
-Constant <- function(val, dim, op_name) {
-    .Call('rtensorflow_Constant', PACKAGE = 'rtensorflow', val, dim, op_name)
+Constant <- function(val, dim, op_name, type) {
+    .Call('rtensorflow_Constant', PACKAGE = 'rtensorflow', val, dim, op_name, type)
 }
 
 Add <- function(l_op, r_op, op_name) {

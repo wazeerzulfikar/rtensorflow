@@ -10,7 +10,7 @@ using namespace std;
 
 void deallocator(void* data, size_t length);
 
-void tensor_deallocator(void* data, size_t length,void* arg);
+template<typename T> void tensor_deallocator(void* data, size_t length,void* arg);
 
 TF_Buffer* read_file(std::string path);
 
@@ -22,9 +22,9 @@ void setInputs(std::vector<std::pair<TF_Operation*,TF_Tensor*>> inputs);
 
 void setOutputs(std::vector<TF_Operation*> outputs);
 
-TF_Tensor* getIntTensor(int* arr,std::vector<int64_t> dimensions);
+template<typename T> TF_Tensor* getTensor(T* arr,std::vector<int64_t> dimensions);
 
-TF_Tensor* parseIntInputs(IntegerVector inp, std::vector<int64_t> dimensions);
+TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, string dtype="int32");
 
 TF_Tensor* ones(std::vector<int64_t> dimensions);
 
@@ -32,11 +32,15 @@ void setPointers();
 
 void runSession(TF_Session* session, TF_Status* status);
 
+template<typename T>T getOutputs();
+
 int getIntOutputs();
+
+double getDoubleOutputs();
 
 // Operation Helpers
 
-TF_Operation* Placeholder(TF_Graph* graph, TF_Status* status, const char* name="input" );
+TF_Operation* Placeholder(TF_Graph* graph, TF_Status* status, const char* name="input",string dtype="int32");
 
 TF_Operation* Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, const char* name="const");
 
