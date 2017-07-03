@@ -63,8 +63,6 @@ Upon installing `libtensorflow.so` in the default directory,
 4. `./configure`
 5. For examples on how to use the R API, look at `R/feed_forward_network.R`
 
-## FAQ's
-
 ## Contributing
 Developers and users are welcome to contribute!
 
