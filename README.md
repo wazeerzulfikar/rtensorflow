@@ -59,7 +59,7 @@ Upon installing `libtensorflow.so` in the default directory,
 
 1. `install.packages("devtools")`
 2. `library(devtools)`
-3.  `install_github(wazeerzulfikar/rtensorflow`
+3.  `install_github(wazeerzulfikar/rtensorflow)`
 4. `./configure`
 5. For examples on how to use the R API, look at `R/feed_forward_network.R`
 
