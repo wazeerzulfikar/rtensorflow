@@ -180,37 +180,45 @@ char* generateUniqueName(string name) {
   return rand_name;
 }
 
-TF_Operation* Placeholder(TF_Graph* graph, TF_Status* status, const char* name, string dtype){
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Placeholder", name);
+pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string dtype){
+  char* op_name = generateUniqueName("Placeholder");
+  TF_OperationDescription* desc = TF_NewOperation(graph, "Placeholder", op_name);
   if (dtype=="int32"){
     TF_SetAttrType(desc,"dtype",TF_INT32);
   }
   else{
     TF_SetAttrType(desc,"dtype",TF_DOUBLE);
   }
-  return TF_FinishOperation(desc, status);
+  TF_Operation* op = TF_FinishOperation(desc, status);
+  return {op_name,op};
 }
 
-TF_Operation* Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, const char* name){
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Const", name);
+pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status){
+  char* op_name = generateUniqueName("Constant");
+  TF_OperationDescription* desc = TF_NewOperation(graph, "Const", op_name);
   TF_SetAttrTensor(desc, "value", tensor, status);
   if(TF_GetCode(status)!=TF_OK){
-    return nullptr;
+    return {nullptr,nullptr};
   }
   TF_SetAttrType(desc,"dtype",TF_TensorType(tensor));
-  return TF_FinishOperation(desc, status);
+  TF_Operation* op = TF_FinishOperation(desc, status);
+  return {op_name,op};
 }
 
-TF_Operation* Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, const char* name){
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Add", name);
+pair<char*,TF_Operation*> Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status){
+  char* op_name = generateUniqueName("Add");
+  TF_OperationDescription* desc = TF_NewOperation(graph, "Add", op_name);
   TF_AddInput(desc, {l,0});
   TF_AddInput(desc, {r,0});
-  return TF_FinishOperation(desc, status);
+  TF_Operation* op = TF_FinishOperation(desc, status);
+  return {op_name,op};
 }
 
-TF_Operation* MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status, const char* name){
-  TF_OperationDescription* desc = TF_NewOperation(graph,"MatMul", name);
+pair<char*,TF_Operation*> MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status){
+  char* op_name = generateUniqueName("MatMul");
+  TF_OperationDescription* desc = TF_NewOperation(graph,"MatMul", op_name);
   TF_AddInput(desc, {l,0});
   TF_AddInput(desc, {r,0});
-  return TF_FinishOperation(desc, status);
+  TF_Operation* op = TF_FinishOperation(desc, status);
+  return {op_name,op};
 }

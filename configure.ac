@@ -1,6 +1,5 @@
 AC_PREREQ([2.69])
 AC_INIT(DESCRIPTION)
-AC_CONFIG_SRCDIR([src/build_run_ff_graph.cpp])
 
 
 # Checks for programs.

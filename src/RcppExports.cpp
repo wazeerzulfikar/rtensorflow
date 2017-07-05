@@ -5,17 +5,6 @@
 
 using namespace Rcpp;
 
-// c_build_run_ff_graph
-int c_build_run_ff_graph(NumericVector inp);
-RcppExport SEXP rtensorflow_c_build_run_ff_graph(SEXP inpSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    rcpp_result_gen = Rcpp::wrap(c_build_run_ff_graph(inp));
-    return rcpp_result_gen;
-END_RCPP
-}
 // instantiateSessionVariables
 int instantiateSessionVariables();
 RcppExport SEXP rtensorflow_instantiateSessionVariables() {
@@ -102,69 +91,73 @@ BEGIN_RCPP
 END_RCPP
 }
 // Placeholder
-std::string Placeholder(std::string op_name, std::string dtype);
-RcppExport SEXP rtensorflow_Placeholder(SEXP op_nameSEXP, SEXP dtypeSEXP) {
+std::string Placeholder(std::string dtype);
+RcppExport SEXP rtensorflow_Placeholder(SEXP dtypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
     Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
-    rcpp_result_gen = Rcpp::wrap(Placeholder(op_name, dtype));
+    rcpp_result_gen = Rcpp::wrap(Placeholder(dtype));
     return rcpp_result_gen;
 END_RCPP
 }
 // Constant
-std::string Constant(NumericVector val, std::vector<int64_t> dim, std::string op_name, std::string type);
-RcppExport SEXP rtensorflow_Constant(SEXP valSEXP, SEXP dimSEXP, SEXP op_nameSEXP, SEXP typeSEXP) {
+std::string Constant(NumericVector val, std::vector<int64_t> dim, std::string dtype);
+RcppExport SEXP rtensorflow_Constant(SEXP valSEXP, SEXP dimSEXP, SEXP dtypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type val(valSEXP);
     Rcpp::traits::input_parameter< std::vector<int64_t> >::type dim(dimSEXP);
-    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
-    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(Constant(val, dim, op_name, type));
+    Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(Constant(val, dim, dtype));
     return rcpp_result_gen;
 END_RCPP
 }
 // Add
-std::string Add(std::string l_op, std::string r_op, std::string op_name);
-RcppExport SEXP rtensorflow_Add(SEXP l_opSEXP, SEXP r_opSEXP, SEXP op_nameSEXP) {
+std::string Add(std::string l_op, std::string r_op);
+RcppExport SEXP rtensorflow_Add(SEXP l_opSEXP, SEXP r_opSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type l_op(l_opSEXP);
     Rcpp::traits::input_parameter< std::string >::type r_op(r_opSEXP);
-    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(Add(l_op, r_op, op_name));
+    rcpp_result_gen = Rcpp::wrap(Add(l_op, r_op));
     return rcpp_result_gen;
 END_RCPP
 }
 // MatMul
-std::string MatMul(std::string l_op, std::string r_op, std::string op_name);
-RcppExport SEXP rtensorflow_MatMul(SEXP l_opSEXP, SEXP r_opSEXP, SEXP op_nameSEXP) {
+std::string MatMul(std::string l_op, std::string r_op);
+RcppExport SEXP rtensorflow_MatMul(SEXP l_opSEXP, SEXP r_opSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type l_op(l_opSEXP);
     Rcpp::traits::input_parameter< std::string >::type r_op(r_opSEXP);
-    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(MatMul(l_op, r_op, op_name));
+    rcpp_result_gen = Rcpp::wrap(MatMul(l_op, r_op));
     return rcpp_result_gen;
 END_RCPP
 }
-// printMap
-void printMap();
-RcppExport SEXP rtensorflow_printMap() {
+// printOpList
+void printOpList();
+RcppExport SEXP rtensorflow_printOpList() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    printMap();
+    printOpList();
+    return R_NilValue;
+END_RCPP
+}
+// locateError
+void locateError();
+RcppExport SEXP rtensorflow_locateError() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    locateError();
     return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"rtensorflow_c_build_run_ff_graph", (DL_FUNC) &rtensorflow_c_build_run_ff_graph, 1},
     {"rtensorflow_instantiateSessionVariables", (DL_FUNC) &rtensorflow_instantiateSessionVariables, 0},
     {"rtensorflow_loadGraphFromFile", (DL_FUNC) &rtensorflow_loadGraphFromFile, 1},
     {"rtensorflow_feedInput", (DL_FUNC) &rtensorflow_feedInput, 3},
@@ -173,11 +166,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_printIntOutputs", (DL_FUNC) &rtensorflow_printIntOutputs, 0},
     {"rtensorflow_printDoubleOutputs", (DL_FUNC) &rtensorflow_printDoubleOutputs, 0},
     {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
-    {"rtensorflow_Placeholder", (DL_FUNC) &rtensorflow_Placeholder, 2},
-    {"rtensorflow_Constant", (DL_FUNC) &rtensorflow_Constant, 4},
-    {"rtensorflow_Add", (DL_FUNC) &rtensorflow_Add, 3},
-    {"rtensorflow_MatMul", (DL_FUNC) &rtensorflow_MatMul, 3},
-    {"rtensorflow_printMap", (DL_FUNC) &rtensorflow_printMap, 0},
+    {"rtensorflow_Placeholder", (DL_FUNC) &rtensorflow_Placeholder, 1},
+    {"rtensorflow_Constant", (DL_FUNC) &rtensorflow_Constant, 3},
+    {"rtensorflow_Add", (DL_FUNC) &rtensorflow_Add, 2},
+    {"rtensorflow_MatMul", (DL_FUNC) &rtensorflow_MatMul, 2},
+    {"rtensorflow_printOpList", (DL_FUNC) &rtensorflow_printOpList, 0},
+    {"rtensorflow_locateError", (DL_FUNC) &rtensorflow_locateError, 0},
     {NULL, NULL, 0}
 };
 

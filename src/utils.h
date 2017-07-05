@@ -42,10 +42,10 @@ double getDoubleOutputs();
 
 char* generateUniqueName(string name);
 
-TF_Operation* Placeholder(TF_Graph* graph, TF_Status* status, const char* name="input",string dtype="int32");
+pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string dtype="int32");
 
-TF_Operation* Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, const char* name="const");
+pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
 
-TF_Operation* Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, const char* name="add");
+pair<char*,TF_Operation*> Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status);
 
-TF_Operation* MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status, const char* name="matmul");
+pair<char*,TF_Operation*> MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status);

@@ -27,17 +27,17 @@ import_run_graph <- function(path,feed){
 build_run_graph <- function(feed, dtype="int32"){
   instantiateSessionVariables()
   
-  input <- Placeholder("input",dtype)
+  input <- Placeholder(dtype)
 
-  w1 <- Constant(rep(1,12),c(3,4),"w1",dtype)
-  b1 <- Constant(rep(1,4),c(4),"b1",dtype)
-  w2 <- Constant(rep(1,4),c(4,1),"w2",dtype)
-  b2 <- Constant(rep(1,1),c(1),"b2",dtype)
+  w1 <- Constant(rep(1,12),c(3,4),dtype)
+  b1 <- Constant(rep(1,4),c(4),dtype)
+  w2 <- Constant(rep(1,4),c(4,1),dtype)
+  b2 <- Constant(rep(1,1),c(1),dtype)
   
-  hidden_matmul <- MatMul(input,w1,"hidden_matmul")
-  hidden <-  Add(hidden_matmul, b1, "hidden")
-  output_matmul <- MatMul(hidden,w2,"output_matmul")
-  output <-  Add(output_matmul, b2, "output")
+  hidden_matmul <- MatMul(input,w1)
+  hidden <- Add(hidden_matmul, b1)
+  output_matmul <- MatMul(hidden,w2)
+  output <- Add(output_matmul, b2)
   
   feedInput(input, feed, dtype)
   setOutput(output)
