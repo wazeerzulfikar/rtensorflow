@@ -153,6 +153,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// printMap
+void printMap();
+RcppExport SEXP rtensorflow_printMap() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    printMap();
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_c_build_run_ff_graph", (DL_FUNC) &rtensorflow_c_build_run_ff_graph, 1},
@@ -168,6 +177,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_Constant", (DL_FUNC) &rtensorflow_Constant, 4},
     {"rtensorflow_Add", (DL_FUNC) &rtensorflow_Add, 3},
     {"rtensorflow_MatMul", (DL_FUNC) &rtensorflow_MatMul, 3},
+    {"rtensorflow_printMap", (DL_FUNC) &rtensorflow_printMap, 0},
     {NULL, NULL, 0}
 };
 

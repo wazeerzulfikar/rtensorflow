@@ -167,6 +167,19 @@ double getDoubleOutputs(){
 
 // Operation Helpers
 
+char* generateUniqueName(string name) {
+  static const char alphanum[] =
+    "0123456789"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz";
+  int len = 5;
+  char* rand_name = new char[len];
+  for (int i = 0; i < len; ++i) {
+    rand_name[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+  }
+  return rand_name;
+}
+
 TF_Operation* Placeholder(TF_Graph* graph, TF_Status* status, const char* name, string dtype){
   TF_OperationDescription* desc = TF_NewOperation(graph, "Placeholder", name);
   if (dtype=="int32"){

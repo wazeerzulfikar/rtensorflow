@@ -40,6 +40,8 @@ double getDoubleOutputs();
 
 // Operation Helpers
 
+char* generateUniqueName(string name);
+
 TF_Operation* Placeholder(TF_Graph* graph, TF_Status* status, const char* name="input",string dtype="int32");
 
 TF_Operation* Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, const char* name="const");

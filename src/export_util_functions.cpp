@@ -126,36 +126,50 @@ int deleteSessionVariables() {
 
 // [[Rcpp::export]]
 std::string Placeholder(std::string op_name, std::string dtype){
-  TF_Operation* op = Placeholder(graph, status, op_name.c_str(), dtype);
-  op_list.emplace(op_name,op);
-  return op_name;
+  char* c = generateUniqueName(op_name);
+  TF_Operation* op = Placeholder(graph, status, c, dtype);
+  op_list.emplace(c,op);
+  return c;
 }
 
 // [[Rcpp::export]]
 std::string Constant(NumericVector val, std::vector<int64_t> dim, std::string op_name, std::string type){
+  char* c = generateUniqueName(op_name);
   TF_Tensor* val_t = parseInputs(val,dim,type);
-  TF_Operation* op = Constant(val_t,graph,status, op_name.c_str());
-  op_list.emplace(op_name,op);
-  return op_name;
+  TF_Operation* op = Constant(val_t,graph,status, c);
+  op_list.emplace(c,op);
+  return c;
 }
 
 // [[Rcpp::export]]
 std::string Add(std::string l_op, std::string r_op, std::string op_name){
+  char* c = generateUniqueName(op_name);
   TF_Operation* l = op_list.at(l_op);
   TF_Operation* r = op_list.at(r_op);
-  TF_Operation* op = Add(l, r, graph, status, op_name.c_str());
-  op_list.emplace(op_name,op);
-  return op_name;
+  TF_Operation* op = Add(l, r, graph, status,c);
+  op_list.emplace(c,op);
+  return c;
 }
 
 // [[Rcpp::export]]
 std::string MatMul(std::string l_op, std::string r_op, std::string op_name){
-  TF_Operation* l = op_list.at(l_op);
-  TF_Operation* r = op_list.at(r_op);
-  TF_Operation* op = MatMul(l, r, graph, status, op_name.c_str());
-  op_list.emplace(op_name,op);
-  return op_name;
+  char* c = generateUniqueName(op_name);
+  TF_Operation* l = op_list.at(l_op.c_str());
+  TF_Operation* r = op_list.at(r_op.c_str());
+  TF_Operation* op = MatMul(l, r, graph, status, c);
+  op_list.emplace(c,op);
+  return c;
 }
 
+// [[Rcpp::export]]
+void printMap(){
+  for (auto const& x : op_list)
+  {
+    std::cout << x.first  // string (key)
+              << ':' 
+              << x.second // string's value 
+              << std::endl ;
+  }
+}
 
 

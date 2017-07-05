@@ -4,10 +4,12 @@
 \alias{build_run_graph}
 \title{Build and Run Graph}
 \usage{
-build_run_graph(feed)
+build_run_graph(feed, dtype = "int32")
 }
 \arguments{
 \item{feed}{Integer vector of size 3, feed for the network}
+
+\item{dtype}{Datatype to be used, one of {"int32","double"}}
 }
 \value{
 Output Value of Network

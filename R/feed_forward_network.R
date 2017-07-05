@@ -21,13 +21,14 @@ import_run_graph <- function(path,feed){
 #' @title Build and Run Graph
 #' @description Function to build and run graph using C API
 #' @param feed Integer vector of size 3, feed for the network
+#' @param dtype Datatype to be used, one of {"int32","double"}
 #' @return Output Value of Network 
 
 build_run_graph <- function(feed, dtype="int32"){
   instantiateSessionVariables()
   
   input <- Placeholder("input",dtype)
-  
+
   w1 <- Constant(rep(1,12),c(3,4),"w1",dtype)
   b1 <- Constant(rep(1,4),c(4),"b1",dtype)
   w2 <- Constant(rep(1,4),c(4,1),"w2",dtype)
@@ -38,10 +39,10 @@ build_run_graph <- function(feed, dtype="int32"){
   output_matmul <- MatMul(hidden,w2,"output_matmul")
   output <-  Add(output_matmul, b2, "output")
   
-  feedInput("input", feed, dtype)
-  setOutput("output")
+  feedInput(input, feed, dtype)
+  setOutput(output)
   runSession()
-  if (dtype=="int32"){
+  if (identical(dtype,"int32")){
     output <- printIntOutputs()
   }
   else{

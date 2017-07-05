@@ -53,3 +53,7 @@ MatMul <- function(l_op, r_op, op_name) {
     .Call('rtensorflow_MatMul', PACKAGE = 'rtensorflow', l_op, r_op, op_name)
 }
 
+printMap <- function() {
+    invisible(.Call('rtensorflow_printMap', PACKAGE = 'rtensorflow'))
+}
+

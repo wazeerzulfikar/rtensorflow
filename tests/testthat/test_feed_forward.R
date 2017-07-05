@@ -26,17 +26,17 @@ test_that("Check Import Run Graph", {
 
 test_that("Check Build Run Graph", {
   
-  result <- build_run_graph(c(1,2,3))
+  result <- build_run_graph(c(1,2,3),dtype="int32")
   
   expect_that( result, is_a("integer") )
   expect_equal( result, 29 )
   
-  result <- build_run_graph(c(7,12,3))
+  result <- build_run_graph(c(7.4,12,3.32),dtype="double")
   
-  expect_that( result, is_a("integer") )
-  expect_equal( result, 93 )
+  expect_that( result, is_a("numeric") )
+  expect_equal( result, 95.88 )
   
-  result <- build_run_graph(c(652,211,42))
+  result <- build_run_graph(c(652,211,42),dtype="int32")
   
   expect_that( result, is_a("integer") )
   expect_equal( result, 3625 )
