@@ -29,10 +29,10 @@ build_run_graph <- function(feed, dtype="int32"){
   
   input <- Placeholder(dtype)
 
-  w1 <- Constant(rep(1,12),c(3,4),dtype = dtype)
-  b1 <- Constant(rep(1,4),c(4),dtype = dtype)
-  w2 <- Constant(rep(1,4),c(4,1),dtype = dtype)
-  b2 <- Constant(rep(1,1),c(1),dtype =dtype)
+  w1 <- Constant(rep(1,12),c(3,4),dtype=dtype)
+  b1 <- Constant(rep(1,4),c(4),dtype=dtype)
+  w2 <- Constant(rep(1,4),c(4,1),dtype=dtype)
+  b2 <- Constant(rep(1,1),c(1),dtype=dtype)
   
   hidden_matmul <- MatMul(input,w1)
   hidden <- Add(hidden_matmul, b1)
@@ -49,6 +49,20 @@ build_run_graph <- function(feed, dtype="int32"){
   else{
     output <- printDoubleOutputs()
   }
+  
   return(output)
 }
 
+add_graph <- function(){
+  instantiateSessionVariables()
+  
+  a <- Constant(c(1,2,3,4),dtype="int32")
+  b <- Constant(c(1),c(1),dtype="int32")
+  
+  add <- Add(a,b)
+  
+  setOutput(add)
+  runSession()
+  
+  printIntOutputs()
+}

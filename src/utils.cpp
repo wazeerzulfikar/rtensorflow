@@ -161,22 +161,38 @@ void runSession(TF_Session* session, TF_Status* status){
                  nullptr, status );
 }
 
-template<typename T> T getOutputs(){
+template<typename T> pair<T*,int64_t> getOutputs(){
   TF_Tensor* out = output_values_[0];
   if (out == nullptr){
-    return -9999;
+    return {nullptr,0};
   }
   
+  int64_t length = 1;
+  for(int i=0;i<TF_NumDims(out);i++){
+    length *= TF_Dim(out,i);
+  }
+
   void* output_contents = TF_TensorData(out);
-  return *((T*) output_contents);
+  return {(T*) output_contents,length};
 }
 
 int getIntOutputs(){
-  return getOutputs<int>();
+  pair<int*,int64_t> output_val;
+  output_val =  getOutputs<int>();
+  for(int64_t i=0;i<output_val.second;i++){
+    cout<<*(output_val.first+i)<<" ";
+  }
+  cout<<endl;
+  return *(output_val.first);
 }
 
 double getDoubleOutputs(){
-  return getOutputs<double>();
+  pair<double*,int64_t> output_val;
+  output_val =  getOutputs<double>();
+  for(int64_t i=0;i<output_val.second;i++){
+    cout<<*(output_val.first+i)<<" "<<endl;
+  }
+  return *(output_val.first);
 }
 
 // Operation Helpers

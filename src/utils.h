@@ -33,7 +33,7 @@ void setPointers();
 
 void runSession(TF_Session* session, TF_Status* status);
 
-template<typename T>T getOutputs();
+template<typename T> std::pair<T*,int64_t> getOutputs();
 
 int getIntOutputs();
 

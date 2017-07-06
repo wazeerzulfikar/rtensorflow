@@ -98,18 +98,12 @@ int runSession(){
 
 // [[Rcpp::export]]
 int printIntOutputs(){
-  int out = getIntOutputs();
-  
-  printf("Output Value: %i\n", out);
-  return out;
+  return getIntOutputs();
 }
 
 // [[Rcpp::export]]
 double printDoubleOutputs(){
-  double out = getDoubleOutputs();
-  
-  printf("Output Value: %f\n", out);
-  return out;
+  return getDoubleOutputs();
 }
 
 // [[Rcpp::export]]
