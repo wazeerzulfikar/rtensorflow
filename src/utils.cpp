@@ -163,6 +163,9 @@ void runSession(TF_Session* session, TF_Status* status){
 
 template<typename T> T getOutputs(){
   TF_Tensor* out = output_values_[0];
+  if (out==nullptr){
+    return 9999;
+  }
   void* output_contents = TF_TensorData(out);
   return *((T*) output_contents);
 }
@@ -174,7 +177,6 @@ int getIntOutputs(){
 double getDoubleOutputs(){
   return getOutputs<double>();
 }
-
 
 // Operation Helpers
 
@@ -216,20 +218,20 @@ pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status
   return {op_name,op};
 }
 
-pair<char*,TF_Operation*> Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status){
-  char* op_name = generateUniqueName("Add");
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Add", op_name);
-  TF_AddInput(desc, {l,0});
-  TF_AddInput(desc, {r,0});
+pair<char*,TF_Operation*> Unary_Op(TF_Operation* inp, TF_Graph* graph, TF_Status* status, string op_name){
+  char* unique_name = generateUniqueName(op_name);
+  TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name);
+  TF_AddInput(desc, {inp,0});
   TF_Operation* op = TF_FinishOperation(desc, status);
-  return {op_name,op};
+  return {unique_name,op};
 }
 
-pair<char*,TF_Operation*> MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status){
-  char* op_name = generateUniqueName("MatMul");
-  TF_OperationDescription* desc = TF_NewOperation(graph,"MatMul", op_name);
+pair<char*,TF_Operation*> Binary_Op(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, string op_name){
+  char* unique_name = generateUniqueName(op_name);
+  TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name);
   TF_AddInput(desc, {l,0});
   TF_AddInput(desc, {r,0});
   TF_Operation* op = TF_FinishOperation(desc, status);
-  return {op_name,op};
+  return {unique_name,op};
 }
+

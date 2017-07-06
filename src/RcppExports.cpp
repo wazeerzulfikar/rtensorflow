@@ -114,27 +114,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Add
-std::string Add(std::string l_op, std::string r_op);
-RcppExport SEXP rtensorflow_Add(SEXP l_opSEXP, SEXP r_opSEXP) {
+// getUnaryOp
+std::string getUnaryOp(std::string inp, std::string op_name);
+RcppExport SEXP rtensorflow_getUnaryOp(SEXP inpSEXP, SEXP op_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type l_op(l_opSEXP);
-    Rcpp::traits::input_parameter< std::string >::type r_op(r_opSEXP);
-    rcpp_result_gen = Rcpp::wrap(Add(l_op, r_op));
+    Rcpp::traits::input_parameter< std::string >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(getUnaryOp(inp, op_name));
     return rcpp_result_gen;
 END_RCPP
 }
-// MatMul
-std::string MatMul(std::string l_op, std::string r_op);
-RcppExport SEXP rtensorflow_MatMul(SEXP l_opSEXP, SEXP r_opSEXP) {
+// getBinaryOp
+std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name);
+RcppExport SEXP rtensorflow_getBinaryOp(SEXP l_opSEXP, SEXP r_opSEXP, SEXP op_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type l_op(l_opSEXP);
     Rcpp::traits::input_parameter< std::string >::type r_op(r_opSEXP);
-    rcpp_result_gen = Rcpp::wrap(MatMul(l_op, r_op));
+    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(getBinaryOp(l_op, r_op, op_name));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -168,8 +169,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
     {"rtensorflow_Placeholder", (DL_FUNC) &rtensorflow_Placeholder, 1},
     {"rtensorflow_Constant", (DL_FUNC) &rtensorflow_Constant, 3},
-    {"rtensorflow_Add", (DL_FUNC) &rtensorflow_Add, 2},
-    {"rtensorflow_MatMul", (DL_FUNC) &rtensorflow_MatMul, 2},
+    {"rtensorflow_getUnaryOp", (DL_FUNC) &rtensorflow_getUnaryOp, 2},
+    {"rtensorflow_getBinaryOp", (DL_FUNC) &rtensorflow_getBinaryOp, 3},
     {"rtensorflow_printOpList", (DL_FUNC) &rtensorflow_printOpList, 0},
     {"rtensorflow_locateError", (DL_FUNC) &rtensorflow_locateError, 0},
     {NULL, NULL, 0}

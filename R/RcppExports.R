@@ -41,12 +41,12 @@ Constant <- function(val, dim, dtype) {
     .Call('rtensorflow_Constant', PACKAGE = 'rtensorflow', val, dim, dtype)
 }
 
-Add <- function(l_op, r_op) {
-    .Call('rtensorflow_Add', PACKAGE = 'rtensorflow', l_op, r_op)
+getUnaryOp <- function(inp, op_name) {
+    .Call('rtensorflow_getUnaryOp', PACKAGE = 'rtensorflow', inp, op_name)
 }
 
-MatMul <- function(l_op, r_op) {
-    .Call('rtensorflow_MatMul', PACKAGE = 'rtensorflow', l_op, r_op)
+getBinaryOp <- function(l_op, r_op, op_name) {
+    .Call('rtensorflow_getBinaryOp', PACKAGE = 'rtensorflow', l_op, r_op, op_name)
 }
 
 printOpList <- function() {

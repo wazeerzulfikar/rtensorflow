@@ -48,8 +48,8 @@ std::pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, s
 
 std::pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
 
-std::pair<char*,TF_Operation*> Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status);
+pair<char*,TF_Operation*> Binary_Op(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, string op_name);
 
-std::pair<char*,TF_Operation*> MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status);
+pair<char*,TF_Operation*> Unary_Op(TF_Operation* inp, TF_Graph* graph, TF_Status* status, string op_name);
 
 #endif  // RTENSORFLOW_SRC_UTILS_H_

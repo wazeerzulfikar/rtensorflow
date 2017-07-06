@@ -42,6 +42,7 @@ build_run_graph <- function(feed, dtype="int32"){
   feedInput(input, feed, dtype)
   setOutput(output)
   runSession()
+  
   if (identical(dtype,"int32")){
     output <- printIntOutputs()
   }

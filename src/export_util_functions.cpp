@@ -142,21 +142,20 @@ std::string Constant(NumericVector val, std::vector<int64_t> dim, std::string dt
 }
 
 // [[Rcpp::export]]
-std::string Add(std::string l_op, std::string r_op){
+std::string getUnaryOp(std::string inp, std::string op_name){
   pair<char*,TF_Operation*> op;
-  TF_Operation* l = op_list.at(l_op);
-  TF_Operation* r = op_list.at(r_op);
-  op = Add(l, r, graph, status);
+  TF_Operation* i = op_list.at(inp);
+  op = Unary_Op(i, graph, status, op_name);
   op_list.emplace(op.first,op.second);
   return op.first;
 }
 
 // [[Rcpp::export]]
-std::string MatMul(std::string l_op, std::string r_op){
+std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name){
   pair<char*,TF_Operation*> op;
   TF_Operation* l = op_list.at(l_op);
   TF_Operation* r = op_list.at(r_op);
-  op = MatMul(l, r, graph, status);
+  op = Binary_Op(l, r, graph, status, op_name);
   op_list.emplace(op.first,op.second);
   return op.first;
 }
