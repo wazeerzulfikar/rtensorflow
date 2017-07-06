@@ -59,12 +59,12 @@ Upon installing `libtensorflow.so` in the default directory,
 
 1. `install.packages("devtools")`
 2. `library(devtools)`
-3.  `install_github(wazeerzulfikar/rtensorflow)`
-4. `./configure`
-5. For examples on how to use the R API, look at `R/feed_forward_network.R`
+3.  `install_github("wazeerzulfikar/rtensorflow")`
+4. `library(rtensorflow)`
+5. For examples on how to use the R API, look at `R/examples.R`
 
 ## Contributing
 Developers and users are welcome to contribute!
 
 ## License
-This project is licensed under the terms of the [Apache 2.0 license](https://github.com/tensorflow/rust/blob/master/LICENSE).
+This project is licensed under the terms of the Apache 2.0 license.
