@@ -133,7 +133,7 @@ std::string Placeholder(std::string dtype){
 }
 
 // [[Rcpp::export]]
-std::string Constant(NumericVector val, std::vector<int64_t> dim, std::string dtype){
+std::string getConstant(NumericVector val, std::vector<int64_t> dim, std::string dtype){
   TF_Tensor* val_t = parseInputs(val,dim,dtype);
   pair<char*,TF_Operation*> op;
   op = Constant(val_t,graph,status);

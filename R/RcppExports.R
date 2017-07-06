@@ -37,8 +37,8 @@ Placeholder <- function(dtype) {
     .Call('rtensorflow_Placeholder', PACKAGE = 'rtensorflow', dtype)
 }
 
-Constant <- function(val, dim, dtype) {
-    .Call('rtensorflow_Constant', PACKAGE = 'rtensorflow', val, dim, dtype)
+getConstant <- function(val, dim, dtype) {
+    .Call('rtensorflow_getConstant', PACKAGE = 'rtensorflow', val, dim, dtype)
 }
 
 getUnaryOp <- function(inp, op_name) {

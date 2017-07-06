@@ -163,9 +163,10 @@ void runSession(TF_Session* session, TF_Status* status){
 
 template<typename T> T getOutputs(){
   TF_Tensor* out = output_values_[0];
-  if (out==nullptr){
-    return 9999;
+  if (out == nullptr){
+    return -9999;
   }
+  
   void* output_contents = TF_TensorData(out);
   return *((T*) output_contents);
 }

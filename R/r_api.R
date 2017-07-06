@@ -1,5 +1,12 @@
 # Wrappers to create mathematical ops for graph
 
+Constant <- function(val,dim,dtype){
+  if (missing(dim)){
+    dim <- c(length(val))
+  }
+  return (getConstant(val,dim,dtype))
+}
+
 Add <- function(l_op,r_op){
   return (getBinaryOp(l_op,r_op,"Add"))
 }
