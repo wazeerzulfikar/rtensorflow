@@ -1,12 +1,13 @@
+#ifndef RTENSORFLOW_SRC_UTILS_H_
+#define RTENSORFLOW_SRC_UTILS_H_
+
 #include <Rcpp.h>
 using namespace Rcpp;
-#include <stdio.h>
-#include <iostream>
-using namespace std;
-#include <tensorflow/c/c_api.h>
-#include <stdlib.h>   
-#include <vector>  
+#include <utility>
 #include <string>
+using namespace std;
+#include <stddef.h>
+#include <tensorflow/c/c_api.h>
 
 void deallocator(void* data, size_t length);
 
@@ -38,14 +39,17 @@ int getIntOutputs();
 
 double getDoubleOutputs();
 
+
 // Operation Helpers
 
 char* generateUniqueName(string name);
 
-pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string dtype="int32");
+std::pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string dtype="int32");
 
-pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
+std::pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
 
-pair<char*,TF_Operation*> Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status);
+std::pair<char*,TF_Operation*> Add(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status);
 
-pair<char*,TF_Operation*> MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status);
+std::pair<char*,TF_Operation*> MatMul(TF_Operation* l, TF_Operation* r, TF_Graph* graph, TF_Status* status);
+
+#endif  // RTENSORFLOW_SRC_UTILS_H_

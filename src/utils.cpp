@@ -1,4 +1,13 @@
 #include "utils.h"
+#include <Rcpp.h>
+using namespace Rcpp;
+#include <stdio.h>
+#include <iostream>
+using namespace std;
+#include <tensorflow/c/c_api.h>
+#include <stdlib.h>   
+#include <vector>  
+#include <string>
 
 std::vector<TF_Operation*> targets;
 std::vector<TF_Output> inputs_;
@@ -11,6 +20,7 @@ const TF_Output* inputs_ptr;
 TF_Tensor* const* input_values_ptr;
 const TF_Output* outputs_ptr;
 TF_Tensor** output_values_ptr;
+
 
 void deallocator(void* data, size_t length) {                                             
   free(data);                                                                       
@@ -159,15 +169,16 @@ template<typename T> T getOutputs(){
 
 int getIntOutputs(){
   return getOutputs<int>();
-};
+}
 
 double getDoubleOutputs(){
   return getOutputs<double>();
-};
+}
+
 
 // Operation Helpers
 
-char* generateUniqueName(string name) {
+char* generateUniqueName(string op_name) {
   static const char alphanum[] =
     "0123456789"
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -175,8 +186,8 @@ char* generateUniqueName(string name) {
   int len = 5;
   char* rand_name = new char[len];
   for (int i = 0; i < len; ++i) {
-    rand_name[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
-  }
+      rand_name[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
   return rand_name;
 }
 
