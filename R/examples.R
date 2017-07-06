@@ -9,12 +9,14 @@
 #' @return Output Value of Network 
 
 import_run_graph <- function(path,feed){
+  
   instantiateSessionVariables()
   loadGraphFromFile(path)
   feedInput("input", feed, "int32")
   setOutput("output")
   runSession()
-  output <- printIntOutputs()
+  output <- fetchOutput()
+  
   return(output)
 }
 
@@ -25,6 +27,7 @@ import_run_graph <- function(path,feed){
 #' @return Output Value of Network 
 
 build_run_graph <- function(feed, dtype="int32"){
+  
   instantiateSessionVariables()
   
   input <- Placeholder(dtype)
@@ -43,17 +46,15 @@ build_run_graph <- function(feed, dtype="int32"){
   setOutput(output)
   runSession()
   
-  if (identical(dtype,"int32")){
-    output <- printIntOutputs()
-  }
-  else{
-    output <- printDoubleOutputs()
-  }
+  output <- fetchOutput(dtype = dtype)
+  
+  print(output)
   
   return(output)
 }
 
 add_graph <- function(){
+  
   instantiateSessionVariables()
   
   a <- Constant(c(1,2,3,4),dtype="int32")
@@ -61,8 +62,12 @@ add_graph <- function(){
   
   add <- Add(a,b)
   
-  setOutput(add)
-  runSession()
+  neg <- Neg(add)
   
-  printIntOutputs()
+  setOutput(neg)
+  runSession()
+
+  output <- fetchOutput()
+  
+  print(output) 
 }

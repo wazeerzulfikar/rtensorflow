@@ -21,12 +21,8 @@ runSession <- function() {
     .Call('rtensorflow_runSession', PACKAGE = 'rtensorflow')
 }
 
-printIntOutputs <- function() {
-    .Call('rtensorflow_printIntOutputs', PACKAGE = 'rtensorflow')
-}
-
-printDoubleOutputs <- function() {
-    .Call('rtensorflow_printDoubleOutputs', PACKAGE = 'rtensorflow')
+getOutput <- function(dtype) {
+    .Call('rtensorflow_getOutput', PACKAGE = 'rtensorflow', dtype)
 }
 
 deleteSessionVariables <- function() {

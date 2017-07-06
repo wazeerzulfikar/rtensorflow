@@ -35,11 +35,12 @@ void runSession(TF_Session* session, TF_Status* status);
 
 template<typename T> std::pair<T*,int64_t> getOutputs();
 
-int getIntOutputs();
+std::pair<int*,int64_t> getIntOutput();
 
-double getDoubleOutputs();
+std::pair<double*,int64_t> getDoubleOutput();
 
-
+std::vector<int64_t> getOutputDimensions();
+  
 // Operation Helpers
 
 char* generateUniqueName(string name);

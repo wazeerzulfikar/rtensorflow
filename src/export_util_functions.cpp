@@ -97,13 +97,27 @@ int runSession(){
 }
 
 // [[Rcpp::export]]
-int printIntOutputs(){
-  return getIntOutputs();
-}
-
-// [[Rcpp::export]]
-double printDoubleOutputs(){
-  return getDoubleOutputs();
+List getOutput(std::string dtype){
+  NumericVector output_val;
+  if(dtype == "int32"){
+    pair<int*,int64_t> out;
+    out = getIntOutput();
+    output_val = NumericVector(out.second);
+    for(int i=0;i<out.second;i++){
+      output_val[i] = out.first[i];
+    }
+  }else{
+    pair<double*,int64_t> out;
+    out = getDoubleOutput();
+    output_val = NumericVector(out.second);
+    for(int i=0;i<out.second;i++){
+      output_val[i] = out.first[i];
+    }
+  }
+  List output;
+  output["val"] = output_val;
+  output["dim"] = getOutputDimensions();
+  return output;
 }
 
 // [[Rcpp::export]]
@@ -155,6 +169,7 @@ std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name)
 }
 
 //Debug Helpers
+
 // [[Rcpp::export]]
 void printOpList(){
   for (auto const& x : op_list)

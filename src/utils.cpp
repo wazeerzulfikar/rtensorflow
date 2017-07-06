@@ -176,23 +176,31 @@ template<typename T> pair<T*,int64_t> getOutputs(){
   return {(T*) output_contents,length};
 }
 
-int getIntOutputs(){
+pair<int*,int64_t> getIntOutput(){
   pair<int*,int64_t> output_val;
   output_val =  getOutputs<int>();
-  for(int64_t i=0;i<output_val.second;i++){
-    cout<<*(output_val.first+i)<<" ";
-  }
-  cout<<endl;
-  return *(output_val.first);
+  
+  return output_val;
 }
 
-double getDoubleOutputs(){
+pair<double*,int64_t> getDoubleOutput(){
   pair<double*,int64_t> output_val;
   output_val =  getOutputs<double>();
-  for(int64_t i=0;i<output_val.second;i++){
-    cout<<*(output_val.first+i)<<" "<<endl;
+
+  return output_val;
+}
+
+std::vector<int64_t> getOutputDimensions(){
+  TF_Tensor* out = output_values_[0];
+  std::vector<int64_t> dim(TF_NumDims(out));
+  if (out == nullptr){
+    return {0};
   }
-  return *(output_val.first);
+  
+  for(int i=0;i<TF_NumDims(out);i++){
+    dim [i]= TF_Dim(out,i);
+  }
+  return dim;
 }
 
 // Operation Helpers
@@ -213,6 +221,7 @@ char* generateUniqueName(string op_name) {
 pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string dtype){
   char* op_name = generateUniqueName("Placeholder");
   TF_OperationDescription* desc = TF_NewOperation(graph, "Placeholder", op_name);
+  
   if (dtype=="int32"){
     TF_SetAttrType(desc,"dtype",TF_INT32);
   }
@@ -220,6 +229,7 @@ pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string
     TF_SetAttrType(desc,"dtype",TF_DOUBLE);
   }
   TF_Operation* op = TF_FinishOperation(desc, status);
+  
   return {op_name,op};
 }
 
@@ -227,11 +237,13 @@ pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status
   char* op_name = generateUniqueName("Constant");
   TF_OperationDescription* desc = TF_NewOperation(graph, "Const", op_name);
   TF_SetAttrTensor(desc, "value", tensor, status);
+  
   if(TF_GetCode(status)!=TF_OK){
     return {nullptr,nullptr};
   }
   TF_SetAttrType(desc,"dtype",TF_TensorType(tensor));
   TF_Operation* op = TF_FinishOperation(desc, status);
+  
   return {op_name,op};
 }
 
@@ -240,6 +252,7 @@ pair<char*,TF_Operation*> Unary_Op(TF_Operation* inp, TF_Graph* graph, TF_Status
   TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name);
   TF_AddInput(desc, {inp,0});
   TF_Operation* op = TF_FinishOperation(desc, status);
+  
   return {unique_name,op};
 }
 
@@ -249,6 +262,7 @@ pair<char*,TF_Operation*> Binary_Op(TF_Operation* l,TF_Operation* r, TF_Graph* g
   TF_AddInput(desc, {l,0});
   TF_AddInput(desc, {r,0});
   TF_Operation* op = TF_FinishOperation(desc, status);
+  
   return {unique_name,op};
 }
 

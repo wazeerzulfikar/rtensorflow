@@ -60,23 +60,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// printIntOutputs
-int printIntOutputs();
-RcppExport SEXP rtensorflow_printIntOutputs() {
+// getOutput
+List getOutput(std::string dtype);
+RcppExport SEXP rtensorflow_getOutput(SEXP dtypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(printIntOutputs());
-    return rcpp_result_gen;
-END_RCPP
-}
-// printDoubleOutputs
-double printDoubleOutputs();
-RcppExport SEXP rtensorflow_printDoubleOutputs() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(printDoubleOutputs());
+    Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(getOutput(dtype));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -164,8 +155,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_feedInput", (DL_FUNC) &rtensorflow_feedInput, 3},
     {"rtensorflow_setOutput", (DL_FUNC) &rtensorflow_setOutput, 1},
     {"rtensorflow_runSession", (DL_FUNC) &rtensorflow_runSession, 0},
-    {"rtensorflow_printIntOutputs", (DL_FUNC) &rtensorflow_printIntOutputs, 0},
-    {"rtensorflow_printDoubleOutputs", (DL_FUNC) &rtensorflow_printDoubleOutputs, 0},
+    {"rtensorflow_getOutput", (DL_FUNC) &rtensorflow_getOutput, 1},
     {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
     {"rtensorflow_Placeholder", (DL_FUNC) &rtensorflow_Placeholder, 1},
     {"rtensorflow_getConstant", (DL_FUNC) &rtensorflow_getConstant, 3},

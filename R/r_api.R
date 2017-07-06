@@ -22,3 +22,11 @@ Pow <- function(l_op,r_op){
 Neg <- function(inp){
   return (getUnaryOp(inp,"Neg"))
 }
+
+fetchOutput <- function(dtype="int32"){
+  
+  output <- getOutput(dtype);
+  output_array <- array(data = output$val, dim = output$dim)
+  
+  return (output_array)
+} 
