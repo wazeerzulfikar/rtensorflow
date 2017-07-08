@@ -48,15 +48,11 @@ int loadGraphFromFile(std::string path){
 }
 
 // [[Rcpp::export]]
-int feedInput(std::string op_name, NumericVector inp, std::string type) {
+int setFeedInput(std::string op_name, NumericVector inp, std::vector<int64_t> dim, std::string dtype) {
   const char* op_name_ptr = op_name.c_str();
   TF_Operation* input = TF_GraphOperationByName(graph,op_name_ptr);
-  if(inp.size()!=3){
-    cout<<"Wrong size of Input"<<endl;
-    return -1;
-  }
   
-  TF_Tensor* feed = parseInputs(inp,{1,3},type);
+  TF_Tensor* feed = parseInputs(inp,dim,dtype);
   
   setInputs({{input,feed}});
   
@@ -133,37 +129,37 @@ int deleteSessionVariables() {
 //Graph Building Functions
 
 // [[Rcpp::export]]
-std::string Placeholder(std::string dtype){
-  pair<char*,TF_Operation*> op;
-  op = Placeholder(graph, status, dtype);
+std::string getPlaceholder(std::string dtype, std::string unique_name){
+  pair<string,TF_Operation*> op;
+  op = Placeholder(graph, status, "Placeholder", unique_name, dtype);
   op_list.emplace(op.first,op.second);
   return op.first;
 }
 
 // [[Rcpp::export]]
-std::string getConstant(NumericVector val, std::vector<int64_t> dim, std::string dtype){
+std::string getConstant(NumericVector val, std::vector<int64_t> dim, std::string dtype, std::string unique_name){
   TF_Tensor* val_t = parseInputs(val,dim,dtype);
-  pair<char*,TF_Operation*> op;
-  op = Constant(val_t,graph,status);
+  pair<string,TF_Operation*> op;
+  op = Constant(val_t,graph,status,"Const",unique_name);
   op_list.emplace(op.first,op.second);
   return op.first;
 }
 
 // [[Rcpp::export]]
-std::string getUnaryOp(std::string inp, std::string op_name){
-  pair<char*,TF_Operation*> op;
+std::string getUnaryOp(std::string inp, std::string op_name, std::string unique_name){
+  pair<string,TF_Operation*> op;
   TF_Operation* i = op_list.at(inp);
-  op = Unary_Op(i, graph, status, op_name);
+  op = Unary_Op(i, graph, status, op_name, unique_name);
   op_list.emplace(op.first,op.second);
   return op.first;
 }
 
 // [[Rcpp::export]]
-std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name){
-  pair<char*,TF_Operation*> op;
+std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name, std::string unique_name){
+  pair<string,TF_Operation*> op;
   TF_Operation* l = op_list.at(l_op);
   TF_Operation* r = op_list.at(r_op);
-  op = Binary_Op(l, r, graph, status, op_name);
+  op = Binary_Op(l, r, graph, status, op_name, unique_name);
   op_list.emplace(op.first,op.second);
   return op.first;
 }

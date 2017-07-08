@@ -205,22 +205,9 @@ std::vector<int64_t> getOutputDimensions(){
 
 // Operation Helpers
 
-char* generateUniqueName(string op_name) {
-  static const char alphanum[] =
-    "0123456789"
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz";
-  int len = 5;
-  char* rand_name = new char[len];
-  for (int i = 0; i < len; ++i) {
-      rand_name[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
-    }
-  return rand_name;
-}
-
-pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string dtype){
-  char* op_name = generateUniqueName("Placeholder");
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Placeholder", op_name);
+pair<string,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string op_name, string unique_name, string dtype){
+  
+  TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name.c_str());
   
   if (dtype=="int32"){
     TF_SetAttrType(desc,"dtype",TF_INT32);
@@ -230,12 +217,11 @@ pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string
   }
   TF_Operation* op = TF_FinishOperation(desc, status);
   
-  return {op_name,op};
+  return {unique_name,op};
 }
 
-pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status){
-  char* op_name = generateUniqueName("Constant");
-  TF_OperationDescription* desc = TF_NewOperation(graph, "Const", op_name);
+pair<string,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, string op_name, string unique_name){
+  TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name.c_str());
   TF_SetAttrTensor(desc, "value", tensor, status);
   
   if(TF_GetCode(status)!=TF_OK){
@@ -244,21 +230,19 @@ pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status
   TF_SetAttrType(desc,"dtype",TF_TensorType(tensor));
   TF_Operation* op = TF_FinishOperation(desc, status);
   
-  return {op_name,op};
+  return {unique_name,op};
 }
 
-pair<char*,TF_Operation*> Unary_Op(TF_Operation* inp, TF_Graph* graph, TF_Status* status, string op_name){
-  char* unique_name = generateUniqueName(op_name);
-  TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name);
+pair<string,TF_Operation*> Unary_Op(TF_Operation* inp, TF_Graph* graph, TF_Status* status, string op_name, string unique_name){
+  TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name.c_str());
   TF_AddInput(desc, {inp,0});
   TF_Operation* op = TF_FinishOperation(desc, status);
   
   return {unique_name,op};
 }
 
-pair<char*,TF_Operation*> Binary_Op(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, string op_name){
-  char* unique_name = generateUniqueName(op_name);
-  TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name);
+pair<string,TF_Operation*> Binary_Op(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, string op_name,string unique_name){
+  TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name.c_str());
   TF_AddInput(desc, {l,0});
   TF_AddInput(desc, {r,0});
   TF_Operation* op = TF_FinishOperation(desc, status);

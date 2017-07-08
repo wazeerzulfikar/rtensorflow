@@ -17,11 +17,6 @@ test_that("Check Import Run Graph", {
   expect_that( file, is_a("integer") )
   expect_equal( file, -1 )
   
-  file <- loadGraphFromFile(path)
-  input_status <- feedInput("input",c(1,2,3,4),"int32")
-  
-  expect_that( input_status, is_a("integer") )
-  expect_equal( input_status, -1 )
 })
 
 test_that("Check Build Run Graph", {

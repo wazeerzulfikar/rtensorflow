@@ -43,14 +43,12 @@ std::vector<int64_t> getOutputDimensions();
   
 // Operation Helpers
 
-char* generateUniqueName(string name);
+std::pair<string,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string op_name, string unique_name, string dtype);
 
-std::pair<char*,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string dtype="int32");
+std::pair<string,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, string op_name, string unique_name);
 
-std::pair<char*,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
+std::pair<string,TF_Operation*> Binary_Op(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, string op_name, string unique_name);
 
-pair<char*,TF_Operation*> Binary_Op(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, string op_name);
-
-pair<char*,TF_Operation*> Unary_Op(TF_Operation* inp, TF_Graph* graph, TF_Status* status, string op_name);
+std::pair<string,TF_Operation*> Unary_Op(TF_Operation* inp, TF_Graph* graph, TF_Status* status, string op_name, string unique_name);
 
 #endif  // RTENSORFLOW_SRC_UTILS_H_

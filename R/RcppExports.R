@@ -9,8 +9,8 @@ loadGraphFromFile <- function(path) {
     .Call('rtensorflow_loadGraphFromFile', PACKAGE = 'rtensorflow', path)
 }
 
-feedInput <- function(op_name, inp, type) {
-    .Call('rtensorflow_feedInput', PACKAGE = 'rtensorflow', op_name, inp, type)
+setFeedInput <- function(op_name, inp, dim, dtype) {
+    .Call('rtensorflow_setFeedInput', PACKAGE = 'rtensorflow', op_name, inp, dim, dtype)
 }
 
 setOutput <- function(op_name) {
@@ -29,20 +29,20 @@ deleteSessionVariables <- function() {
     .Call('rtensorflow_deleteSessionVariables', PACKAGE = 'rtensorflow')
 }
 
-Placeholder <- function(dtype) {
-    .Call('rtensorflow_Placeholder', PACKAGE = 'rtensorflow', dtype)
+getPlaceholder <- function(dtype, unique_name) {
+    .Call('rtensorflow_getPlaceholder', PACKAGE = 'rtensorflow', dtype, unique_name)
 }
 
-getConstant <- function(val, dim, dtype) {
-    .Call('rtensorflow_getConstant', PACKAGE = 'rtensorflow', val, dim, dtype)
+getConstant <- function(val, dim, dtype, unique_name) {
+    .Call('rtensorflow_getConstant', PACKAGE = 'rtensorflow', val, dim, dtype, unique_name)
 }
 
-getUnaryOp <- function(inp, op_name) {
-    .Call('rtensorflow_getUnaryOp', PACKAGE = 'rtensorflow', inp, op_name)
+getUnaryOp <- function(inp, op_name, unique_name) {
+    .Call('rtensorflow_getUnaryOp', PACKAGE = 'rtensorflow', inp, op_name, unique_name)
 }
 
-getBinaryOp <- function(l_op, r_op, op_name) {
-    .Call('rtensorflow_getBinaryOp', PACKAGE = 'rtensorflow', l_op, r_op, op_name)
+getBinaryOp <- function(l_op, r_op, op_name, unique_name) {
+    .Call('rtensorflow_getBinaryOp', PACKAGE = 'rtensorflow', l_op, r_op, op_name, unique_name)
 }
 
 printOpList <- function() {
