@@ -1,6 +1,6 @@
 # Generate random unique name for ops
 
-generateUniqueName <- function(extra_length=5, op_name=""){
+generateUniqueName <- function(extra_length=5, op_name="") {
 
   randomString <- paste(sample(c(0:9, letters, LETTERS),
                                extra_length, replace=TRUE),
@@ -12,13 +12,13 @@ generateUniqueName <- function(extra_length=5, op_name=""){
 
 # Helper to set feed dim in while setting Input
 
-feedInput <- function(input, feed, dim = c(length(feed)),dtype="int32"){
+feedInput <- function(input, feed, dim = c(length(feed)), dtype="int32") {
   return (setFeedInput(input, feed, dim, dtype))
 }
 
 # Wrappers to create mathematical ops for graph
 
-Placeholder <- function(dtype="int32", name="Placeholder"){
+Placeholder <- function(name="Placeholder", dtype="int32") {
   
   if(identical(name,"Placeholder")){
     name <- generateUniqueName(op_name = name)

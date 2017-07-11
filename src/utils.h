@@ -11,19 +11,19 @@ using namespace std;
 
 void deallocator(void* data, size_t length);
 
-template<typename T> void tensor_deallocator(void* data, size_t length,void* arg);
+template<typename T> void tensor_deallocator (void* data, size_t length, void* arg);
 
-TF_Buffer* read_file(std::string path);
+TF_Buffer* read_file (const char* path);
 
 void deleteInputValues();
 
-void resetOutputValues();
+void resetOutputValues ();
 
-void setInputs(std::vector<std::pair<TF_Operation*,TF_Tensor*>> inputs);
+void setInputs (std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs);
 
 void setOutputs(std::vector<TF_Operation*> outputs);
 
-template<typename T> TF_Tensor* getTensor(T* arr,std::vector<int64_t> dimensions);
+template<typename T> TF_Tensor* getTensor(T* arr, std::vector<int64_t> dimensions);
 
 TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, string dtype="int32");
 
@@ -33,22 +33,22 @@ void setPointers();
 
 void runSession(TF_Session* session, TF_Status* status);
 
-template<typename T> std::pair<T*,int64_t> getOutputs();
+template <typename T> std::pair<T*, int64_t> getOutputs();
 
-std::pair<int*,int64_t> getIntOutput();
+std::pair<int*, int64_t> getIntOutput();
 
-std::pair<double*,int64_t> getDoubleOutput();
+std::pair<double*, int64_t> getDoubleOutput();
 
 std::vector<int64_t> getOutputDimensions();
   
 // Operation Helpers
 
-std::pair<string,TF_Operation*> Placeholder(TF_Graph* graph, TF_Status* status, string op_name, string unique_name, string dtype);
+std::pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, string dtype, TF_Graph* graph, TF_Status* status);
 
-std::pair<string,TF_Operation*> Constant(TF_Tensor* tensor, TF_Graph* graph, TF_Status* status, string op_name, string unique_name);
+std::pair<string, TF_Operation*> Constant(string op_name, string unique_name, TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
 
-std::pair<string,TF_Operation*> Binary_Op(TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status, string op_name, string unique_name);
+std::pair<string, TF_Operation*> Unary_Op(string op_name, string unique_name, TF_Operation* inp, TF_Graph* graph, TF_Status* status);
 
-std::pair<string,TF_Operation*> Unary_Op(TF_Operation* inp, TF_Graph* graph, TF_Status* status, string op_name, string unique_name);
+std::pair<string, TF_Operation*> Binary_Op(string op_name, string unique_name, TF_Operation* l,TF_Operation* r, TF_Graph* graph, TF_Status* status);
 
 #endif  // RTENSORFLOW_SRC_UTILS_H_

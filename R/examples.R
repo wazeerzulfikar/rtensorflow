@@ -8,7 +8,7 @@
 #' @param feed Integer vector of size 3, feed for the network
 #' @return Output Value of Network 
 
-import_run_graph <- function(path,feed){
+import_run_graph <- function(path, feed){
   
   instantiateSessionVariables()
   loadGraphFromFile(path)
@@ -16,8 +16,9 @@ import_run_graph <- function(path,feed){
   setOutput("output")
   runSession()
   output <- fetchOutput()
-  
+  deleteSessionVariables()
   return(output)
+  
 }
 
 #' @title Build and Run Graph
@@ -26,38 +27,39 @@ import_run_graph <- function(path,feed){
 #' @param dtype Datatype to be used, one of {"int32","double"}
 #' @return Output Value of Network 
 
-build_run_graph <- function(feed, dtype="int32"){
+build_run_graph <- function(feed, dtype="int32") {
   
   instantiateSessionVariables()
-  input <- Placeholder(dtype)
-
-  w1 <- Constant(rep(1,12),dim=c(3,4),dtype=dtype)
-  b1 <- Constant(rep(1,4),dim=c(4),dtype=dtype)
-  w2 <- Constant(rep(1,4),dim=c(4,1),dtype=dtype)
-  b2 <- Constant(rep(1,1),dim=c(1),dtype=dtype)
   
-  hidden_matmul <- MatMul(input,w1)
+  input <- Placeholder(name="input", dtype=dtype)
+
+  w1 <- Constant(rep(1,12), dim = c(3,4), dtype = dtype)
+  b1 <- Constant(rep(1,4), dim = c(4), dtype = dtype)
+  w2 <- Constant(rep(1,4), dim = c(4,1), dtype = dtype)
+  b2 <- Constant(rep(1,1), dim = c(1), dtype = dtype)
+  
+  hidden_matmul <- MatMul(input, w1)
   hidden <- Add(hidden_matmul, b1)
-  output_matmul <- MatMul(hidden,w2)
+  output_matmul <- MatMul(hidden, w2)
   output <- Add(output_matmul, b2)
   
-  feedInput(input,feed,dim=c(1,3),dtype=dtype)
+  feedInput(input, feed, dim = c(1,3), dtype = dtype)
   setOutput(output)
   runSession()
   
   output <- fetchOutput(dtype = dtype)
-  
-  print(output)
+
+  deleteSessionVariables()
   
   return(output)
 }
 
-add_graph <- function(){
+add_graph <- function() {
   
   instantiateSessionVariables()
   
-  a <- Constant(c(1,2,3,4),dtype="int32")
-  b <- Constant(c(1),c(1),dtype="int32")
+  a <- Constant(c(1,2,3,4), dtype="int32")
+  b <- Constant(c(1), dim=c(1), dtype="int32")
   
   add <- Add(a,b)
   
@@ -67,6 +69,7 @@ add_graph <- function(){
   runSession()
 
   output <- fetchOutput()
-  
-  print(output) 
+
+  deleteSessionVariables()
+  return (output)
 }
