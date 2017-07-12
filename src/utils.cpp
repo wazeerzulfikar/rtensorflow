@@ -52,11 +52,12 @@ TF_Buffer* read_file(const char* path) {
   return buf;
 }
 
-void deleteInputValues() {
+void resetInputValues() {
   for (int i = 0; i < input_values_.size(); ++i) {
     TF_DeleteTensor(input_values_[i]);
   }
   input_values_.clear();
+  inputs_.clear();
 }
 
 void resetOutputValues() {
@@ -66,11 +67,11 @@ void resetOutputValues() {
     }
   }
   output_values_.clear();
+  outputs_.clear();
 }
 
 void setInputs(std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs) {
-  deleteInputValues();
-  inputs_.clear();
+  resetInputValues();
   for (const auto& i : inputs) {
     inputs_.emplace_back(TF_Output{i.first, 0});
     input_values_.emplace_back(i.second);
@@ -79,7 +80,6 @@ void setInputs(std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs) {
 
 void setOutputs(std::vector<TF_Operation*> outputs) {
   resetOutputValues();
-  outputs_.clear();
   for (TF_Operation* o : outputs){
     outputs_.emplace_back(TF_Output{o,0});
   }

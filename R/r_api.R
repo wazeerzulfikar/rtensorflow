@@ -1,5 +1,11 @@
-# Generate random unique name for ops
-
+#' @title Generate Unique Name
+#'
+#' @description Generates a unique name for the node in the graph
+#' 
+#' @param extra_length Number of characters to be randomly generated for identifier
+#' @param op_name Name of op to be used as base of unique generated name
+#' 
+#' @return Unique generated name for node
 generateUniqueName <- function(extra_length=5, op_name="") {
 
   randomString <- paste(sample(c(0:9, letters, LETTERS),
@@ -10,15 +16,46 @@ generateUniqueName <- function(extra_length=5, op_name="") {
   return(randomString)
 }
 
-# Helper to set feed dim in while setting Input
-
-feedInput <- function(input, feed, dim = c(length(feed)), dtype="int32") {
-  return (setFeedInput(input, feed, dim, dtype))
+#' @title Feed Input
+#'
+#' @description Easy-to-use wrapper for setFeedInput
+#' 
+#' @param input_node Node to be set as input to graph
+#' @param feed Vector to be fed as input to the graph
+#' @param dim Vector indicating dimensions of feed
+#' @param dtype Datatype of feed
+#' 
+#' @return Integer status
+feedInput <- function(input_node, feed, dim = c(length(feed)), dtype="int32") {
+  return (setFeedInput(input_node, feed, dim, dtype))
 }
+
+#' @title Fetch Output
+#'
+#' @description Easy-to-use wrapper for getOutput
+#' 
+#' @param dtype Datatype of output
+#' 
+#' @return Output Array
+fetchOutput <- function(dtype="int32") {
+  
+  output <- getOutput(dtype);
+  output_array <- array(data = output$val, dim = output$dim)
+  
+  return (output_array)
+} 
 
 # Wrappers to create mathematical ops for graph
 
-Placeholder <- function(name="Placeholder", dtype="int32") {
+#' @title Placeholder Wrapper
+#'
+#' @description  Easy-to-use wrapper for getPlaceholder
+#' 
+#' @param dtype Datatype of feed
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
+Placeholder <- function(dtype="int32", name="Placeholder") {
   
   if(identical(name,"Placeholder")){
     name <- generateUniqueName(op_name = name)
@@ -27,7 +64,17 @@ Placeholder <- function(name="Placeholder", dtype="int32") {
   return (getPlaceholder(dtype,name))
 }
 
-Constant <- function(val,dim = c(length(val)),dtype="int32",name="Const"){
+#' @title Constant Wrapper
+#'
+#' @description  Easy-to-use wrapper for getConstant
+#' 
+#' @param val Vector for value of Constant node
+#' @param dim Vector indicating dimensions of val
+#' @param dtype Datatype of val
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
+Constant <- function(val, dim = c(length(val)), dtype="int32", name="Const") {
   
   if(identical(name,"Const")){
     name <- generateUniqueName(op_name = name)
@@ -36,7 +83,16 @@ Constant <- function(val,dim = c(length(val)),dtype="int32",name="Const"){
   return (getConstant(val,dim,dtype,name))
 }
 
-Add <- function(l_op, r_op, name="Add"){
+#' @title Add Op
+#'
+#' @description Initializes an Add op in the graph
+#' 
+#' @param l_op Input node
+#' @param r_op Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
+Add <- function(l_op, r_op, name="Add") {
   
   if(identical(name,"Add")){
     name <- generateUniqueName(op_name = name)
@@ -45,7 +101,16 @@ Add <- function(l_op, r_op, name="Add"){
   return (getBinaryOp(l_op,r_op,"Add",name))
 }
 
-MatMul <- function(l_op, r_op, name="MatMul"){
+#' @title MatMul Op
+#'
+#' @description Initializes an MatMul op in the graph
+#' 
+#' @param l_op Input node
+#' @param r_op Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
+MatMul <- function(l_op, r_op, name="MatMul") {
   
   if(identical(name,"MatMul")){
     name <- generateUniqueName(op_name = name)
@@ -54,7 +119,16 @@ MatMul <- function(l_op, r_op, name="MatMul"){
   return (getBinaryOp(l_op,r_op,"MatMul",name))
 }
 
-Pow <- function(l_op, r_op, name="Pow"){
+#' @title Pow Op
+#'
+#' @description Initializes an Pow op in the graph
+#' 
+#' @param l_op Input node
+#' @param r_op Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
+Pow <- function(l_op, r_op, name="Pow") {
   
   if(identical(name,"Pow")){
     name <- generateUniqueName(op_name = name)
@@ -63,7 +137,15 @@ Pow <- function(l_op, r_op, name="Pow"){
   return (getBinaryOp(l_op,r_op,"Pow",name))
 }
 
-Neg <- function(inp, name="Neg"){
+#' @title Neg Op
+#'
+#' @description Initializes an Neg op in the graph
+#' 
+#' @param inp Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
+Neg <- function(inp, name="Neg") {
   
   if(identical(name,"Add")){
     name <- generateUniqueName(op_name = name)
@@ -72,10 +154,3 @@ Neg <- function(inp, name="Neg"){
   return (getUnaryOp(inp,"Neg", name))
 }
 
-fetchOutput <- function(dtype="int32"){
-  
-  output <- getOutput(dtype);
-  output_array <- array(data = output$val, dim = output$dim)
-  
-  return (output_array)
-} 

@@ -5,13 +5,13 @@
 
 using namespace Rcpp;
 
-// instantiateSessionVariables
-int instantiateSessionVariables();
-RcppExport SEXP rtensorflow_instantiateSessionVariables() {
+// initializeSessionVariables
+int initializeSessionVariables();
+RcppExport SEXP rtensorflow_initializeSessionVariables() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(instantiateSessionVariables());
+    rcpp_result_gen = Rcpp::wrap(initializeSessionVariables());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -135,12 +135,12 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// printOpList
-void printOpList();
-RcppExport SEXP rtensorflow_printOpList() {
+// printNodeList
+void printNodeList();
+RcppExport SEXP rtensorflow_printNodeList() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    printOpList();
+    printNodeList();
     return R_NilValue;
 END_RCPP
 }
@@ -155,7 +155,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"rtensorflow_instantiateSessionVariables", (DL_FUNC) &rtensorflow_instantiateSessionVariables, 0},
+    {"rtensorflow_initializeSessionVariables", (DL_FUNC) &rtensorflow_initializeSessionVariables, 0},
     {"rtensorflow_loadGraphFromFile", (DL_FUNC) &rtensorflow_loadGraphFromFile, 1},
     {"rtensorflow_setFeedInput", (DL_FUNC) &rtensorflow_setFeedInput, 4},
     {"rtensorflow_setOutput", (DL_FUNC) &rtensorflow_setOutput, 1},
@@ -166,7 +166,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_getConstant", (DL_FUNC) &rtensorflow_getConstant, 4},
     {"rtensorflow_getUnaryOp", (DL_FUNC) &rtensorflow_getUnaryOp, 3},
     {"rtensorflow_getBinaryOp", (DL_FUNC) &rtensorflow_getBinaryOp, 4},
-    {"rtensorflow_printOpList", (DL_FUNC) &rtensorflow_printOpList, 0},
+    {"rtensorflow_printNodeList", (DL_FUNC) &rtensorflow_printNodeList, 0},
     {"rtensorflow_locateError", (DL_FUNC) &rtensorflow_locateError, 0},
     {NULL, NULL, 0}
 };

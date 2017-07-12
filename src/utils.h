@@ -15,7 +15,7 @@ template<typename T> void tensor_deallocator (void* data, size_t length, void* a
 
 TF_Buffer* read_file (const char* path);
 
-void deleteInputValues();
+void resetInputValues();
 
 void resetOutputValues ();
 

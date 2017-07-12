@@ -10,7 +10,7 @@
 
 import_run_graph <- function(path, feed){
   
-  instantiateSessionVariables()
+  initializeSessionVariables()
   loadGraphFromFile(path)
   feedInput("input", feed,dim=c(1,3), dtype="int32")
   setOutput("output")
@@ -29,9 +29,9 @@ import_run_graph <- function(path, feed){
 
 build_run_graph <- function(feed, dtype="int32") {
   
-  instantiateSessionVariables()
+  initializeSessionVariables()
   
-  input <- Placeholder(name="input", dtype=dtype)
+  input <- Placeholder(dtype=dtype, name="input")
 
   w1 <- Constant(rep(1,12), dim = c(3,4), dtype = dtype)
   b1 <- Constant(rep(1,4), dim = c(4), dtype = dtype)
@@ -54,9 +54,12 @@ build_run_graph <- function(feed, dtype="int32") {
   return(output)
 }
 
+#' @title Build an Add graph
+#' @description Function to build and run graph using C API
+#' @return Output Value of Network 
 add_graph <- function() {
   
-  instantiateSessionVariables()
+  initializeSessionVariables()
   
   a <- Constant(c(1,2,3,4), dtype="int32")
   b <- Constant(c(1), dim=c(1), dtype="int32")
