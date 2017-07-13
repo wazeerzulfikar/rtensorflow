@@ -7,11 +7,11 @@
 runSession(op_name)
 }
 \arguments{
-\item{op_name}{Node to be set as output to graph}
+\item{op_name}{Node to be set as output of graph}
 }
 \value{
 Multidimensional output matrix
 }
 \description{
-Runs the Tensorflow session
+Runs the current Tensorflow session
 }

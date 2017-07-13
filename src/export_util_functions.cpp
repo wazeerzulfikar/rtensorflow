@@ -8,7 +8,6 @@ TF_SessionOptions* options;
 TF_Session* session;
 std::map <string, TF_Operation*> op_list;
 
-
 //' @title Initialize Session Variables
 //' 
 //' @description Initializes all global variables and allocate space for each
@@ -73,10 +72,8 @@ int loadGraphFromFile(std::string path) {
 //' 
 //' @description Sets the input node of graph, and feeds a tensor to it
 //' 
-//' @param op_name Op name (Node) to be set as input to graph
+//' @param op_name Op name (Node) to which tensor must be fed to graph
 //' @param inp Vector to be fed to graph
-//' @param dim Vector indicating dimensions of inp
-//' @param dtype Datatype of inp 
 //' 
 //' @return Integer status 
 //' 
@@ -102,37 +99,13 @@ int setFeedInput(std::string op_name, NumericVector inp) {
   return 0;
 }
 
-List fetchOutput(TF_DataType dtype) {
-  NumericVector output_val;
-  if(dtype == 3) {
-    pair<int*, int64_t> out;
-    out = getIntOutput();
-    output_val = NumericVector(out.second);
-    for (int i = 0; i < out.second; ++i){
-      output_val[i] = out.first[i];
-    }
-  } else {
-    pair<double*, int64_t> out;
-    out = getDoubleOutput();
-    output_val = NumericVector(out.second);
-    for (int i = 0; i < out.second; ++i) {
-      output_val[i] = out.first[i];
-    }
-  }
-  List output;
-  output["val"] = output_val;
-  output["dim"] = getOutputDimensions();
-  return output;
-}
-
-//' @title Run Session
+//' @title Run Internal Session
 //' 
 //' @description Runs the Current Session
 //' 
-//' @return Integer status
+//' @param op_name Node to be set as output of graph
 //' 
-//' @examples
-//' runSession()
+//' @return R List containing output tensor and dimensions
 //' 
 // [[Rcpp::export]]
 List runInternalSession(std::string op_name) {
@@ -189,6 +162,7 @@ int deleteSessionVariables() {
 //' 
 //' @description Adds a placeholder operation to the graph
 //' 
+//' @param shape Shape of Tensor
 //' @param dtype Datatype of input
 //' @param unique_name Unique name for the node
 //' 
@@ -197,7 +171,7 @@ int deleteSessionVariables() {
 // [[Rcpp::export]]
 std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::string unique_name) {
   pair<string, TF_Operation*> op;
-  op = Placeholder("Placeholder", unique_name, shape, dtype, graph, status);
+  op = Placeholder("Placeholder", unique_name, shape, getDataType(dtype), graph, status);
   op_list.emplace(op.first, op.second);
   return op.first;
 }
@@ -215,7 +189,7 @@ std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::s
 //' 
 // [[Rcpp::export]]
 std::string getConstant(NumericVector val, std::vector<int64_t> dim, std::string dtype, std::string unique_name) {
-  TF_Tensor* val_t = parseCustomInputs(val, dim, dtype);
+  TF_Tensor* val_t = parseInputs(val, dim, getDataType(dtype));
   pair<string, TF_Operation*> op;
   op = Constant("Const", unique_name, val_t, graph, status);
   op_list.emplace(op.first, op.second);

@@ -4,9 +4,11 @@
 \alias{getPlaceholder}
 \title{Placeholder}
 \usage{
-getPlaceholder(dtype, unique_name)
+getPlaceholder(shape, dtype, unique_name)
 }
 \arguments{
+\item{shape}{Shape of Tensor}
+
 \item{dtype}{Datatype of input}
 
 \item{unique_name}{Unique name for the node}

@@ -20,10 +20,8 @@ generateUniqueName <- function(extra_length=5, op_name="") {
 #'
 #' @description Easy-to-use wrapper for setFeedInput
 #' 
-#' @param input_node Node to be set as input to graph
+#' @param input_node Node to which tensor must be fed to graph
 #' @param feed Vector to be fed as input to the graph
-#' @param dim Vector indicating dimensions of feed
-#' @param dtype Datatype of feed
 #' 
 #' @return Integer status
 feedInput <- function(input_node, feed) {
@@ -32,9 +30,9 @@ feedInput <- function(input_node, feed) {
 
 #' @title Run Session
 #'
-#' @description Runs the Tensorflow session
+#' @description Runs the current Tensorflow session
 #' 
-#' @param op_name Node to be set as output to graph
+#' @param op_name Node to be set as output of graph
 #' 
 #' @return Multidimensional output matrix
 runSession <- function(op_name) {
@@ -50,7 +48,8 @@ runSession <- function(op_name) {
 #'
 #' @description  Easy-to-use wrapper for getPlaceholder
 #' 
-#' @param dtype Datatype of feed
+#' @param shape Shape of Tensor
+#' @param dtype Datatype of Tensor
 #' @param name Optional custom name for node
 #' 
 #' @return Unique name of node

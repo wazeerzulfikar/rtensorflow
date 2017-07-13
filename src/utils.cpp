@@ -86,7 +86,13 @@ void setOutputs(std::vector<TF_Operation*> outputs) {
   output_values_.resize(outputs_.size(), nullptr);
 }
 
-template <typename T> TF_Tensor* getTensor(T* arr, std::vector<int64_t> dimensions) {
+TF_DataType getDataType (string dtype) {
+  if (dtype=="int32") return TF_INT32;
+  else if (dtype=="double") return TF_DOUBLE;
+  return TF_FLOAT;
+}
+
+template <typename T> TF_Tensor* getTensor(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
   int no_dims = dimensions.size();
   int64_t length=1;
   int64_t* dim = new int64_t[dimensions.size()];
@@ -94,49 +100,23 @@ template <typename T> TF_Tensor* getTensor(T* arr, std::vector<int64_t> dimensio
     length *= dimensions.at(i);
     dim[i] = dimensions.at(i);
   }
-  int numBytes;
-  TF_DataType DT;
-  if (typeid(T)==typeid(int)) {
-    DT = TF_INT32;
-    numBytes = sizeof(int);
-  } else {
-    DT = TF_DOUBLE;
-    numBytes = sizeof(double);
+  
+  T* c_inp = new T[inp.size()];
+  for (int iter=0; iter < inp.size(); ++iter) {
+    c_inp[iter] = inp[iter];
   }
+
   return TF_NewTensor(
-    DT, dim, no_dims, arr, numBytes*length,
+    dtype, dim, no_dims, c_inp, sizeof(T)*length,
     &tensor_deallocator<T>,
     nullptr);
 }
 
 TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
   if (dtype==3) {
-   int* c_inp = new int[inp.size()];
-    for (int iter=0; iter < inp.size(); ++iter) {
-      c_inp[iter] = static_cast<int> (inp[iter]);
-    }
-    return getTensor<int>(c_inp,dimensions);
+    return getTensor<int>(inp, dimensions, dtype);
   } else {
-    double* c_inp = new double[inp.size()];
-    for(int iter=0;iter<inp.size();iter++){
-      c_inp[iter] = inp[iter];
-    }
-    return getTensor<double>(c_inp, dimensions);
-  }
-}
-TF_Tensor* parseCustomInputs(NumericVector inp, std::vector<int64_t> dimensions, string dtype) {
-  if (dtype=="int32") {
-   int* c_inp = new int[inp.size()];
-    for (int iter=0; iter < inp.size(); ++iter) {
-      c_inp[iter] = static_cast<int> (inp[iter]);
-    }
-    return getTensor<int>(c_inp,dimensions);
-  } else {
-    double* c_inp = new double[inp.size()];
-    for(int iter=0;iter<inp.size();iter++){
-      c_inp[iter] = inp[iter];
-    }
-    return getTensor<double>(c_inp, dimensions);
+    return getTensor<double>(inp, dimensions,dtype);
   }
 }
 
@@ -146,18 +126,11 @@ TF_Tensor* ones(std::vector<int64_t> dimensions) {
   for (int i = 0; i < dimensions.size(); ++i) {
     length *= dimensions.at(i);
   }
-  int* arr = new int[length];
-  for (int i = 0; i < length; ++i) {
+  NumericVector arr;
+    for (int i = 0; i < length; ++i) {
     arr[i] = 1;
   }
-  return getTensor<int>(arr, dimensions);
-}
-
-TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph) {
-  const char* op_name_ptr = op_name.c_str();
-  TF_Operation* output = TF_GraphOperationByName(graph, op_name_ptr);
-  setOutputs({output});
-  return output;
+  return getTensor<int>(arr, dimensions, TF_INT32);
 }
 
 void setPointers() {
@@ -193,20 +166,6 @@ template <typename T> pair<T*, int64_t> getOutputs() {
   return {(T*) output_contents,length};
 }
 
-pair<int*,int64_t> getIntOutput() {
-  pair<int*,int64_t> output_val;
-  output_val =  getOutputs<int>();
-  
-  return output_val;
-}
-
-pair<double*, int64_t> getDoubleOutput() { 
-  pair<double*,int64_t> output_val;
-  output_val =  getOutputs<double>();
-
-  return output_val;
-}
-
 std::vector<int64_t> getOutputDimensions() {
   TF_Tensor* out = output_values_[0];
   std::vector<int64_t> dim(TF_NumDims(out));
@@ -216,21 +175,47 @@ std::vector<int64_t> getOutputDimensions() {
   for (int i = 0; i < TF_NumDims(out); ++i) {
     dim [i]= TF_Dim(out,i);
   }
+  
   return dim;
 }
 
+TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph) {
+  const char* op_name_ptr = op_name.c_str();
+  TF_Operation* output = TF_GraphOperationByName(graph, op_name_ptr);
+  setOutputs({output});
+  return output;
+}
+
+List fetchOutput(TF_DataType dtype) {
+  NumericVector output_val;
+  if(dtype == 3) {
+    pair<int*, int64_t> out;
+    out = getOutputs<int>();
+    output_val = NumericVector(out.second);
+    for (int i = 0; i < out.second; ++i){
+      output_val[i] = out.first[i];
+    }
+  } else {
+    pair<double*, int64_t> out;
+    out = getOutputs<double>();
+    output_val = NumericVector(out.second);
+    for (int i = 0; i < out.second; ++i) {
+      output_val[i] = out.first[i];
+    }
+  }
+  List output;
+  output["val"] = output_val;
+  output["dim"] = getOutputDimensions();
+  return output;
+}
+
+
 // Operation Helpers
 
-pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vector<int64_t> shape, string dtype, TF_Graph* graph, TF_Status* status) {
+pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vector<int64_t> shape, TF_DataType dtype, TF_Graph* graph, TF_Status* status) {
   
   TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name.c_str());
-  
-  if (dtype=="int32") {
-    TF_SetAttrType(desc, "dtype", TF_INT32);
-  } else {
-    TF_SetAttrType(desc, "dtype", TF_DOUBLE);
-  }
-  
+  TF_SetAttrType(desc, "dtype", dtype);
   int64_t* dim = new int64_t[shape.size()];
   
   for (int i = 0; i < shape.size(); ++i) {
@@ -238,7 +223,6 @@ pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vect
   }
   
   TF_SetAttrShape(desc, "shape", dim, shape.size());
-  
   TF_Operation* op = TF_FinishOperation(desc, status);
   
   return {unique_name,op};

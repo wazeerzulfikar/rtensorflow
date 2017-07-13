@@ -4,16 +4,12 @@
 \alias{setFeedInput}
 \title{Feed Input Ops}
 \usage{
-setFeedInput(op_name, inp, dim)
+setFeedInput(op_name, inp)
 }
 \arguments{
-\item{op_name}{Op name (Node) to be set as input to graph}
+\item{op_name}{Op name (Node) to which tensor must be fed to graph}
 
 \item{inp}{Vector to be fed to graph}
-
-\item{dim}{Vector indicating dimensions of inp}
-
-\item{dtype}{Datatype of inp}
 }
 \value{
 Integer status

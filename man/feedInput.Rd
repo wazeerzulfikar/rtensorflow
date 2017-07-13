@@ -4,16 +4,12 @@
 \alias{feedInput}
 \title{Feed Input}
 \usage{
-feedInput(input_node, feed, dim = c(length(feed)))
+feedInput(input_node, feed)
 }
 \arguments{
-\item{input_node}{Node to be set as input to graph}
+\item{input_node}{Node to which tensor must be fed to graph}
 
 \item{feed}{Vector to be fed as input to the graph}
-
-\item{dim}{Vector indicating dimensions of feed}
-
-\item{dtype}{Datatype of feed}
 }
 \value{
 Integer status

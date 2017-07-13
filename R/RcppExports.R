@@ -33,10 +33,8 @@ loadGraphFromFile <- function(path) {
 #' 
 #' @description Sets the input node of graph, and feeds a tensor to it
 #' 
-#' @param op_name Op name (Node) to be set as input to graph
+#' @param op_name Op name (Node) to which tensor must be fed to graph
 #' @param inp Vector to be fed to graph
-#' @param dim Vector indicating dimensions of inp
-#' @param dtype Datatype of inp 
 #' 
 #' @return Integer status 
 #' 
@@ -44,14 +42,13 @@ setFeedInput <- function(op_name, inp) {
     .Call('rtensorflow_setFeedInput', PACKAGE = 'rtensorflow', op_name, inp)
 }
 
-#' @title Run Session
+#' @title Run Internal Session
 #' 
 #' @description Runs the Current Session
 #' 
-#' @return Integer status
+#' @param op_name Node to be set as output of graph
 #' 
-#' @examples
-#' runSession()
+#' @return R List containing output tensor and dimensions
 #' 
 runInternalSession <- function(op_name) {
     .Call('rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_name)
@@ -75,6 +72,7 @@ deleteSessionVariables <- function() {
 #' 
 #' @description Adds a placeholder operation to the graph
 #' 
+#' @param shape Shape of Tensor
 #' @param dtype Datatype of input
 #' @param unique_name Unique name for the node
 #' 

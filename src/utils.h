@@ -23,15 +23,13 @@ void setInputs (std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs);
 
 void setOutputs(std::vector<TF_Operation*> outputs);
 
-template<typename T> TF_Tensor* getTensor(T* arr, std::vector<int64_t> dimensions);
+TF_DataType getDataType (string dtype);
+
+template<typename T> TF_Tensor* getTensor(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype);
 
 TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype);
 
-TF_Tensor* parseCustomInputs(NumericVector inp, std::vector<int64_t> dimensions, string dtype);
-
 TF_Tensor* ones(std::vector<int64_t> dimensions);
-
-TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph);
 
 void setPointers();
 
@@ -39,15 +37,15 @@ void runSession(TF_Session* session, TF_Status* status);
 
 template <typename T> std::pair<T*, int64_t> getOutputs();
 
-std::pair<int*, int64_t> getIntOutput();
-
-std::pair<double*, int64_t> getDoubleOutput();
-
 std::vector<int64_t> getOutputDimensions();
+
+TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph);
+
+List fetchOutput(TF_DataType dtype);
   
 // Operation Helpers
 
-std::pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vector<int64_t> shape, string dtype, TF_Graph* graph, TF_Status* status);
+std::pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vector<int64_t> shape, TF_DataType dtype, TF_Graph* graph, TF_Status* status);
 
 std::pair<string, TF_Operation*> Constant(string op_name, string unique_name, TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
 

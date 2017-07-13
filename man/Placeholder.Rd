@@ -4,10 +4,12 @@
 \alias{Placeholder}
 \title{Placeholder Wrapper}
 \usage{
-Placeholder(dtype = "int32", name = "Placeholder")
+Placeholder(shape, dtype = "int32", name = "Placeholder")
 }
 \arguments{
-\item{dtype}{Datatype of feed}
+\item{shape}{Shape of Tensor}
+
+\item{dtype}{Datatype of Tensor}
 
 \item{name}{Optional custom name for node}
 }

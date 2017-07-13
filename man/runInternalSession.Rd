@@ -2,17 +2,16 @@
 % Please edit documentation in R/RcppExports.R
 \name{runInternalSession}
 \alias{runInternalSession}
-\title{Run Session}
+\title{Run Internal Session}
 \usage{
 runInternalSession(op_name)
 }
+\arguments{
+\item{op_name}{Node to be set as output of graph}
+}
 \value{
-Integer status
+R List containing output tensor and dimensions
 }
 \description{
 Runs the Current Session
-}
-\examples{
-runSession()
-
 }
