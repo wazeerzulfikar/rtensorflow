@@ -221,15 +221,23 @@ std::vector<int64_t> getOutputDimensions() {
 
 // Operation Helpers
 
-pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, string dtype, TF_Graph* graph, TF_Status* status) {
+pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vector<int64_t> shape, string dtype, TF_Graph* graph, TF_Status* status) {
   
   TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name.c_str());
   
   if (dtype=="int32") {
-    TF_SetAttrType(desc,"dtype",TF_INT32);
+    TF_SetAttrType(desc, "dtype", TF_INT32);
   } else {
-    TF_SetAttrType(desc,"dtype",TF_DOUBLE);
+    TF_SetAttrType(desc, "dtype", TF_DOUBLE);
   }
+  
+  int64_t* dim = new int64_t[shape.size()];
+  
+  for (int i = 0; i < shape.size(); ++i) {
+    dim[i] = shape.at(i);
+  }
+  
+  TF_SetAttrShape(desc, "shape", dim, shape.size());
   
   TF_Operation* op = TF_FinishOperation(desc, status);
   

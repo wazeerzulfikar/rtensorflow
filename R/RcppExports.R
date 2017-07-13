@@ -40,8 +40,8 @@ loadGraphFromFile <- function(path) {
 #' 
 #' @return Integer status 
 #' 
-setFeedInput <- function(op_name, inp, dim) {
-    .Call('rtensorflow_setFeedInput', PACKAGE = 'rtensorflow', op_name, inp, dim)
+setFeedInput <- function(op_name, inp) {
+    .Call('rtensorflow_setFeedInput', PACKAGE = 'rtensorflow', op_name, inp)
 }
 
 #' @title Run Session
@@ -80,8 +80,8 @@ deleteSessionVariables <- function() {
 #' 
 #' @return Unique node name
 #' 
-getPlaceholder <- function(dtype, unique_name) {
-    .Call('rtensorflow_getPlaceholder', PACKAGE = 'rtensorflow', dtype, unique_name)
+getPlaceholder <- function(shape, dtype, unique_name) {
+    .Call('rtensorflow_getPlaceholder', PACKAGE = 'rtensorflow', shape, dtype, unique_name)
 }
 
 #' @title Constant

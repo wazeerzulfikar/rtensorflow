@@ -81,12 +81,21 @@ int loadGraphFromFile(std::string path) {
 //' @return Integer status 
 //' 
 // [[Rcpp::export]]
-int setFeedInput(std::string op_name, NumericVector inp, std::vector<int64_t> dim) {
+int setFeedInput(std::string op_name, NumericVector inp) {
   const char* op_name_ptr = op_name.c_str();
   TF_Operation* input = TF_GraphOperationByName(graph, op_name_ptr);
+  
   TF_DataType dtype = TF_OperationOutputType({input,0});
-
-  TF_Tensor* feed = parseInputs(inp,dim,dtype);
+  
+  int num_dims = TF_GraphGetTensorNumDims(graph, {input, 0}, status);
+  int64_t* shape = new int64_t[num_dims];
+  TF_GraphGetTensorShape(graph, {input,0}, shape,num_dims, status);
+  
+  vector<int64_t> shape_vector;
+  for (int i=0; i < num_dims; ++i){
+    shape_vector.emplace_back(shape[i]);
+  }
+  TF_Tensor* feed = parseInputs(inp,shape_vector,dtype);
   
   setInputs({{input,feed}});
   
@@ -186,9 +195,9 @@ int deleteSessionVariables() {
 //' @return Unique node name
 //' 
 // [[Rcpp::export]]
-std::string getPlaceholder(std::string dtype, std::string unique_name) {
+std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::string unique_name) {
   pair<string, TF_Operation*> op;
-  op = Placeholder("Placeholder", unique_name, dtype, graph, status);
+  op = Placeholder("Placeholder", unique_name, shape, dtype, graph, status);
   op_list.emplace(op.first, op.second);
   return op.first;
 }

@@ -27,15 +27,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // setFeedInput
-int setFeedInput(std::string op_name, NumericVector inp, std::vector<int64_t> dim);
-RcppExport SEXP rtensorflow_setFeedInput(SEXP op_nameSEXP, SEXP inpSEXP, SEXP dimSEXP) {
+int setFeedInput(std::string op_name, NumericVector inp);
+RcppExport SEXP rtensorflow_setFeedInput(SEXP op_nameSEXP, SEXP inpSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    Rcpp::traits::input_parameter< std::vector<int64_t> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(setFeedInput(op_name, inp, dim));
+    rcpp_result_gen = Rcpp::wrap(setFeedInput(op_name, inp));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -61,14 +60,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // getPlaceholder
-std::string getPlaceholder(std::string dtype, std::string unique_name);
-RcppExport SEXP rtensorflow_getPlaceholder(SEXP dtypeSEXP, SEXP unique_nameSEXP) {
+std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::string unique_name);
+RcppExport SEXP rtensorflow_getPlaceholder(SEXP shapeSEXP, SEXP dtypeSEXP, SEXP unique_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<int64_t> >::type shape(shapeSEXP);
     Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
     Rcpp::traits::input_parameter< std::string >::type unique_name(unique_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(getPlaceholder(dtype, unique_name));
+    rcpp_result_gen = Rcpp::wrap(getPlaceholder(shape, dtype, unique_name));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -135,10 +135,10 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_initializeSessionVariables", (DL_FUNC) &rtensorflow_initializeSessionVariables, 0},
     {"rtensorflow_loadGraphFromFile", (DL_FUNC) &rtensorflow_loadGraphFromFile, 1},
-    {"rtensorflow_setFeedInput", (DL_FUNC) &rtensorflow_setFeedInput, 3},
+    {"rtensorflow_setFeedInput", (DL_FUNC) &rtensorflow_setFeedInput, 2},
     {"rtensorflow_runInternalSession", (DL_FUNC) &rtensorflow_runInternalSession, 1},
     {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
-    {"rtensorflow_getPlaceholder", (DL_FUNC) &rtensorflow_getPlaceholder, 2},
+    {"rtensorflow_getPlaceholder", (DL_FUNC) &rtensorflow_getPlaceholder, 3},
     {"rtensorflow_getConstant", (DL_FUNC) &rtensorflow_getConstant, 4},
     {"rtensorflow_getUnaryOp", (DL_FUNC) &rtensorflow_getUnaryOp, 3},
     {"rtensorflow_getBinaryOp", (DL_FUNC) &rtensorflow_getBinaryOp, 4},

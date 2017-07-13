@@ -12,7 +12,7 @@ import_run_graph <- function(path, feed){
   
   initializeSessionVariables()
   loadGraphFromFile(path)
-  feedInput("input", feed,dim=c(1,3))
+  feedInput("input", feed)
   output <- runSession("output")
   
   deleteSessionVariables()
@@ -30,7 +30,7 @@ build_run_graph <- function(feed, dtype="int32") {
   
   initializeSessionVariables()
   
-  input <- Placeholder(dtype=dtype, name="input")
+  input <- Placeholder(c(1,3),dtype=dtype, name="input")
 
   w1 <- Constant(rep(1,12), dim = c(3,4), dtype = dtype)
   b1 <- Constant(rep(1,4), dim = c(4), dtype = dtype)
@@ -42,7 +42,7 @@ build_run_graph <- function(feed, dtype="int32") {
   output_matmul <- MatMul(hidden, w2)
   output <- Add(output_matmul, b2)
   
-  feedInput(input, feed, dim = c(1,3))
+  feedInput(input, feed)
   output <- runSession(output)
   
   deleteSessionVariables()

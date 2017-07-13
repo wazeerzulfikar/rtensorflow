@@ -26,8 +26,8 @@ generateUniqueName <- function(extra_length=5, op_name="") {
 #' @param dtype Datatype of feed
 #' 
 #' @return Integer status
-feedInput <- function(input_node, feed, dim = c(length(feed))) {
-  return (setFeedInput(input_node, feed, dim))
+feedInput <- function(input_node, feed) {
+  return (setFeedInput(input_node, feed))
 }
 
 #' @title Run Session
@@ -54,13 +54,13 @@ runSession <- function(op_name) {
 #' @param name Optional custom name for node
 #' 
 #' @return Unique name of node
-Placeholder <- function(dtype="int32", name="Placeholder") {
+Placeholder <- function(shape, dtype="int32", name="Placeholder") {
   
   if(identical(name,"Placeholder")){
     name <- generateUniqueName(op_name = name)
   }
   
-  return (getPlaceholder(dtype,name))
+  return (getPlaceholder(shape,dtype,name))
 }
 
 #' @title Constant Wrapper

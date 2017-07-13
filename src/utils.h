@@ -47,7 +47,7 @@ std::vector<int64_t> getOutputDimensions();
   
 // Operation Helpers
 
-std::pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, string dtype, TF_Graph* graph, TF_Status* status);
+std::pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vector<int64_t> shape, string dtype, TF_Graph* graph, TF_Status* status);
 
 std::pair<string, TF_Operation*> Constant(string op_name, string unique_name, TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
 
