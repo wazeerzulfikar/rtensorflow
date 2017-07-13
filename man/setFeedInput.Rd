@@ -4,7 +4,7 @@
 \alias{setFeedInput}
 \title{Feed Input Ops}
 \usage{
-setFeedInput(op_name, inp, dim, dtype)
+setFeedInput(op_name, inp, dim)
 }
 \arguments{
 \item{op_name}{Op name (Node) to be set as input to graph}

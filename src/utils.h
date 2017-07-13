@@ -25,9 +25,13 @@ void setOutputs(std::vector<TF_Operation*> outputs);
 
 template<typename T> TF_Tensor* getTensor(T* arr, std::vector<int64_t> dimensions);
 
-TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, string dtype="int32");
+TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype);
+
+TF_Tensor* parseCustomInputs(NumericVector inp, std::vector<int64_t> dimensions, string dtype);
 
 TF_Tensor* ones(std::vector<int64_t> dimensions);
+
+TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph);
 
 void setPointers();
 

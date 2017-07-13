@@ -26,24 +26,23 @@ generateUniqueName <- function(extra_length=5, op_name="") {
 #' @param dtype Datatype of feed
 #' 
 #' @return Integer status
-feedInput <- function(input_node, feed, dim = c(length(feed)), dtype="int32") {
-  return (setFeedInput(input_node, feed, dim, dtype))
+feedInput <- function(input_node, feed, dim = c(length(feed))) {
+  return (setFeedInput(input_node, feed, dim))
 }
 
-#' @title Fetch Output
+#' @title Run Session
 #'
-#' @description Easy-to-use wrapper for getOutput
+#' @description Runs the Tensorflow session
 #' 
-#' @param dtype Datatype of output
+#' @param op_name Node to be set as output to graph
 #' 
-#' @return Output Array
-fetchOutput <- function(dtype="int32") {
-  
-  output <- getOutput(dtype);
+#' @return Multidimensional output matrix
+runSession <- function(op_name) {
+  output <- runInternalSession(op_name);
   output_array <- array(data = output$val, dim = output$dim)
   
   return (output_array)
-} 
+}
 
 # Wrappers to create mathematical ops for graph
 

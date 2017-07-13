@@ -4,7 +4,7 @@
 \alias{feedInput}
 \title{Feed Input}
 \usage{
-feedInput(input_node, feed, dim = c(length(feed)), dtype = "int32")
+feedInput(input_node, feed, dim = c(length(feed)))
 }
 \arguments{
 \item{input_node}{Node to be set as input to graph}

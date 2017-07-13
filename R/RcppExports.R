@@ -40,20 +40,8 @@ loadGraphFromFile <- function(path) {
 #' 
 #' @return Integer status 
 #' 
-setFeedInput <- function(op_name, inp, dim, dtype) {
-    .Call('rtensorflow_setFeedInput', PACKAGE = 'rtensorflow', op_name, inp, dim, dtype)
-}
-
-#' @title Set Output Ops
-#' 
-#' @description Sets the output node of the graph
-#' 
-#' @param op_name Op name (Node) to be set as output
-#' 
-#' @return Integer status 
-#' 
-setOutput <- function(op_name) {
-    .Call('rtensorflow_setOutput', PACKAGE = 'rtensorflow', op_name)
+setFeedInput <- function(op_name, inp, dim) {
+    .Call('rtensorflow_setFeedInput', PACKAGE = 'rtensorflow', op_name, inp, dim)
 }
 
 #' @title Run Session
@@ -65,20 +53,8 @@ setOutput <- function(op_name) {
 #' @examples
 #' runSession()
 #' 
-runSession <- function() {
-    .Call('rtensorflow_runSession', PACKAGE = 'rtensorflow')
-}
-
-#' @title Fetch Output
-#' 
-#' @description Fetches output of graph after running session
-#' 
-#' @param dtype Datatype to be fetched from output node
-#' 
-#' @return List containing output vector and its dimensions
-#' 
-getOutput <- function(dtype) {
-    .Call('rtensorflow_getOutput', PACKAGE = 'rtensorflow', dtype)
+runInternalSession <- function(op_name) {
+    .Call('rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_name)
 }
 
 #' @title Close and Delete Session Variables

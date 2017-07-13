@@ -81,10 +81,11 @@ int loadGraphFromFile(std::string path) {
 //' @return Integer status 
 //' 
 // [[Rcpp::export]]
-int setFeedInput(std::string op_name, NumericVector inp, std::vector<int64_t> dim, std::string dtype) {
+int setFeedInput(std::string op_name, NumericVector inp, std::vector<int64_t> dim) {
   const char* op_name_ptr = op_name.c_str();
   TF_Operation* input = TF_GraphOperationByName(graph, op_name_ptr);
-  
+  TF_DataType dtype = TF_OperationOutputType({input,0});
+
   TF_Tensor* feed = parseInputs(inp,dim,dtype);
   
   setInputs({{input,feed}});
@@ -92,68 +93,9 @@ int setFeedInput(std::string op_name, NumericVector inp, std::vector<int64_t> di
   return 0;
 }
 
-//' @title Set Output Ops
-//' 
-//' @description Sets the output node of the graph
-//' 
-//' @param op_name Op name (Node) to be set as output
-//' 
-//' @return Integer status 
-//' 
-// [[Rcpp::export]]
-int setOutput(std::string op_name) {
-  const char* op_name_ptr = op_name.c_str();
-  TF_Operation* output = TF_GraphOperationByName(graph, op_name_ptr);
-  
-  setOutputs({output});
-  return 0;
-}
-
-//' @title Run Session
-//' 
-//' @description Runs the Current Session
-//' 
-//' @return Integer status
-//' 
-//' @examples
-//' runSession()
-//' 
-// [[Rcpp::export]]
-int runSession() {
-  cout << "Running the Session.. " << endl;
-  setPointers();
-  
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error running session" << endl;
-    cout << TF_Message(status) << endl;
-    return -1;
-  }
-  
-  runSession(session,status);
-  
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error running session" << endl;
-    cout << TF_Message(status) << endl;
-    return -1;
-  }
-  
-  TF_CloseSession(session, status);
-  
-  return 0;
-}
-
-//' @title Fetch Output
-//' 
-//' @description Fetches output of graph after running session
-//' 
-//' @param dtype Datatype to be fetched from output node
-//' 
-//' @return List containing output vector and its dimensions
-//' 
-// [[Rcpp::export]]
-List getOutput(std::string dtype) {
+List fetchOutput(TF_DataType dtype) {
   NumericVector output_val;
-  if(dtype == "int32") {
+  if(dtype == 3) {
     pair<int*, int64_t> out;
     out = getIntOutput();
     output_val = NumericVector(out.second);
@@ -172,6 +114,41 @@ List getOutput(std::string dtype) {
   output["val"] = output_val;
   output["dim"] = getOutputDimensions();
   return output;
+}
+
+//' @title Run Session
+//' 
+//' @description Runs the Current Session
+//' 
+//' @return Integer status
+//' 
+//' @examples
+//' runSession()
+//' 
+// [[Rcpp::export]]
+List runInternalSession(std::string op_name) {
+  cout << "Running the Session.. " << endl;
+  
+  TF_Operation* output = setOutputNode(op_name, graph);
+  TF_DataType dtype = TF_OperationOutputType({output,0});
+  
+  setPointers();
+  
+  if (TF_GetCode(status)!=TF_OK) {
+    cout << "Error in graph" << endl;
+    cout << TF_Message(status) << endl;
+    return -1;
+  }
+  
+  runSession(session,status);
+  
+  if (TF_GetCode(status)!=TF_OK) {
+    cout << "Error running session" << endl;
+    cout << TF_Message(status) << endl;
+    return -1;
+  }
+  
+  return fetchOutput(dtype);
 }
 
 //' @title Close and Delete Session Variables
@@ -229,7 +206,7 @@ std::string getPlaceholder(std::string dtype, std::string unique_name) {
 //' 
 // [[Rcpp::export]]
 std::string getConstant(NumericVector val, std::vector<int64_t> dim, std::string dtype, std::string unique_name) {
-  TF_Tensor* val_t = parseInputs(val, dim, dtype);
+  TF_Tensor* val_t = parseCustomInputs(val, dim, dtype);
   pair<string, TF_Operation*> op;
   op = Constant("Const", unique_name, val_t, graph, status);
   op_list.emplace(op.first, op.second);

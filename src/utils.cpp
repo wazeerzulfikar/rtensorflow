@@ -109,7 +109,22 @@ template <typename T> TF_Tensor* getTensor(T* arr, std::vector<int64_t> dimensio
     nullptr);
 }
 
-TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, string dtype) {
+TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
+  if (dtype==3) {
+   int* c_inp = new int[inp.size()];
+    for (int iter=0; iter < inp.size(); ++iter) {
+      c_inp[iter] = static_cast<int> (inp[iter]);
+    }
+    return getTensor<int>(c_inp,dimensions);
+  } else {
+    double* c_inp = new double[inp.size()];
+    for(int iter=0;iter<inp.size();iter++){
+      c_inp[iter] = inp[iter];
+    }
+    return getTensor<double>(c_inp, dimensions);
+  }
+}
+TF_Tensor* parseCustomInputs(NumericVector inp, std::vector<int64_t> dimensions, string dtype) {
   if (dtype=="int32") {
    int* c_inp = new int[inp.size()];
     for (int iter=0; iter < inp.size(); ++iter) {
@@ -136,6 +151,13 @@ TF_Tensor* ones(std::vector<int64_t> dimensions) {
     arr[i] = 1;
   }
   return getTensor<int>(arr, dimensions);
+}
+
+TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph) {
+  const char* op_name_ptr = op_name.c_str();
+  TF_Operation* output = TF_GraphOperationByName(graph, op_name_ptr);
+  setOutputs({output});
+  return output;
 }
 
 void setPointers() {

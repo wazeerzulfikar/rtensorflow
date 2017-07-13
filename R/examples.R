@@ -12,10 +12,9 @@ import_run_graph <- function(path, feed){
   
   initializeSessionVariables()
   loadGraphFromFile(path)
-  feedInput("input", feed,dim=c(1,3), dtype="int32")
-  setOutput("output")
-  runSession()
-  output <- fetchOutput()
+  feedInput("input", feed,dim=c(1,3))
+  output <- runSession("output")
+  
   deleteSessionVariables()
   return(output)
   
@@ -43,12 +42,9 @@ build_run_graph <- function(feed, dtype="int32") {
   output_matmul <- MatMul(hidden, w2)
   output <- Add(output_matmul, b2)
   
-  feedInput(input, feed, dim = c(1,3), dtype = dtype)
-  setOutput(output)
-  runSession()
+  feedInput(input, feed, dim = c(1,3))
+  output <- runSession(output)
   
-  output <- fetchOutput(dtype = dtype)
-
   deleteSessionVariables()
   
   return(output)
@@ -68,11 +64,8 @@ add_graph <- function() {
   
   neg <- Neg(add)
   
-  setOutput(neg)
-  runSession()
-
-  output <- fetchOutput()
-
+  output <- runSession(output)
+  
   deleteSessionVariables()
   return (output)
 }

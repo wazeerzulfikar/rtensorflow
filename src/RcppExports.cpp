@@ -27,48 +27,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // setFeedInput
-int setFeedInput(std::string op_name, NumericVector inp, std::vector<int64_t> dim, std::string dtype);
-RcppExport SEXP rtensorflow_setFeedInput(SEXP op_nameSEXP, SEXP inpSEXP, SEXP dimSEXP, SEXP dtypeSEXP) {
+int setFeedInput(std::string op_name, NumericVector inp, std::vector<int64_t> dim);
+RcppExport SEXP rtensorflow_setFeedInput(SEXP op_nameSEXP, SEXP inpSEXP, SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
     Rcpp::traits::input_parameter< std::vector<int64_t> >::type dim(dimSEXP);
-    Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
-    rcpp_result_gen = Rcpp::wrap(setFeedInput(op_name, inp, dim, dtype));
+    rcpp_result_gen = Rcpp::wrap(setFeedInput(op_name, inp, dim));
     return rcpp_result_gen;
 END_RCPP
 }
-// setOutput
-int setOutput(std::string op_name);
-RcppExport SEXP rtensorflow_setOutput(SEXP op_nameSEXP) {
+// runInternalSession
+List runInternalSession(std::string op_name);
+RcppExport SEXP rtensorflow_runInternalSession(SEXP op_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(setOutput(op_name));
-    return rcpp_result_gen;
-END_RCPP
-}
-// runSession
-int runSession();
-RcppExport SEXP rtensorflow_runSession() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(runSession());
-    return rcpp_result_gen;
-END_RCPP
-}
-// getOutput
-List getOutput(std::string dtype);
-RcppExport SEXP rtensorflow_getOutput(SEXP dtypeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
-    rcpp_result_gen = Rcpp::wrap(getOutput(dtype));
+    rcpp_result_gen = Rcpp::wrap(runInternalSession(op_name));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -157,10 +135,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_initializeSessionVariables", (DL_FUNC) &rtensorflow_initializeSessionVariables, 0},
     {"rtensorflow_loadGraphFromFile", (DL_FUNC) &rtensorflow_loadGraphFromFile, 1},
-    {"rtensorflow_setFeedInput", (DL_FUNC) &rtensorflow_setFeedInput, 4},
-    {"rtensorflow_setOutput", (DL_FUNC) &rtensorflow_setOutput, 1},
-    {"rtensorflow_runSession", (DL_FUNC) &rtensorflow_runSession, 0},
-    {"rtensorflow_getOutput", (DL_FUNC) &rtensorflow_getOutput, 1},
+    {"rtensorflow_setFeedInput", (DL_FUNC) &rtensorflow_setFeedInput, 3},
+    {"rtensorflow_runInternalSession", (DL_FUNC) &rtensorflow_runInternalSession, 1},
     {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
     {"rtensorflow_getPlaceholder", (DL_FUNC) &rtensorflow_getPlaceholder, 2},
     {"rtensorflow_getConstant", (DL_FUNC) &rtensorflow_getConstant, 4},
