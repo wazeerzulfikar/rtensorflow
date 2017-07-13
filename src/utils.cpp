@@ -71,7 +71,6 @@ void resetOutputValues() {
 }
 
 void setInputs(std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs) {
-  resetInputValues();
   for (const auto& i : inputs) {
     inputs_.emplace_back(TF_Output{i.first, 0});
     input_values_.emplace_back(i.second);
@@ -79,7 +78,6 @@ void setInputs(std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs) {
 }
 
 void setOutputs(std::vector<TF_Operation*> outputs) {
-  resetOutputValues();
   for (TF_Operation* o : outputs){
     outputs_.emplace_back(TF_Output{o,0});
   }

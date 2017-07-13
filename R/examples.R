@@ -57,14 +57,17 @@ add_graph <- function() {
   
   initializeSessionVariables()
   
-  a <- Constant(c(1,2,3,4), dtype="int32")
-  b <- Constant(c(1), dim=c(1), dtype="int32")
+  a <- Placeholder(c(4), dtype="int32")
+  b <- Placeholder(c(1), dtype="int32")
   
   add <- Add(a,b)
   
   neg <- Neg(add)
   
-  output <- runSession(output)
+  feedInput(a,c(1,2,3,4))
+  feedInput(b,c(2))
+  
+  output <- runSession(neg)
   
   deleteSessionVariables()
   return (output)

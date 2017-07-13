@@ -24,6 +24,9 @@ int initializeSessionVariables() {
   options = TF_NewSessionOptions();
   
   session = TF_NewSession(graph, options, status);
+  
+  resetInputValues();
+  resetOutputValues();
   op_list.clear();
   
   if (TF_GetCode(status)!=TF_OK) {
