@@ -57,17 +57,20 @@ add_graph <- function() {
   
   initializeSessionVariables()
   
-  a <- Placeholder(c(4), dtype="int32")
-  b <- Placeholder(c(1), dtype="int32")
+  a <- Placeholder(c(4), dtype="double")
+  b <- Placeholder(c(1), dtype="double")
+  c <- Constant(c(3,4,3,6), dtype="double")
   
   add <- Add(a,b)
   
   neg <- Neg(add)
   
-  feedInput(a,c(1,2,3,4))
-  feedInput(b,c(2))
+  out <- Sigmoid(add)
   
-  output <- runSession(neg)
+  feedInput(a,c(0.2,0.42,0.13,0.54))
+  feedInput(b,c(0.3))
+  
+  output <- runSession(out)
   
   deleteSessionVariables()
   return (output)

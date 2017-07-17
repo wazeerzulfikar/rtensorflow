@@ -101,7 +101,7 @@ Add <- function(l_op, r_op, name="Add") {
 
 #' @title MatMul Op
 #'
-#' @description Initializes an MatMul op in the graph
+#' @description Initializes a MatMul op in the graph
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
@@ -119,7 +119,7 @@ MatMul <- function(l_op, r_op, name="MatMul") {
 
 #' @title Pow Op
 #'
-#' @description Initializes an Pow op in the graph
+#' @description Initializes a Pow op in the graph
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
@@ -137,7 +137,7 @@ Pow <- function(l_op, r_op, name="Pow") {
 
 #' @title Neg Op
 #'
-#' @description Initializes an Neg op in the graph
+#' @description Initializes a Neg op in the graph
 #' 
 #' @param inp Input node
 #' @param name Optional custom name for node
@@ -145,10 +145,64 @@ Pow <- function(l_op, r_op, name="Pow") {
 #' @return Unique name of node
 Neg <- function(inp, name="Neg") {
   
-  if(identical(name,"Add")){
+  if (identical(name, "Neg")){
     name <- generateUniqueName(op_name = name)
   }
   
-  return (getUnaryOp(inp,"Neg", name))
+  return (getUnaryOp(inp, "Neg", name))
+}
+
+Tanh <- function(inp, name="Tanh") {
+  
+  if (identical(name, "Tanh")){
+    name <- generateUniqueName(op_name = name)
+  }
+  
+  return (getUnaryOp(inp, "Tanh", name))
+}
+
+Sigmoid <- function(inp, name="Sigmoid") {
+  
+  if (identical(name, "Sigmoid")){
+    name <- generateUniqueName(op_name = name)
+  }
+  
+  return (getUnaryOp(inp, "Sigmoid", name))
+}
+
+Relu <- function(inp, name="Relu") {
+  
+  if (identical(name, "Relu")){
+    name <- generateUniqueName(op_name = name)
+  }
+  
+  return (getUnaryOp(inp, "Relu", name))
+}
+
+Cos <- function(inp, name="Cos") {
+  
+  if (identical(name, "Cos")){
+    name <- generateUniqueName(op_name = name)
+  }
+  
+  return (getUnaryOp(inp, "Cos", name))
+}
+
+Softmax <- function(inp, name="Softmax") {
+  
+  if (identical(name, "Softmax")){
+    name <- generateUniqueName(op_name = name)
+  }
+  
+  return (getUnaryOp(inp, "Softmax", name))
+}
+
+Equal <- function(l_op, r_op, name="Equal") {
+  
+  if (identical(name,"Equal")){
+    name <- generateUniqueName(op_name = name)
+  }
+  
+  return (getBinaryOp(l_op, r_op, "Equal", name))
 }
 

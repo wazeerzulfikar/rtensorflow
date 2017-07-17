@@ -87,6 +87,7 @@ void setOutputs(std::vector<TF_Operation*> outputs) {
 TF_DataType getDataType (string dtype) {
   if (dtype=="int32") return TF_INT32;
   else if (dtype=="double") return TF_DOUBLE;
+  else if(dtype=="boolean") return TF_BOOL;
   return TF_FLOAT;
 }
 
@@ -186,19 +187,33 @@ TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph) {
 
 List fetchOutput(TF_DataType dtype) {
   NumericVector output_val;
-  if(dtype == 3) {
+  if (dtype == 1) {
+    pair<float*, int64_t> out;
+    out = getOutputs<float>();
+    output_val = NumericVector(out.second);
+    for (int i = 0; i < out.second; ++i) {
+      output_val[i] = out.first[i];
+    }
+  } else if (dtype == 2) {
+      pair<double*, int64_t> out;
+      out = getOutputs<double>();
+      output_val = NumericVector(out.second);
+      for (int i = 0; i < out.second; ++i) {
+        output_val[i] = out.first[i];
+    } 
+  } else if (dtype == 3) {
     pair<int*, int64_t> out;
     out = getOutputs<int>();
     output_val = NumericVector(out.second);
     for (int i = 0; i < out.second; ++i){
       output_val[i] = out.first[i];
-    }
-  } else {
-    pair<double*, int64_t> out;
-    out = getOutputs<double>();
-    output_val = NumericVector(out.second);
-    for (int i = 0; i < out.second; ++i) {
-      output_val[i] = out.first[i];
+    } 
+  } else if (dtype == 10) {
+      pair<bool*, int64_t> out;
+      out = getOutputs<bool>();
+      output_val = NumericVector(out.second);
+      for (int i = 0; i < out.second; ++i) {
+        output_val[i] = out.first[i];
     }
   }
   List output;
