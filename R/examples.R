@@ -67,10 +67,12 @@ add_graph <- function() {
   
   out <- Sigmoid(add)
   
-  feedInput(a,c(0.2,0.42,0.13,0.54))
-  feedInput(b,c(0.3))
+  outa <- Equal(add,c)
   
-  output <- runSession(out)
+  feedInput(a,c(2,3,4,5))
+  feedInput(b,c(1))
+  
+  output <- runSession(outa)
   
   deleteSessionVariables()
   return (output)

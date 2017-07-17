@@ -35,7 +35,7 @@ void setPointers();
 
 void runSession(TF_Session* session, TF_Status* status);
 
-template <typename T> std::pair<T*, int64_t> getOutputs();
+template <typename T> std::vector<T>  getOutputs();
 
 std::vector<int64_t> getOutputDimensions();
 

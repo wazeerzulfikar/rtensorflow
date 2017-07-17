@@ -150,19 +150,26 @@ void runSession(TF_Session* session, TF_Status* status) {
                  nullptr, status );
 }
 
-template <typename T> pair<T*, int64_t> getOutputs() {
+template <typename T> std::vector<T> getOutputs() {
   TF_Tensor* out = output_values_[0];
-  if (out == nullptr) {
-    return {nullptr,0};
-  }
   
+  vector<int64_t> dim = getOutputDimensions();
   int64_t length = 1;
-  for (int i = 0; i < TF_NumDims(out); ++i) {
-    length *= TF_Dim(out,i);
+  for (int i = 0; i < dim.size(); ++i) {
+    length *= dim[i];
   }
 
   void* output_contents = TF_TensorData(out);
-  return {(T*) output_contents,length};
+  
+  vector<T> output_vector = vector<T>(length);
+  
+  T* output_ptr = static_cast<T*>(output_contents);
+  
+  for (int i = 0; i < length; ++i) {
+    output_vector[i] = output_ptr[i];
+  }
+  
+  return output_vector;
 }
 
 std::vector<int64_t> getOutputDimensions() {
@@ -186,42 +193,23 @@ TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph) {
 }
 
 List fetchOutput(TF_DataType dtype) {
-  NumericVector output_val;
-  if (dtype == 1) {
-    pair<float*, int64_t> out;
-    out = getOutputs<float>();
-    output_val = NumericVector(out.second);
-    for (int i = 0; i < out.second; ++i) {
-      output_val[i] = out.first[i];
-    }
-  } else if (dtype == 2) {
-      pair<double*, int64_t> out;
-      out = getOutputs<double>();
-      output_val = NumericVector(out.second);
-      for (int i = 0; i < out.second; ++i) {
-        output_val[i] = out.first[i];
-    } 
-  } else if (dtype == 3) {
-    pair<int*, int64_t> out;
-    out = getOutputs<int>();
-    output_val = NumericVector(out.second);
-    for (int i = 0; i < out.second; ++i){
-      output_val[i] = out.first[i];
-    } 
-  } else if (dtype == 10) {
-      pair<bool*, int64_t> out;
-      out = getOutputs<bool>();
-      output_val = NumericVector(out.second);
-      for (int i = 0; i < out.second; ++i) {
-        output_val[i] = out.first[i];
-    }
-  }
   List output;
-  output["val"] = output_val;
+  if (dtype == 1) {
+    vector<float> output_val = getOutputs<float>();
+    output["val"] = output_val;
+  } else if (dtype == 2) {
+    vector<double> output_val = getOutputs<double>();
+    output["val"] = output_val;
+  } else if (dtype == 3) {
+    vector<int> output_val = getOutputs<int>();
+    output["val"] = output_val;
+  } else if (dtype == 10) {
+    vector<bool> output_val = getOutputs<bool>();
+    output["val"] = output_val;
+  }
   output["dim"] = getOutputDimensions();
   return output;
 }
-
 
 // Operation Helpers
 
