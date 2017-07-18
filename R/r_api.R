@@ -46,20 +46,20 @@ runSession <- function(op_name) {
 
 #' @title Placeholder Wrapper
 #'
-#' @description  Easy-to-use wrapper for getPlaceholder
+#' @description  Easy-to-use wrapper for getPlaceholder. Sets a placeholder op for a value that will be fed into the computation.
 #' 
-#' @param shape Shape of Tensor
-#' @param dtype Datatype of Tensor
+#' @param dtype Shape of Tensor
+#' @param shape Datatype of Tensor
 #' @param name Optional custom name for node
 #' 
 #' @return Unique name of node
-Placeholder <- function(shape, dtype="int32", name="Placeholder") {
+Placeholder <- function(dtype, shape = NULL, name = "Placeholder") {
   
   if(identical(name,"Placeholder")){
     name <- generateUniqueName(op_name = name)
   }
   
-  return (getPlaceholder(shape,dtype,name))
+  return (getPlaceholder(shape, dtype, name))
 }
 
 #' @title Constant Wrapper
@@ -67,23 +67,23 @@ Placeholder <- function(shape, dtype="int32", name="Placeholder") {
 #' @description  Easy-to-use wrapper for getConstant
 #' 
 #' @param val Vector for value of Constant node
-#' @param dim Vector indicating dimensions of val
 #' @param dtype Datatype of val
+#' @param shape Vector indicating dimensions of val
 #' @param name Optional custom name for node
 #' 
 #' @return Unique name of node
-Constant <- function(val, dim = c(length(val)), dtype="int32", name="Const") {
+Constant <- function(val, dtype = "int32", shape = c(length(val)), name = "Const") {
   
   if(identical(name,"Const")){
     name <- generateUniqueName(op_name = name)
   }
   
-  return (getConstant(val,dim,dtype,name))
+  return (getConstant(val, shape, dtype, name))
 }
 
 #' @title Add Op
 #'
-#' @description Initializes an Add op in the graph
+#' @description Initializes an Add op in the graph. Returns x + y element-wise.
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
@@ -101,7 +101,7 @@ Add <- function(l_op, r_op, name="Add") {
 
 #' @title MatMul Op
 #'
-#' @description Initializes a MatMul op in the graph
+#' @description Initializes a MatMul op in the graph. Multiply the matrix x by the matrix y.
 #' 
 #' @param l_op Input node
 #' @param r_op Input node

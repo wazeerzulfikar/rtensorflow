@@ -4,7 +4,7 @@
 \alias{build_run_graph}
 \title{Build and Run Graph}
 \usage{
-build_run_graph(feed, dtype = "int32")
+build_run_graph(feed, dtype = "double")
 }
 \arguments{
 \item{feed}{Integer vector of size 3, feed for the network}

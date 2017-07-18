@@ -26,24 +26,24 @@ import_run_graph <- function(path, feed){
 #' @param dtype Datatype to be used, one of {"int32","double"}
 #' @return Output Value of Network 
 
-build_run_graph <- function(feed, dtype="int32") {
+build_run_graph <- function(feed, dtype="double") {
   
   initializeSessionVariables()
   
-  input <- Placeholder(c(1,3),dtype=dtype, name="input")
+  input <- Placeholder(dtype, shape = c(1,3), name="input")
 
-  w1 <- Constant(rep(1,12), dim = c(3,4), dtype = dtype)
-  b1 <- Constant(rep(1,4), dim = c(4), dtype = dtype)
-  w2 <- Constant(rep(1,4), dim = c(4,1), dtype = dtype)
-  b2 <- Constant(rep(1,1), dim = c(1), dtype = dtype)
+  w1 <- Constant(rep(1,12), dtype = dtype, shape = c(3,4))
+  b1 <- Constant(rep(1,4),  dtype = dtype, shape = c(4))
+  w2 <- Constant(rep(1,4),  dtype = dtype, shape = c(4,1))
+  b2 <- Constant(rep(1,1),  dtype = dtype, shape = c(1))
   
   hidden_matmul <- MatMul(input, w1)
-  hidden <- Add(hidden_matmul, b1)
-  output_matmul <- MatMul(hidden, w2)
-  output <- Add(output_matmul, b2)
+  hidden_layer <- Add(hidden_matmul, b1)
+  output_matmul <- MatMul(hidden_layer, w2)
+  output_layer <- Add(output_matmul, b2)
   
   feedInput(input, feed)
-  output <- runSession(output)
+  output <- runSession(output_layer)
   
   deleteSessionVariables()
   
@@ -67,12 +67,10 @@ add_graph <- function() {
   
   out <- Sigmoid(add)
   
-  outa <- Equal(add,c)
+  feedInput(a,c(-0.2,0.42,0.13,-0.54))
+  feedInput(b,c(0.3))
   
-  feedInput(a,c(2,3,4,5))
-  feedInput(b,c(1))
-  
-  output <- runSession(outa)
+  output <- runSession(out)
   
   deleteSessionVariables()
   return (output)

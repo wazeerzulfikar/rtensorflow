@@ -4,12 +4,12 @@
 \alias{Placeholder}
 \title{Placeholder Wrapper}
 \usage{
-Placeholder(shape, dtype = "int32", name = "Placeholder")
+Placeholder(dtype, shape = None, name = "Placeholder")
 }
 \arguments{
-\item{shape}{Shape of Tensor}
+\item{dtype}{Shape of Tensor}
 
-\item{dtype}{Datatype of Tensor}
+\item{shape}{Datatype of Tensor}
 
 \item{name}{Optional custom name for node}
 }
@@ -17,5 +17,5 @@ Placeholder(shape, dtype = "int32", name = "Placeholder")
 Unique name of node
 }
 \description{
-Easy-to-use wrapper for getPlaceholder
+Easy-to-use wrapper for getPlaceholder. Sets a placeholder op for a value that will be fed into the computation.
 }

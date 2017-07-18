@@ -9,7 +9,7 @@ test_that("Check Import Run Graph", {
   
   result <- import_run_graph(path,c(652,211,42))
   
-  expect_that( result[0], is_a("numeric") )
+  expect_that( result[0], is_a("integer") )
   expect_equal( result, array(data=c(3625),dim=c(1,1)) )
 
   file <- loadGraphFromFile("./wrong_path")
@@ -33,7 +33,7 @@ test_that("Check Build Run Graph", {
   
   result <- build_run_graph(c(652,211,42),dtype="int32")
   
-  expect_that( result[0], is_a("numeric") )
+  expect_that( result[0], is_a("integer") )
   expect_equal( result, array(data=c(3625),dim=c(1,1)) )
   
 })

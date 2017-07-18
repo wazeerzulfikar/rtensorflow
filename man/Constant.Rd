@@ -4,14 +4,14 @@
 \alias{Constant}
 \title{Constant Wrapper}
 \usage{
-Constant(val, dim = c(length(val)), dtype = "int32", name = "Const")
+Constant(val, dtype = "int32", shape = c(length(val)), name = "Const")
 }
 \arguments{
 \item{val}{Vector for value of Constant node}
 
-\item{dim}{Vector indicating dimensions of val}
-
 \item{dtype}{Datatype of val}
+
+\item{shape}{Vector indicating dimensions of val}
 
 \item{name}{Optional custom name for node}
 }

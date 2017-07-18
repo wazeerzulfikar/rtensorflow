@@ -100,6 +100,7 @@ template <typename T> TF_Tensor* getTensor(NumericVector inp, std::vector<int64_
     dim[i] = dimensions.at(i);
   }
   
+// Use void pointer to get any tensor datatype?
   T* c_inp = new T[inp.size()];
   for (int iter=0; iter < inp.size(); ++iter) {
     c_inp[iter] = inp[iter];
@@ -112,11 +113,16 @@ template <typename T> TF_Tensor* getTensor(NumericVector inp, std::vector<int64_
 }
 
 TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
-  if (dtype==3) {
+  if (dtype == 1) {
+    return getTensor<float>(inp, dimensions, dtype);
+  } else if (dtype == 2) {
+    return getTensor<double>(inp, dimensions, dtype);
+  } else if (dtype == 3) {
     return getTensor<int>(inp, dimensions, dtype);
-  } else {
-    return getTensor<double>(inp, dimensions,dtype);
+  } else if (dtype == 10) {
+    return getTensor<bool>(inp, dimensions, dtype);
   }
+  return nullptr;
 }
 
 TF_Tensor* ones(std::vector<int64_t> dimensions) {

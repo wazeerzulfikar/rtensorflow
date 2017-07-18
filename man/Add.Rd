@@ -17,5 +17,5 @@ Add(l_op, r_op, name = "Add")
 Unique name of node
 }
 \description{
-Initializes an Add op in the graph
+Initializes an Add op in the graph. Returns x + y element-wise.
 }

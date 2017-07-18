@@ -14,9 +14,9 @@ rtensorflow is a language binding for TensorFlow, an open source library for Mac
 
 Tensorflow, essentially, is a graph computational library. Nodes in the graph represent operations that must be performed. Edges in the graph represent either data or control dependencies. 
 
-## Import Graph and Run with Custom Input
+## Import Graph and Run with Custom Input (With Example)
 
-The first step is to initialize all the globale variables associated with a Session. A session is a runtime object representing a launched graph. This is a necessary step for any type of usage of rtensorflow. This can be done by,
+The first step is to initialize all the global variables associated with a Session. A session is a runtime object representing a launched graph. This is a necessary step for any type of usage of rtensorflow. This can be done by,
 
 `initializeSessionVariables()`
 
@@ -24,42 +24,121 @@ Then next step is to load the graph from the file. The graphs are stored as [Pro
 
 `loadGraphFromFile(path)`
 
-The loaded graph now needs input which can be fed to the input node. The input node is essentially the entry point to the computational graph. Let's say the input node is referenced by the name "input". `feed` is the vector which you want to input to the graph. The dimensions of the `feed` vector need to specified and lastly the datatype of the `feed` vector. (Currently rtensorflow only supports "int32" and "double")
+The loaded graph now needs input which can be fed to the input node. The input node is essentially the entry point to the computational graph. Let's say the input node is referenced by the name "input". `feed` is the vector which you want to input to that node.
 
-`feedInput("input", feed, dim=c(1,3), dtype="int32")`
+`feedInput("input", feed)`
 
-Once, the input node has been set, the output node needs to be set as well. Basically, its the node, whose output is needed to be returned. Let's say the output node is referenced by the name "output".
+Once, the input node has been set, the output node needs to be set as well. Running the session essentially is to compute the output of the set output node. Once the Session runs without any error, the output of the graph is returned. The output is in the form of a multidimensional matrix.
 
-`setOutput("output")`
-
-Everything has been set succesfully, it is now time to run the session.
-
-`runSession()`
-
-Now that the session has run without any error, it means that the output is ready to be fetched from the output node which was set earlier. The datatype of the output vector which will be returned needs to be specified as well. This function will return a multidimensional matrix with the value of the vector and dimensions of it.
-
-`output <- fetchOutput()`
+`output <- runSession("output")`
 
 To wrap things up, after all the computations have been finished, the session needs to be closed and all the variables need to be destroyed for safety.
 
-` deleteSessionVariables()`
+`deleteSessionVariables()`
 
-### A small example
+### The full code example for Importing and Running Graph
 
 ```{r}
-import_run_graph <- function(path, feed){
-  
+  library(rtensorflow)
+  import_run_graph <- function() {
   initializeSessionVariables()
-  loadGraphFromFile(path)
-  feedInput("input", feed, dim=c(1,3), dtype="int32")
-  setOutput("output")
-  runSession()
-  output <- fetchOutput()
+  loadGraphFromFile("../tests/models/feed_forward_graph.pb")
+  feedInput("input", c(1,2,3))
+  output <- runSession("output")
+  
   deleteSessionVariables()
   return(output)
+  }
   
-}
+  import_run_graph()
+  
 ```
+
+## Build Custom Graph and Run (With Example)
+
+In this example, we will build a simple feed forward neural network. The network will have three layers: input layer, hidden layer and output layer. The input layer will have 3 neurons, the hidden layer with 4 neurons and a Relu activation function and output layer with 1 neuron and a Sigmoid activation function. The weights and biases of all the connections will be initialized with ones. Generally a neural network has 3 hyperparameters (variable options to be set before training which define a specific neural net): 
+- Number of hidden layers - 1
+- Number of neurons per layer - 3,4,1
+- Activation functions - Relu and Sigmoid
+
+The first step is to initialize all the global variables associated with a Session. A session is a runtime object representing a launched graph. This is a necessary step for any type of usage of rtensorflow. This can be done by,
+
+`initializeSessionVariables()`
+
+Next, we have to make a Placeholder node in the graph. This is for a value that will be fed into the computation. The shape and data type of the future tensor which will be fed is specified. We can optionally name all ops. This op is named as "input".
+
+`input <- Placeholder("float", shape = c(1,3), name="input")`
+
+For initializing the weights and biases, we use Constant ops which holds a constant tensor. Here, we are using one-filled vectors. The shape of the constant value and data type are also arguments.
+
+```
+w1 <- Constant(rep(1,12), dtype = "float", shape = c(3,4))
+b1 <- Constant(rep(1,4), dtype = "float", shape = c(4))
+w2 <- Constant(rep(1,4), dtype = "float", shape = c(4,1))
+b2 <- Constant(rep(1,1), dtype = "float", shape = c(1))
+``` 
+
+Now we initialize the most basic and important layer of a neural network, the fully connected layer. It involves a matrix multiplication of the input the weights and an element-wise addition with the bias tensors. Below are two layers, the hidden layer and a output layer. The hidden layer has a Rectified Linear Unit (Relu) activation, while the output layer has a Sigmoid activation.
+
+```
+  hidden_matmul <- MatMul(input, w1)
+  hidden_bias_add <- Add(hidden_matmul, b1)
+  hidden_layer <- Relu(hidden_bias_add)
+  
+  output_matmul <- MatMul(hidden_layer, w2)
+  output_bias_add <- Add(output_matmul, b2)
+  output_layer <- Sigmoid(output_bias_add)
+```
+
+The built graph now needs input to the placeholder (input node). The input node is essentially the entry point to the computational graph. Let's say the input node is referenced by the name "input". `feed` is the vector which you want to input to that node.
+
+`feedInput(input, feed)`
+
+Once, the input node has been set, the output node needs to be set as well. Running the session essentially is to compute the output of the set output node. Once the Session runs without any error, the output of the graph is returned. The output is in the form of a multidimensional matrix.
+
+`output <- runSession(output)`
+
+To wrap things up, after all the computations have been finished, the session needs to be closed and all the variables need to be destroyed for safety.
+
+`deleteSessionVariables()`
+
+### The full code example for Building and Running Custom Graph
+
+```{r}
+library(rtensorflow)
+
+build_run_graph <- function(feed) {
+
+  initializeSessionVariables()
+  
+  input <- Placeholder("float", shape = c(1,3), name = "input")
+
+  w1 <- Constant(rep(1,12), dtype = "float", shape = c(3,4))
+  b1 <- Constant(rep(1,4),  dtype = "float", shape = c(4))
+  w2 <- Constant(rep(1,4),  dtype = "float", shape = c(4,1))
+  b2 <- Constant(rep(1,1),  dtype = "float", shape = c(1))
+  
+  hidden_matmul <- MatMul(input, w1)
+  hidden_bias_add <- Add(hidden_matmul, b1)
+  hidden_layer <- Relu(hidden_bias_add)
+  
+  output_matmul <- MatMul(hidden_layer, w2)
+  output_bias_add <- Add(output_matmul, b2)
+  output_layer <- Sigmoid(output_bias_add)
+  
+  
+  feedInput(input, feed)
+  output <- runSession(output_layer)
+  
+  deleteSessionVariables()
+  return (output)
+}
+
+build_run_graph(c(-4.1,-1.3,3.98))
+
+```
+
+
 
 
 
