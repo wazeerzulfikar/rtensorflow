@@ -4,7 +4,7 @@
 \alias{Placeholder}
 \title{Placeholder Wrapper}
 \usage{
-Placeholder(dtype, shape = None, name = "Placeholder")
+Placeholder(dtype, shape = NULL, name = "Placeholder")
 }
 \arguments{
 \item{dtype}{Shape of Tensor}

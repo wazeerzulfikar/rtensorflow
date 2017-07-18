@@ -17,5 +17,5 @@ Pow(l_op, r_op, name = "Pow")
 Unique name of node
 }
 \description{
-Initializes a Pow op in the graph
+Computes the power of one value to another.
 }

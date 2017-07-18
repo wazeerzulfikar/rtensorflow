@@ -19,5 +19,5 @@ Constant(val, dtype = "int32", shape = c(length(val)), name = "Const")
 Unique name of node
 }
 \description{
-Easy-to-use wrapper for getConstant
+Easy-to-use wrapper for getConstant. Returns a constant tensor.
 }

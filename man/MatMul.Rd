@@ -17,5 +17,5 @@ MatMul(l_op, r_op, name = "MatMul")
 Unique name of node
 }
 \description{
-Initializes a MatMul op in the graph. Multiply the matrix x by the matrix y.
+Multiply the matrix x by the matrix y.
 }

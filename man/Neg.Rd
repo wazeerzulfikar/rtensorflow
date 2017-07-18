@@ -15,5 +15,5 @@ Neg(inp, name = "Neg")
 Unique name of node
 }
 \description{
-Initializes a Neg op in the graph
+Computes numerical negative value element-wise.
 }

@@ -64,7 +64,7 @@ Placeholder <- function(dtype, shape = NULL, name = "Placeholder") {
 
 #' @title Constant Wrapper
 #'
-#' @description  Easy-to-use wrapper for getConstant
+#' @description  Easy-to-use wrapper for getConstant. Returns a constant tensor.
 #' 
 #' @param val Vector for value of Constant node
 #' @param dtype Datatype of val
@@ -83,7 +83,7 @@ Constant <- function(val, dtype = "int32", shape = c(length(val)), name = "Const
 
 #' @title Add Op
 #'
-#' @description Initializes an Add op in the graph. Returns x + y element-wise.
+#' @description Returns x + y element-wise.
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
@@ -101,7 +101,7 @@ Add <- function(l_op, r_op, name="Add") {
 
 #' @title MatMul Op
 #'
-#' @description Initializes a MatMul op in the graph. Multiply the matrix x by the matrix y.
+#' @description Multiply the matrix x by the matrix y.
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
@@ -119,7 +119,7 @@ MatMul <- function(l_op, r_op, name="MatMul") {
 
 #' @title Pow Op
 #'
-#' @description Initializes a Pow op in the graph
+#' @description Computes the power of one value to another.
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
@@ -137,7 +137,7 @@ Pow <- function(l_op, r_op, name="Pow") {
 
 #' @title Neg Op
 #'
-#' @description Initializes a Neg op in the graph
+#' @description Computes numerical negative value element-wise.
 #' 
 #' @param inp Input node
 #' @param name Optional custom name for node
@@ -152,6 +152,14 @@ Neg <- function(inp, name="Neg") {
   return (getUnaryOp(inp, "Neg", name))
 }
 
+#' @title Tanh Op
+#'
+#' @description Computes hyperbolic tangent of `x` element-wise.
+#' 
+#' @param inp Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
 Tanh <- function(inp, name="Tanh") {
   
   if (identical(name, "Tanh")){
@@ -161,6 +169,14 @@ Tanh <- function(inp, name="Tanh") {
   return (getUnaryOp(inp, "Tanh", name))
 }
 
+#' @title Sigmoid Op
+#'
+#' @description Computes sigmoid of `x` element-wise.
+#' 
+#' @param inp Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
 Sigmoid <- function(inp, name="Sigmoid") {
   
   if (identical(name, "Sigmoid")){
@@ -170,6 +186,14 @@ Sigmoid <- function(inp, name="Sigmoid") {
   return (getUnaryOp(inp, "Sigmoid", name))
 }
 
+#' @title Relu Op
+#'
+#' @description Computes rectified linear: `max(features, 0)`.
+#' 
+#' @param inp Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
 Relu <- function(inp, name="Relu") {
   
   if (identical(name, "Relu")){
@@ -179,6 +203,14 @@ Relu <- function(inp, name="Relu") {
   return (getUnaryOp(inp, "Relu", name))
 }
 
+#' @title Cos Op
+#'
+#' @description Computes cos of x element-wise.
+#' 
+#' @param inp Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
 Cos <- function(inp, name="Cos") {
   
   if (identical(name, "Cos")){
@@ -188,6 +220,14 @@ Cos <- function(inp, name="Cos") {
   return (getUnaryOp(inp, "Cos", name))
 }
 
+#' @title Softmax Op
+#'
+#' @description Computes softmax activations.
+#' 
+#' @param inp Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
 Softmax <- function(inp, name="Softmax") {
   
   if (identical(name, "Softmax")){
@@ -197,6 +237,15 @@ Softmax <- function(inp, name="Softmax") {
   return (getUnaryOp(inp, "Softmax", name))
 }
 
+#' @title Equal Op
+#'
+#' @description Returns the truth value of (x == y) element-wise.
+#' 
+#' @param l_op Input node
+#' @param r_op Input node
+#' @param name Optional custom name for node
+#' 
+#' @return Unique name of node
 Equal <- function(l_op, r_op, name="Equal") {
   
   if (identical(name,"Equal")){
