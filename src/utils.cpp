@@ -93,21 +93,20 @@ TF_DataType getDataType (string dtype) {
 
 template <typename T> TF_Tensor* getTensor(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
   int no_dims = dimensions.size();
-  int64_t length=1;
-  int64_t* dim = new int64_t[dimensions.size()];
+  int64_t* dim = new int64_t[no_dims];
   for (int i = 0; i < dimensions.size(); ++i) {
-    length *= dimensions.at(i);
     dim[i] = dimensions.at(i);
   }
   
 // Use void pointer to get any tensor datatype?
+
   T* c_inp = new T[inp.size()];
-  for (int iter=0; iter < inp.size(); ++iter) {
+  for (int64_t iter=0; iter < inp.size(); ++iter) {
     c_inp[iter] = inp[iter];
   }
 
   return TF_NewTensor(
-    dtype, dim, no_dims, c_inp, sizeof(T)*length,
+    dtype, dim, no_dims, c_inp, sizeof(T)*inp.size(),
     &tensor_deallocator<T>,
     nullptr);
 }

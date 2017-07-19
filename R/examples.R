@@ -26,7 +26,7 @@ import_run_graph <- function(path, feed){
 #' @param dtype Datatype to be used, one of {"int32","double"}
 #' @return Output Value of Network 
 
-build_run_graph <- function(feed, dtype="double") {
+build_run_graph <- function(feed, dtype="float") {
   
   initializeSessionVariables()
   
@@ -74,4 +74,12 @@ add_graph <- function() {
   
   deleteSessionVariables()
   return (output)
+}
+
+check_load_saved_model <- function(path){
+  initializeSessionVariables()
+  loadSavedModel(path)
+  feedInput("x",c(2))
+  return (runSession("y_hat"))
+
 }

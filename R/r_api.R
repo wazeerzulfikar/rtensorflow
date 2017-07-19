@@ -37,8 +37,8 @@ feedInput <- function(input_node, feed) {
 #' @return Multidimensional output matrix
 runSession <- function(op_name) {
   output <- runInternalSession(op_name);
-  output_array <- array(data = output$val, dim = output$dim)
   
+  output_array <- array(data = output$val, dim = output$dim)
   return (output_array)
 }
 

@@ -126,6 +126,10 @@ getBinaryOp <- function(l_op, r_op, op_name, unique_name) {
     .Call('rtensorflow_getBinaryOp', PACKAGE = 'rtensorflow', l_op, r_op, op_name, unique_name)
 }
 
+loadSavedModel <- function(path) {
+    invisible(.Call('rtensorflow_loadSavedModel', PACKAGE = 'rtensorflow', path))
+}
+
 #' @title Print Node List
 #' 
 #' @description Debug helper, prints all nodes currently in the graph

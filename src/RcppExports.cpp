@@ -113,6 +113,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// loadSavedModel
+void loadSavedModel(std::string path);
+RcppExport SEXP rtensorflow_loadSavedModel(SEXP pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
+    loadSavedModel(path);
+    return R_NilValue;
+END_RCPP
+}
 // printNodeList
 void printNodeList();
 RcppExport SEXP rtensorflow_printNodeList() {
@@ -142,6 +152,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_getConstant", (DL_FUNC) &rtensorflow_getConstant, 4},
     {"rtensorflow_getUnaryOp", (DL_FUNC) &rtensorflow_getUnaryOp, 3},
     {"rtensorflow_getBinaryOp", (DL_FUNC) &rtensorflow_getBinaryOp, 4},
+    {"rtensorflow_loadSavedModel", (DL_FUNC) &rtensorflow_loadSavedModel, 1},
     {"rtensorflow_printNodeList", (DL_FUNC) &rtensorflow_printNodeList, 0},
     {"rtensorflow_locateError", (DL_FUNC) &rtensorflow_locateError, 0},
     {NULL, NULL, 0}

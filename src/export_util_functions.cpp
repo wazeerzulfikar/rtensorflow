@@ -84,19 +84,27 @@ int loadGraphFromFile(std::string path) {
 int setFeedInput(std::string op_name, NumericVector inp) {
   const char* op_name_ptr = op_name.c_str();
   TF_Operation* input = TF_GraphOperationByName(graph, op_name_ptr);
-  
+
   TF_DataType dtype = TF_OperationOutputType({input,0});
-  
+
   int num_dims = TF_GraphGetTensorNumDims(graph, {input, 0}, status);
-  int64_t* shape = new int64_t[num_dims];
-  TF_GraphGetTensorShape(graph, {input,0}, shape,num_dims, status);
+  int64_t* shape;
+  
+  if (num_dims==-1) {
+    num_dims = 1;
+    shape = new int64_t[num_dims];
+    shape[0] = -1;
+  } else {
+    shape = new int64_t[num_dims];
+    TF_GraphGetTensorShape(graph, {input,0}, shape, num_dims, status);
+    
+  }
   
   vector<int64_t> shape_vector;
   for (int i=0; i < num_dims; ++i){
     shape_vector.emplace_back(shape[i]);
   }
   TF_Tensor* feed = parseInputs(inp,shape_vector,dtype);
-  
   setInputs({{input,feed}});
   
   return 0;
@@ -237,6 +245,22 @@ std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name,
   op = Binary_Op( op_name, unique_name, l, r, graph, status);
   op_list.emplace(op.first, op.second);
   return op.first;
+}
+
+// [[Rcpp::export]]
+void loadSavedModel(std::string path) {
+  TF_Buffer* run_options = TF_NewBufferFromString("", 0);
+  TF_Buffer* metagraph = TF_NewBuffer();
+
+  const char* tags[] = {"train","serve"};
+
+  session = TF_LoadSessionFromSavedModel(
+    options, run_options, path.c_str(), tags, 2, graph, metagraph, status);
+  
+  if (TF_GetCode(status)!=TF_OK) {
+    cout << "Here is the error :"<< endl;
+    cout << TF_Message(status) << endl;
+  }
 }
 
 //Debug Helpers
