@@ -35,9 +35,12 @@ feedInput <- function(input_node, feed) {
 #' @param op_name Node to be set as output of graph
 #' 
 #' @return Multidimensional output matrix
-runSession <- function(op_name) {
-  output <- runInternalSession(op_name);
-  
+runSession <- function(op_name, train = FALSE) {
+  output <- runInternalSession(op_name, train);
+  if (train) {
+    return (0)
+  }
+
   output_array <- array(data = output$val, dim = output$dim)
   return (output_array)
 }

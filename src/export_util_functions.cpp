@@ -27,6 +27,7 @@ int initializeSessionVariables() {
   
   resetInputValues();
   resetOutputValues();
+  resetTargets();
   op_list.clear();
   
   if (TF_GetCode(status)!=TF_OK) {
@@ -97,7 +98,6 @@ int setFeedInput(std::string op_name, NumericVector inp) {
   } else {
     shape = new int64_t[num_dims];
     TF_GraphGetTensorShape(graph, {input,0}, shape, num_dims, status);
-    
   }
   
   vector<int64_t> shape_vector;
@@ -119,12 +119,17 @@ int setFeedInput(std::string op_name, NumericVector inp) {
 //' @return R List containing output tensor and dimensions
 //' 
 // [[Rcpp::export]]
-List runInternalSession(std::string op_name) {
+List runInternalSession(std::string op_name, bool train) {
   cout << "Running the Session.. " << endl;
   
-  TF_Operation* output = setOutputNode(op_name, graph);
-  TF_DataType dtype = TF_OperationOutputType({output,0});
-  
+  TF_Operation* output;
+  TF_Operation* target;
+  if (train) {
+    target = setTargetNode(op_name, graph);
+  } else {
+    output = setOutputNode(op_name, graph);
+  }
+
   setPointers();
   
   if (TF_GetCode(status)!=TF_OK) {
@@ -141,7 +146,12 @@ List runInternalSession(std::string op_name) {
     return -1;
   }
   
-  return fetchOutput(dtype);
+  if (train) {
+    return 0;
+  } else {
+    TF_DataType dtype = TF_OperationOutputType({output,0});
+    return fetchOutput(dtype);
+  }
 }
 
 //' @title Close and Delete Session Variables
@@ -159,6 +169,7 @@ int deleteSessionVariables() {
 
   resetInputValues();
   resetOutputValues();
+  resetTargets();
   TF_CloseSession(session, status);
   TF_DeleteSession(session, status);
   TF_DeleteStatus(status);
@@ -248,14 +259,16 @@ std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name,
 }
 
 // [[Rcpp::export]]
-void loadSavedModel(std::string path) {
+void loadSavedModel(std::string path, CharacterVector tags) {
   TF_Buffer* run_options = TF_NewBufferFromString("", 0);
   TF_Buffer* metagraph = TF_NewBuffer();
-
-  const char* tags[] = {"train","serve"};
+  char** tags_ptr = new char*[tags.size()];
+  for (int i=0; i < tags.size(); ++i){
+    tags_ptr[i]=tags[i];
+  }
 
   session = TF_LoadSessionFromSavedModel(
-    options, run_options, path.c_str(), tags, 2, graph, metagraph, status);
+    options, run_options, path.c_str(), tags_ptr, tags.size(), graph, metagraph, status);
   
   if (TF_GetCode(status)!=TF_OK) {
     cout << "Here is the error :"<< endl;

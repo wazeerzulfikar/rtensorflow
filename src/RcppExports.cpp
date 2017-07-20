@@ -39,13 +39,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // runInternalSession
-List runInternalSession(std::string op_name);
-RcppExport SEXP rtensorflow_runInternalSession(SEXP op_nameSEXP) {
+List runInternalSession(std::string op_name, bool train);
+RcppExport SEXP rtensorflow_runInternalSession(SEXP op_nameSEXP, SEXP trainSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(runInternalSession(op_name));
+    Rcpp::traits::input_parameter< bool >::type train(trainSEXP);
+    rcpp_result_gen = Rcpp::wrap(runInternalSession(op_name, train));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -114,12 +115,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // loadSavedModel
-void loadSavedModel(std::string path);
-RcppExport SEXP rtensorflow_loadSavedModel(SEXP pathSEXP) {
+void loadSavedModel(std::string path, CharacterVector tags);
+RcppExport SEXP rtensorflow_loadSavedModel(SEXP pathSEXP, SEXP tagsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    loadSavedModel(path);
+    Rcpp::traits::input_parameter< CharacterVector >::type tags(tagsSEXP);
+    loadSavedModel(path, tags);
     return R_NilValue;
 END_RCPP
 }
@@ -146,13 +148,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"rtensorflow_initializeSessionVariables", (DL_FUNC) &rtensorflow_initializeSessionVariables, 0},
     {"rtensorflow_loadGraphFromFile", (DL_FUNC) &rtensorflow_loadGraphFromFile, 1},
     {"rtensorflow_setFeedInput", (DL_FUNC) &rtensorflow_setFeedInput, 2},
-    {"rtensorflow_runInternalSession", (DL_FUNC) &rtensorflow_runInternalSession, 1},
+    {"rtensorflow_runInternalSession", (DL_FUNC) &rtensorflow_runInternalSession, 2},
     {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
     {"rtensorflow_getPlaceholder", (DL_FUNC) &rtensorflow_getPlaceholder, 3},
     {"rtensorflow_getConstant", (DL_FUNC) &rtensorflow_getConstant, 4},
     {"rtensorflow_getUnaryOp", (DL_FUNC) &rtensorflow_getUnaryOp, 3},
     {"rtensorflow_getBinaryOp", (DL_FUNC) &rtensorflow_getBinaryOp, 4},
-    {"rtensorflow_loadSavedModel", (DL_FUNC) &rtensorflow_loadSavedModel, 1},
+    {"rtensorflow_loadSavedModel", (DL_FUNC) &rtensorflow_loadSavedModel, 2},
     {"rtensorflow_printNodeList", (DL_FUNC) &rtensorflow_printNodeList, 0},
     {"rtensorflow_locateError", (DL_FUNC) &rtensorflow_locateError, 0},
     {NULL, NULL, 0}

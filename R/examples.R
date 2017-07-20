@@ -57,8 +57,8 @@ add_graph <- function() {
   
   initializeSessionVariables()
   
-  a <- Placeholder(c(4), dtype="double")
-  b <- Placeholder(c(1), dtype="double")
+  a <- Placeholder("double", shape=c(4))
+  b <- Placeholder("double", shape=c(1))
   c <- Constant(c(3,4,3,6), dtype="double")
   
   add <- Add(a,b)
@@ -78,8 +78,10 @@ add_graph <- function() {
 
 check_load_saved_model <- function(path){
   initializeSessionVariables()
-  loadSavedModel(path)
-  feedInput("x",c(2))
-  return (runSession("y_hat"))
-
+  loadSavedModel(path, c("train", "serve"))
+  feedInput("x",rep(2,1000))
+  feedInput("y", rep(4,1000))
+  runSession("train", train = TRUE)
+  
+  return(runSession("y_hat")[1])
 }

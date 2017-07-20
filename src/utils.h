@@ -19,9 +19,13 @@ void resetInputValues();
 
 void resetOutputValues ();
 
-void setInputs (std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs);
+void resetTargets();
+
+void setInputs(std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs);
 
 void setOutputs(std::vector<TF_Operation*> outputs);
+
+void setTargets(std::vector<TF_Operation*> targets);
 
 TF_DataType getDataType (string dtype);
 
@@ -31,6 +35,10 @@ TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_Da
 
 TF_Tensor* ones(std::vector<int64_t> dimensions);
 
+TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph);
+
+TF_Operation* setTargetNode(std::string op_name, TF_Graph* graph); 
+
 void setPointers();
 
 void runSession(TF_Session* session, TF_Status* status);
@@ -38,8 +46,6 @@ void runSession(TF_Session* session, TF_Status* status);
 template <typename T> std::vector<T>  getOutputs();
 
 std::vector<int64_t> getOutputDimensions();
-
-TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph);
 
 List fetchOutput(TF_DataType dtype);
   

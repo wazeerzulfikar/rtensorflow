@@ -9,7 +9,7 @@ using namespace std;
 #include <vector>  
 #include <string>
 
-std::vector<TF_Operation*> targets;
+std::vector<TF_Operation*> targets_;
 std::vector<TF_Output> inputs_;
 std::vector<TF_Tensor*> input_values_;
 std::vector<TF_Output> outputs_;
@@ -70,6 +70,10 @@ void resetOutputValues() {
   outputs_.clear();
 }
 
+void resetTargets() {
+  targets_.clear();
+}
+
 void setInputs(std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs) {
   for (const auto& i : inputs) {
     inputs_.emplace_back(TF_Output{i.first, 0});
@@ -82,6 +86,12 @@ void setOutputs(std::vector<TF_Operation*> outputs) {
     outputs_.emplace_back(TF_Output{o,0});
   }
   output_values_.resize(outputs_.size(), nullptr);
+}
+
+void setTargets(std::vector<TF_Operation*> targets) {
+  for (TF_Operation* t : targets){
+    targets_.emplace_back(t);
+  }
 }
 
 TF_DataType getDataType (string dtype) {
@@ -137,8 +147,22 @@ TF_Tensor* ones(std::vector<int64_t> dimensions) {
   return getTensor<int>(arr, dimensions, TF_INT32);
 }
 
+TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph) {
+  const char* op_name_ptr = op_name.c_str();
+  TF_Operation* output = TF_GraphOperationByName(graph, op_name_ptr);
+  setOutputs({output});
+  return output;
+}
+
+TF_Operation* setTargetNode(std::string op_name, TF_Graph* graph) {
+  const char* op_name_ptr = op_name.c_str();
+  TF_Operation* target = TF_GraphOperationByName(graph, op_name_ptr);
+  setTargets({target});
+  return target;
+}
+
 void setPointers() {
-  targets_ptr = targets.empty() ? nullptr : &targets[0];
+  targets_ptr = targets_.empty() ? nullptr : &targets_[0];
   
   inputs_ptr = inputs_.empty() ? nullptr : &inputs_[0];
   input_values_ptr = input_values_.empty() ? nullptr : &input_values_[0];
@@ -151,7 +175,7 @@ void runSession(TF_Session* session, TF_Status* status) {
   TF_SessionRun(session, nullptr,
                  inputs_ptr, input_values_ptr, inputs_.size(),  // Inputs
                  outputs_ptr, output_values_ptr, outputs_.size(),  // Outputs
-                 targets_ptr, targets.size(),  // Operations
+                 targets_ptr, targets_.size(),  // Operations
                  nullptr, status );
 }
 
@@ -188,13 +212,6 @@ std::vector<int64_t> getOutputDimensions() {
   }
   
   return dim;
-}
-
-TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph) {
-  const char* op_name_ptr = op_name.c_str();
-  TF_Operation* output = TF_GraphOperationByName(graph, op_name_ptr);
-  setOutputs({output});
-  return output;
 }
 
 List fetchOutput(TF_DataType dtype) {

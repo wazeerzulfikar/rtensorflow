@@ -50,8 +50,8 @@ setFeedInput <- function(op_name, inp) {
 #' 
 #' @return R List containing output tensor and dimensions
 #' 
-runInternalSession <- function(op_name) {
-    .Call('rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_name)
+runInternalSession <- function(op_name, train) {
+    .Call('rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_name, train)
 }
 
 #' @title Close and Delete Session Variables
@@ -126,8 +126,8 @@ getBinaryOp <- function(l_op, r_op, op_name, unique_name) {
     .Call('rtensorflow_getBinaryOp', PACKAGE = 'rtensorflow', l_op, r_op, op_name, unique_name)
 }
 
-loadSavedModel <- function(path) {
-    invisible(.Call('rtensorflow_loadSavedModel', PACKAGE = 'rtensorflow', path))
+loadSavedModel <- function(path, tags) {
+    invisible(.Call('rtensorflow_loadSavedModel', PACKAGE = 'rtensorflow', path, tags))
 }
 
 #' @title Print Node List
