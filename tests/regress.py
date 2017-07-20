@@ -5,15 +5,15 @@ from tensorflow.python.saved_model.signature_constants import REGRESS_METHOD_NAM
 from tensorflow.python.saved_model.tag_constants import TRAINING, SERVING
 from tensorflow.python.saved_model.utils import build_tensor_info
 
-x = tf.placeholder(tf.float32,shape=[1000], name='x')
-y = tf.placeholder(tf.float32,shape=[1000], name='y')
+x = tf.placeholder(tf.float32,shape=[1], name='x')
+y = tf.placeholder(tf.float32,shape=[1], name='y')
 
 w = tf.Variable(tf.random_uniform([1], -1.0, 1.0), name='w')
 b = tf.Variable(tf.zeros([1]), name='b')
 y_hat = tf.add(w * x, b, name="y_hat")
 
 loss = tf.reduce_mean(tf.square(y_hat - y))
-optimizer = tf.train.GradientDescentOptimizer(0.0001)
+optimizer = tf.train.GradientDescentOptimizer(0.01)
 train = optimizer.minimize(loss, name='train')
 
 init = tf.variables_initializer(tf.global_variables(), name='init')

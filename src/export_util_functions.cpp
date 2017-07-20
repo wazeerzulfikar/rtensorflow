@@ -82,7 +82,7 @@ int loadGraphFromFile(std::string path) {
 //' @return Integer status 
 //' 
 // [[Rcpp::export]]
-int setFeedInput(std::string op_name, NumericVector inp) {
+int setFeedInput(std::string op_name, List inp) {
   const char* op_name_ptr = op_name.c_str();
   TF_Operation* input = TF_GraphOperationByName(graph, op_name_ptr);
 
@@ -119,12 +119,15 @@ int setFeedInput(std::string op_name, NumericVector inp) {
 //' @return R List containing output tensor and dimensions
 //' 
 // [[Rcpp::export]]
-List runInternalSession(std::string op_name, bool train) {
+List runInternalSession(std::string op_name) {
   cout << "Running the Session.. " << endl;
+  
+  TF_Operation* op = TF_GraphOperationByName(graph, op_name.c_str());
+  const char* type = TF_OperationOpType(op);
   
   TF_Operation* output;
   TF_Operation* target;
-  if (train) {
+  if (strcmp(type,"NoOp")==0) {
     target = setTargetNode(op_name, graph);
   } else {
     output = setOutputNode(op_name, graph);
@@ -146,7 +149,7 @@ List runInternalSession(std::string op_name, bool train) {
     return -1;
   }
   
-  if (train) {
+  if (strcmp(type,"NoOp")==0) {
     return 0;
   } else {
     TF_DataType dtype = TF_OperationOutputType({output,0});
@@ -210,7 +213,7 @@ std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::s
 //' @return Unique node name
 //' 
 // [[Rcpp::export]]
-std::string getConstant(NumericVector val, std::vector<int64_t> dim, std::string dtype, std::string unique_name) {
+std::string getConstant(List val, std::vector<int64_t> dim, std::string dtype, std::string unique_name) {
   TF_Tensor* val_t = parseInputs(val, dim, getDataType(dtype));
   pair<string, TF_Operation*> op;
   op = Constant("Const", unique_name, val_t, graph, status);

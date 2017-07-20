@@ -29,11 +29,9 @@ void setTargets(std::vector<TF_Operation*> targets);
 
 TF_DataType getDataType (string dtype);
 
-template<typename T> TF_Tensor* getTensor(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype);
+template<typename T> TF_Tensor* getTensor(List inp, std::vector<int64_t> dimensions, TF_DataType dtype);
 
-TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype);
-
-TF_Tensor* ones(std::vector<int64_t> dimensions);
+TF_Tensor* parseInputs(List inp, std::vector<int64_t> dimensions, TF_DataType dtype);
 
 TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph);
 

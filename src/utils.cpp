@@ -8,10 +8,11 @@ using namespace std;
 #include <stdlib.h>   
 #include <vector>  
 #include <string>
+#include <algorithm>
 
 std::vector<TF_Operation*> targets_;
 std::vector<TF_Output> inputs_;
-std::vector<TF_Tensor*> input_values_;
+vector<TF_Tensor*> input_values_;
 std::vector<TF_Output> outputs_;
 std::vector<TF_Tensor*> output_values_;
 
@@ -76,8 +77,8 @@ void resetTargets() {
 
 void setInputs(std::vector<std::pair<TF_Operation*, TF_Tensor*>> inputs) {
   for (const auto& i : inputs) {
-    inputs_.emplace_back(TF_Output{i.first, 0});
-    input_values_.emplace_back(i.second);
+      inputs_.emplace_back(TF_Output{i.first, 0});
+      input_values_.emplace_back(i.second);
   }
 }
 
@@ -101,27 +102,27 @@ TF_DataType getDataType (string dtype) {
   return TF_FLOAT;
 }
 
-template <typename T> TF_Tensor* getTensor(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
+template <typename T> TF_Tensor* getTensor(List inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
   int no_dims = dimensions.size();
-  int64_t* dim = new int64_t[no_dims];
-  for (int i = 0; i < dimensions.size(); ++i) {
-    dim[i] = dimensions.at(i);
+  int i = 0;
+  if (dimensions.at(i)==-1) {
+    --no_dims;
+    i = 1;
   }
   
 // Use void pointer to get any tensor datatype?
-
   T* c_inp = new T[inp.size()];
   for (int64_t iter=0; iter < inp.size(); ++iter) {
     c_inp[iter] = inp[iter];
   }
 
   return TF_NewTensor(
-    dtype, dim, no_dims, c_inp, sizeof(T)*inp.size(),
+    dtype, &dimensions[i], no_dims, c_inp, sizeof(T)*inp.size(),
     &tensor_deallocator<T>,
     nullptr);
 }
 
-TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
+TF_Tensor* parseInputs(List inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
   if (dtype == 1) {
     return getTensor<float>(inp, dimensions, dtype);
   } else if (dtype == 2) {
@@ -132,19 +133,6 @@ TF_Tensor* parseInputs(NumericVector inp, std::vector<int64_t> dimensions, TF_Da
     return getTensor<bool>(inp, dimensions, dtype);
   }
   return nullptr;
-}
-
-TF_Tensor* ones(std::vector<int64_t> dimensions) {
-  //Function for returning a Tensor of required dimension, filled with 1's
-  int64_t length=1;
-  for (int i = 0; i < dimensions.size(); ++i) {
-    length *= dimensions.at(i);
-  }
-  NumericVector arr;
-    for (int i = 0; i < length; ++i) {
-    arr[i] = 1;
-  }
-  return getTensor<int>(arr, dimensions, TF_INT32);
 }
 
 TF_Operation* setOutputNode(std::string op_name, TF_Graph* graph) {
@@ -177,6 +165,7 @@ void runSession(TF_Session* session, TF_Status* status) {
                  outputs_ptr, output_values_ptr, outputs_.size(),  // Outputs
                  targets_ptr, targets_.size(),  // Operations
                  nullptr, status );
+  resetInputValues();
 }
 
 template <typename T> std::vector<T> getOutputs() {

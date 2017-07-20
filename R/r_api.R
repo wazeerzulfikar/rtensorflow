@@ -35,12 +35,12 @@ feedInput <- function(input_node, feed) {
 #' @param op_name Node to be set as output of graph
 #' 
 #' @return Multidimensional output matrix
-runSession <- function(op_name, train = FALSE) {
-  output <- runInternalSession(op_name, train);
-  if (train) {
+runSession <- function(op_name) {
+  output <- runInternalSession(op_name);
+  
+  if (length(output)==0) {
     return (0)
   }
-
   output_array <- array(data = output$val, dim = output$dim)
   return (output_array)
 }
@@ -75,7 +75,7 @@ Placeholder <- function(dtype, shape = NULL, name = "Placeholder") {
 #' @param name Optional custom name for node
 #' 
 #' @return Unique name of node
-Constant <- function(val, dtype = "int32", shape = c(length(val)), name = "Const") {
+Constant <- function(val, dtype = "float", shape = c(length(val)), name = "Const") {
   
   if(identical(name,"Const")){
     name <- generateUniqueName(op_name = name)

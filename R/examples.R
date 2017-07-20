@@ -61,11 +61,9 @@ add_graph <- function() {
   b <- Placeholder("double", shape=c(1))
   c <- Constant(c(3,4,3,6), dtype="double")
   
-  add <- Add(a,b)
+  neg <- Neg(Add(a,b))
   
-  neg <- Neg(add)
-  
-  out <- Sigmoid(add)
+  out <- Sigmoid(neg)
   
   feedInput(a,c(-0.2,0.42,0.13,-0.54))
   feedInput(b,c(0.3))
@@ -79,9 +77,15 @@ add_graph <- function() {
 check_load_saved_model <- function(path){
   initializeSessionVariables()
   loadSavedModel(path, c("train", "serve"))
-  feedInput("x",rep(2,1000))
-  feedInput("y", rep(4,1000))
-  runSession("train", train = TRUE)
+  # Training the regressor
+  for (i in 1:100) {
+    feedInput("x",rep(4,1))
+    feedInput("y", rep(5,1))
+    runSession("train")
+  }
   
-  return(runSession("y_hat")[1])
+  # Testing the regressor
+  feedInput("x", rep(4,1))
+  feedInput("y", rep(5,1))
+  return(runSession("y_hat"))
 }
