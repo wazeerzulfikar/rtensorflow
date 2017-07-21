@@ -35,14 +35,18 @@ feedInput <- function(input_node, feed) {
 #' @param op_name Node to be set as output of graph
 #' 
 #' @return Multidimensional output matrix
-runSession <- function(op_name) {
-  output <- runInternalSession(op_name);
-  
-  if (length(output)==0) {
-    return (0)
+runSession <- function(op_names) {
+  output <- runInternalSession(op_names)
+  output_list <- list()
+  for (op in op_names) {
+    if (identical(output[[op]],"No Output")) {
+      output_list[op] <- 0
+    } else {
+      output_array <- array(data = output[[op]][["val"]], dim = output[[op]][["dim"]])
+      output_list[op] <- output_array
+    }
   }
-  output_array <- array(data = output$val, dim = output$dim)
-  return (output_array)
+  return (output_list)
 }
 
 # Wrappers to create mathematical ops for graph

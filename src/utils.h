@@ -41,11 +41,11 @@ void setPointers();
 
 void runSession(TF_Session* session, TF_Status* status);
 
-template <typename T> std::vector<T>  getOutputs();
-
 std::vector<int64_t> getOutputDimensions();
 
-List fetchOutput(TF_DataType dtype);
+List fetchOutput(TF_DataType dtype, int output_index);
+
+template <typename T> std::vector<T>  getOutputs(int output_index);
   
 // Operation Helpers
 

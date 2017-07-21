@@ -165,29 +165,6 @@ void runSession(TF_Session* session, TF_Status* status) {
                  outputs_ptr, output_values_ptr, outputs_.size(),  // Outputs
                  targets_ptr, targets_.size(),  // Operations
                  nullptr, status );
-  resetInputValues();
-}
-
-template <typename T> std::vector<T> getOutputs() {
-  TF_Tensor* out = output_values_[0];
-  
-  vector<int64_t> dim = getOutputDimensions();
-  int64_t length = 1;
-  for (int i = 0; i < dim.size(); ++i) {
-    length *= dim[i];
-  }
-
-  void* output_contents = TF_TensorData(out);
-  
-  vector<T> output_vector = vector<T>(length);
-  
-  T* output_ptr = static_cast<T*>(output_contents);
-  
-  for (int i = 0; i < length; ++i) {
-    output_vector[i] = output_ptr[i];
-  }
-  
-  return output_vector;
 }
 
 std::vector<int64_t> getOutputDimensions() {
@@ -203,23 +180,45 @@ std::vector<int64_t> getOutputDimensions() {
   return dim;
 }
 
-List fetchOutput(TF_DataType dtype) {
+List fetchOutput(TF_DataType dtype, int output_index) {
   List output;
   if (dtype == 1) {
-    vector<float> output_val = getOutputs<float>();
+    vector<float> output_val = getOutputs<float>(output_index);
     output["val"] = output_val;
   } else if (dtype == 2) {
-    vector<double> output_val = getOutputs<double>();
+    vector<double> output_val = getOutputs<double>(output_index);
     output["val"] = output_val;
   } else if (dtype == 3) {
-    vector<int> output_val = getOutputs<int>();
+    vector<int> output_val = getOutputs<int>(output_index);
     output["val"] = output_val;
   } else if (dtype == 10) {
-    vector<bool> output_val = getOutputs<bool>();
+    vector<bool> output_val = getOutputs<bool>(output_index);
     output["val"] = output_val;
   }
   output["dim"] = getOutputDimensions();
   return output;
+}
+
+template <typename T> std::vector<T> getOutputs(int output_index) {
+  TF_Tensor* out = output_values_[output_index];
+  
+  vector<int64_t> dim = getOutputDimensions();
+  int64_t length = 1;
+  for (int i = 0; i < dim.size(); ++i) {
+    length *= dim[i];
+  }
+  
+  void* output_contents = TF_TensorData(out);
+  
+  vector<T> output_vector = vector<T>(length);
+  
+  T* output_ptr = static_cast<T*>(output_contents);
+  
+  for (int i = 0; i < length; ++i) {
+    output_vector[i] = output_ptr[i];
+  }
+  
+  return output_vector;
 }
 
 // Operation Helpers

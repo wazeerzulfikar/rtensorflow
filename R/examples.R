@@ -78,7 +78,7 @@ check_load_saved_model <- function(path){
   initializeSessionVariables()
   loadSavedModel(path, c("train", "serve"))
   # Training the regressor
-  for (i in 1:100) {
+  for (i in 1:10) {
     feedInput("x",rep(4,1))
     feedInput("y", rep(5,1))
     runSession("train")
@@ -87,5 +87,6 @@ check_load_saved_model <- function(path){
   # Testing the regressor
   feedInput("x", rep(4,1))
   feedInput("y", rep(5,1))
-  return(runSession("y_hat"))
+  output <- runSession(c("train","y_hat"))
+  return (output$"y_hat")
 }

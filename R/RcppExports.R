@@ -50,8 +50,8 @@ setFeedInput <- function(op_name, inp) {
 #' 
 #' @return R List containing output tensor and dimensions
 #' 
-runInternalSession <- function(op_name) {
-    .Call('rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_name)
+runInternalSession <- function(op_names) {
+    .Call('rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_names)
 }
 
 #' @title Close and Delete Session Variables

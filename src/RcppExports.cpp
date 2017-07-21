@@ -39,13 +39,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // runInternalSession
-List runInternalSession(std::string op_name);
-RcppExport SEXP rtensorflow_runInternalSession(SEXP op_nameSEXP) {
+List runInternalSession(std::vector<std::string> op_names);
+RcppExport SEXP rtensorflow_runInternalSession(SEXP op_namesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(runInternalSession(op_name));
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type op_names(op_namesSEXP);
+    rcpp_result_gen = Rcpp::wrap(runInternalSession(op_names));
     return rcpp_result_gen;
 END_RCPP
 }

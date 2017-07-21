@@ -119,42 +119,48 @@ int setFeedInput(std::string op_name, List inp) {
 //' @return R List containing output tensor and dimensions
 //' 
 // [[Rcpp::export]]
-List runInternalSession(std::string op_name) {
+List runInternalSession(std::vector<std::string> op_names) {
   cout << "Running the Session.. " << endl;
+  List output;
+  int output_index = 0;
+  for (string op_name : op_names){
+    TF_Operation* op = TF_GraphOperationByName(graph, op_name.c_str());
+    const char* type = TF_OperationOpType(op);
   
-  TF_Operation* op = TF_GraphOperationByName(graph, op_name.c_str());
-  const char* type = TF_OperationOpType(op);
-  
-  TF_Operation* output;
-  TF_Operation* target;
-  if (strcmp(type,"NoOp")==0) {
-    target = setTargetNode(op_name, graph);
-  } else {
-    output = setOutputNode(op_name, graph);
-  }
+    TF_Operation* output_op;
+    TF_Operation* target_op;
+    if (strcmp(type,"NoOp")==0) {
+      target_op = setTargetNode(op_name, graph);
+    } else {
+      output_op = setOutputNode(op_name, graph);
+    }
 
-  setPointers();
+    setPointers();
   
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error in graph" << endl;
-    cout << TF_Message(status) << endl;
-    return -1;
+    if (TF_GetCode(status)!=TF_OK) {
+      cout << "Error in graph" << endl;
+      cout << TF_Message(status) << endl;
+      return -1;
+    }
+  
+    runSession(session,status);
+  
+    if (TF_GetCode(status)!=TF_OK) {
+      cout << "Error running session" << endl;
+      cout << TF_Message(status) << endl;
+      return -1;
+    }
+  
+    if (strcmp(type,"NoOp")==0) {
+      output[op_name] = "No Output";
+    } else {
+      TF_DataType dtype = TF_OperationOutputType({output_op,0});
+      output[op_name] = fetchOutput(dtype, output_index);
+      output_index+=1;
+    }
   }
-  
-  runSession(session,status);
-  
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error running session" << endl;
-    cout << TF_Message(status) << endl;
-    return -1;
-  }
-  
-  if (strcmp(type,"NoOp")==0) {
-    return 0;
-  } else {
-    TF_DataType dtype = TF_OperationOutputType({output,0});
-    return fetchOutput(dtype);
-  }
+  resetInputValues();
+  return output;
 }
 
 //' @title Close and Delete Session Variables
