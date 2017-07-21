@@ -57,7 +57,7 @@ add_graph <- function() {
   
   initializeSessionVariables()
   
-  a <- Placeholder("double", shape=c(4))
+  a <- Placeholder("double", shape=c(-1,4))
   b <- Placeholder("double", shape=c(1))
   c <- Constant(c(3,4,3,6), dtype="double")
   
@@ -78,15 +78,15 @@ check_load_saved_model <- function(path){
   loadSavedModel(path, c("train", "serve"))
   # Training the regressor
   for (i in 1:10) {
-    feedInput("x",rep(4,1))
-    feedInput("y", rep(5,1))
+    feedInput("x",rep(i,1))
+    feedInput("y", rep(i,1))
     output <- runSession(c("train", "loss"))
     cat("Loss: ",output[["loss"]],"\n")
   }
   
   # Testing the regressor
   feedInput("x", rep(4,1))
-  feedInput("y", rep(5,1))
+  feedInput("y", rep(4,1))
   output <- runSession("y_hat")
   
   deleteSessionVariables()

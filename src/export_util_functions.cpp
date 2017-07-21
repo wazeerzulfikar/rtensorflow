@@ -103,6 +103,7 @@ int setFeedInput(std::string op_name, List inp) {
   vector<int64_t> shape_vector;
   for (int i=0; i < num_dims; ++i){
     shape_vector.emplace_back(shape[i]);
+
   }
   TF_Tensor* feed = parseInputs(inp,shape_vector,dtype);
   setInputs({{input,feed}});

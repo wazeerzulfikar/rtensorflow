@@ -104,20 +104,28 @@ TF_DataType getDataType (string dtype) {
 
 template <typename T> TF_Tensor* getTensor(List inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
   int no_dims = dimensions.size();
-  int i = 0;
-  if (dimensions.at(i)==-1) {
-    --no_dims;
-    i = 1;
+  int unknown_dim = -1;
+  int64_t length = 1;
+  
+  for (int i = 0; i < dimensions.size(); ++i) {
+    if (dimensions.at(i)==-1) {
+      unknown_dim = i;
+    } else {
+      length *= dimensions.at(i);
+    }
   }
   
-// Use void pointer to get any tensor datatype?
+  if (unknown_dim > -1) {
+    dimensions[unknown_dim] = static_cast<int>(inp.size()/length);
+  }
+  
   T* c_inp = new T[inp.size()];
   for (int64_t iter=0; iter < inp.size(); ++iter) {
     c_inp[iter] = inp[iter];
   }
 
   return TF_NewTensor(
-    dtype, &dimensions[i], no_dims, c_inp, sizeof(T)*inp.size(),
+    dtype, &dimensions[0], no_dims, c_inp, sizeof(T)*inp.size(),
     &tensor_deallocator<T>,
     nullptr);
 }
@@ -181,6 +189,7 @@ std::vector<int64_t> getOutputDimensions(int output_index) {
 
 List fetchOutput(TF_DataType dtype, int output_index) {
   List output;
+  
   if (dtype == 1) {
     vector<float> output_val = getOutputs<float>(output_index);
     output["val"] = output_val;
@@ -194,6 +203,7 @@ List fetchOutput(TF_DataType dtype, int output_index) {
     vector<bool> output_val = getOutputs<bool>(output_index);
     output["val"] = output_val;
   }
+  
   output["dim"] = getOutputDimensions(output_index);
   return output;
 }
