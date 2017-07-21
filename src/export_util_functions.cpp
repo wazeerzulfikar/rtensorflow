@@ -122,18 +122,17 @@ int setFeedInput(std::string op_name, List inp) {
 List runInternalSession(std::vector<std::string> op_names) {
   cout << "Running the Session.. " << endl;
   List output;
-  int output_index = 0;
+  vector<pair<string, TF_Operation*>>output_operations;
   for (string op_name : op_names){
     TF_Operation* op = TF_GraphOperationByName(graph, op_name.c_str());
     const char* type = TF_OperationOpType(op);
   
-    TF_Operation* output_op;
-    TF_Operation* target_op;
     if (strcmp(type,"NoOp")==0) {
-      target_op = setTargetNode(op_name, graph);
+      output_operations.emplace_back(op_name, setTargetNode(op_name, graph));
     } else {
-      output_op = setOutputNode(op_name, graph);
+      output_operations.emplace_back(op_name, setOutputNode(op_name, graph));
     }
+  }
 
     setPointers();
   
@@ -143,7 +142,7 @@ List runInternalSession(std::vector<std::string> op_names) {
       return -1;
     }
   
-    runSession(session,status);
+    runSession(session, status);
   
     if (TF_GetCode(status)!=TF_OK) {
       cout << "Error running session" << endl;
@@ -151,15 +150,20 @@ List runInternalSession(std::vector<std::string> op_names) {
       return -1;
     }
   
+  int output_index = 0;
+  for (auto op : output_operations) {
+    const char* type = TF_OperationOpType(op.second);
     if (strcmp(type,"NoOp")==0) {
-      output[op_name] = "No Output";
+      output[op.first] = "No Output";
     } else {
-      TF_DataType dtype = TF_OperationOutputType({output_op,0});
-      output[op_name] = fetchOutput(dtype, output_index);
+      TF_DataType dtype = TF_OperationOutputType({op.second,0});
+      output[op.first] = fetchOutput(dtype, output_index);
       output_index+=1;
     }
   }
+  
   resetInputValues();
+  resetOutputValues();
   return output;
 }
 

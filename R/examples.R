@@ -13,10 +13,10 @@ import_run_graph <- function(path, feed){
   initializeSessionVariables()
   loadGraphFromFile(path)
   feedInput("input", feed)
-  output <- runSession("output")
+  output_list <- runSession("output")
   
   deleteSessionVariables()
-  return(output)
+  return(output_list[["output"]])
   
 }
 
@@ -40,14 +40,14 @@ build_run_graph <- function(feed, dtype="float") {
   hidden_matmul <- MatMul(input, w1)
   hidden_layer <- Add(hidden_matmul, b1)
   output_matmul <- MatMul(hidden_layer, w2)
-  output_layer <- Add(output_matmul, b2)
+  output_layer <- Add(output_matmul, b2, name="out")
   
   feedInput(input, feed)
-  output <- runSession(output_layer)
+  output <- runSession("out")
   
   deleteSessionVariables()
   
-  return(output)
+  return(output[[output_layer]])
 }
 
 #' @title Build an Add graph
@@ -68,10 +68,9 @@ add_graph <- function() {
   feedInput(a,c(-0.2,0.42,0.13,-0.54))
   feedInput(b,c(0.3))
   
-  output <- runSession(out)
-  
+  output <- runSession(c(out,neg))
   deleteSessionVariables()
-  return (output)
+  return (output[[out]])
 }
 
 check_load_saved_model <- function(path){
@@ -81,12 +80,15 @@ check_load_saved_model <- function(path){
   for (i in 1:10) {
     feedInput("x",rep(4,1))
     feedInput("y", rep(5,1))
-    runSession("train")
+    output <- runSession(c("train", "loss"))
+    cat("Loss: ",output[["loss"]],"\n")
   }
   
   # Testing the regressor
   feedInput("x", rep(4,1))
   feedInput("y", rep(5,1))
-  output <- runSession(c("train","y_hat"))
-  return (output$"y_hat")
+  output <- runSession("y_hat")
+  
+  deleteSessionVariables()
+  return (output[["y_hat"]])
 }

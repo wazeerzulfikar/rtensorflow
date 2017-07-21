@@ -40,10 +40,10 @@ runSession <- function(op_names) {
   output_list <- list()
   for (op in op_names) {
     if (identical(output[[op]],"No Output")) {
-      output_list[op] <- 0
+      output_list[[op]] <- 0
     } else {
       output_array <- array(data = output[[op]][["val"]], dim = output[[op]][["dim"]])
-      output_list[op] <- output_array
+      output_list[[op]] <- output_array
     }
   }
   return (output_list)

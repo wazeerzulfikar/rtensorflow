@@ -41,7 +41,7 @@ void setPointers();
 
 void runSession(TF_Session* session, TF_Status* status);
 
-std::vector<int64_t> getOutputDimensions();
+std::vector<int64_t> getOutputDimensions(int output_index);
 
 List fetchOutput(TF_DataType dtype, int output_index);
 

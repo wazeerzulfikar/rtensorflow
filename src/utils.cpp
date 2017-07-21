@@ -167,12 +167,11 @@ void runSession(TF_Session* session, TF_Status* status) {
                  nullptr, status );
 }
 
-std::vector<int64_t> getOutputDimensions() {
-  TF_Tensor* out = output_values_[0];
+std::vector<int64_t> getOutputDimensions(int output_index) {
+  TF_Tensor* out = output_values_[output_index];
   std::vector<int64_t> dim(TF_NumDims(out));
-  
   if (out == nullptr) return {0};
-  
+
   for (int i = 0; i < TF_NumDims(out); ++i) {
     dim [i]= TF_Dim(out,i);
   }
@@ -195,14 +194,14 @@ List fetchOutput(TF_DataType dtype, int output_index) {
     vector<bool> output_val = getOutputs<bool>(output_index);
     output["val"] = output_val;
   }
-  output["dim"] = getOutputDimensions();
+  output["dim"] = getOutputDimensions(output_index);
   return output;
 }
 
 template <typename T> std::vector<T> getOutputs(int output_index) {
   TF_Tensor* out = output_values_[output_index];
   
-  vector<int64_t> dim = getOutputDimensions();
+  vector<int64_t> dim = getOutputDimensions(output_index);
   int64_t length = 1;
   for (int i = 0; i < dim.size(); ++i) {
     length *= dim[i];
