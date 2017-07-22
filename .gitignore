@@ -8,3 +8,6 @@ config.log
 config.status
 autom4te.cache
 inst/doc
+./tests/MNIST_data/
+/tests/MNIST_data/
+/tests/saved-models/mnist-model/
