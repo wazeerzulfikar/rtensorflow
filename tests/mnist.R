@@ -1,10 +1,10 @@
 library(rtensorflow)
 
-check_mnist <- function(path) {
+check_mnist <- function(model_path, csv_path) {
   initializeSessionVariables()
-  loadSavedModel(path, c("train", "serve"))
+  loadSavedModel(model_path, c("train", "serve"))
   
-  data <- read.csv(file="../mnist_data/train.csv", header=TRUE, sep=',')
+  data <- read.csv(file=csv_path header=TRUE, sep=',')
   print ("Data read successful")
   
   y_train <- data[,"label"]

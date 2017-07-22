@@ -26,6 +26,7 @@ generateUniqueName <- function(extra_length=5, op_name="") {
 #' @return Integer status
 feedInput <- function(input_node, feed) {
   feed_vector <- c()
+  
   if(!is.null(dim(feed))) {
     for (i in 1:nrow(feed)) {
       feed_vector <- c(feed_vector, as.numeric(feed[i,]))
@@ -54,8 +55,8 @@ runSession <- function(op_names) {
       if (length(output[[op]][["dim"]])==0) {
         output[[op]][["dim"]] <- length(output[[op]][["val"]])
       }
-      output_array <- array(data = output[[op]][["val"]], dim = output[[op]][["dim"]])
-      output_list[[op]] <- output_array
+      output_array <- array(data = output[[op]][["val"]], dim = rev(output[[op]][["dim"]]))
+      output_list[[op]] <- t(output_array)
     }
   }
   return (output_list)
