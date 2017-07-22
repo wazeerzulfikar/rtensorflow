@@ -11,7 +11,7 @@
 #' initializeSessionVariables()
 #' 
 initializeSessionVariables <- function() {
-    .Call('rtensorflow_initializeSessionVariables', PACKAGE = 'rtensorflow')
+    .Call('_rtensorflow_initializeSessionVariables', PACKAGE = 'rtensorflow')
 }
 
 #' @title Load Graph from File
@@ -26,7 +26,7 @@ initializeSessionVariables <- function() {
 #' loadGraphFromFile("/tests/models/feed_forward_graph.pb")
 #' 
 loadGraphFromFile <- function(path) {
-    .Call('rtensorflow_loadGraphFromFile', PACKAGE = 'rtensorflow', path)
+    .Call('_rtensorflow_loadGraphFromFile', PACKAGE = 'rtensorflow', path)
 }
 
 #' @title Feed Input Ops
@@ -39,7 +39,7 @@ loadGraphFromFile <- function(path) {
 #' @return Integer status 
 #' 
 setFeedInput <- function(op_name, inp) {
-    .Call('rtensorflow_setFeedInput', PACKAGE = 'rtensorflow', op_name, inp)
+    .Call('_rtensorflow_setFeedInput', PACKAGE = 'rtensorflow', op_name, inp)
 }
 
 #' @title Run Internal Session
@@ -51,7 +51,7 @@ setFeedInput <- function(op_name, inp) {
 #' @return R List containing output tensor and dimensions
 #' 
 runInternalSession <- function(op_names) {
-    .Call('rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_names)
+    .Call('_rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_names)
 }
 
 #' @title Close and Delete Session Variables
@@ -65,7 +65,7 @@ runInternalSession <- function(op_names) {
 #' deleteSessionVariables()
 #' 
 deleteSessionVariables <- function() {
-    .Call('rtensorflow_deleteSessionVariables', PACKAGE = 'rtensorflow')
+    .Call('_rtensorflow_deleteSessionVariables', PACKAGE = 'rtensorflow')
 }
 
 #' @title Placeholder
@@ -79,7 +79,7 @@ deleteSessionVariables <- function() {
 #' @return Unique node name
 #' 
 getPlaceholder <- function(shape, dtype, unique_name) {
-    .Call('rtensorflow_getPlaceholder', PACKAGE = 'rtensorflow', shape, dtype, unique_name)
+    .Call('_rtensorflow_getPlaceholder', PACKAGE = 'rtensorflow', shape, dtype, unique_name)
 }
 
 #' @title Constant
@@ -94,7 +94,7 @@ getPlaceholder <- function(shape, dtype, unique_name) {
 #' @return Unique node name
 #' 
 getConstant <- function(val, dim, dtype, unique_name) {
-    .Call('rtensorflow_getConstant', PACKAGE = 'rtensorflow', val, dim, dtype, unique_name)
+    .Call('_rtensorflow_getConstant', PACKAGE = 'rtensorflow', val, dim, dtype, unique_name)
 }
 
 #' @title Unary Op
@@ -108,7 +108,7 @@ getConstant <- function(val, dim, dtype, unique_name) {
 #' @return Unique node name
 #' 
 getUnaryOp <- function(inp, op_name, unique_name) {
-    .Call('rtensorflow_getUnaryOp', PACKAGE = 'rtensorflow', inp, op_name, unique_name)
+    .Call('_rtensorflow_getUnaryOp', PACKAGE = 'rtensorflow', inp, op_name, unique_name)
 }
 
 #' @title Binary Op
@@ -123,11 +123,11 @@ getUnaryOp <- function(inp, op_name, unique_name) {
 #' @return Unique node name
 #' 
 getBinaryOp <- function(l_op, r_op, op_name, unique_name) {
-    .Call('rtensorflow_getBinaryOp', PACKAGE = 'rtensorflow', l_op, r_op, op_name, unique_name)
+    .Call('_rtensorflow_getBinaryOp', PACKAGE = 'rtensorflow', l_op, r_op, op_name, unique_name)
 }
 
 loadSavedModel <- function(path, tags) {
-    invisible(.Call('rtensorflow_loadSavedModel', PACKAGE = 'rtensorflow', path, tags))
+    invisible(.Call('_rtensorflow_loadSavedModel', PACKAGE = 'rtensorflow', path, tags))
 }
 
 #' @title Print Node List
@@ -140,7 +140,7 @@ loadSavedModel <- function(path, tags) {
 #' printNodeList()
 #' 
 printNodeList <- function() {
-    invisible(.Call('rtensorflow_printNodeList', PACKAGE = 'rtensorflow'))
+    invisible(.Call('_rtensorflow_printNodeList', PACKAGE = 'rtensorflow'))
 }
 
 #' @title Locate Error
@@ -153,6 +153,6 @@ printNodeList <- function() {
 #' locateError()
 #' 
 locateError <- function() {
-    invisible(.Call('rtensorflow_locateError', PACKAGE = 'rtensorflow'))
+    invisible(.Call('_rtensorflow_locateError', PACKAGE = 'rtensorflow'))
 }
 

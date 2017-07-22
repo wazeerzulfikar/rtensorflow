@@ -25,7 +25,16 @@ generateUniqueName <- function(extra_length=5, op_name="") {
 #' 
 #' @return Integer status
 feedInput <- function(input_node, feed) {
-  return (setFeedInput(input_node, feed))
+  feed_vector <- c()
+  if(!is.null(dim(feed))) {
+    for (i in 1:nrow(feed)) {
+      feed_vector <- c(feed_vector, as.numeric(feed[i,]))
+    }
+  } else {
+    feed_vector <- feed
+  }
+  
+  return (setFeedInput(input_node, feed_vector))
 }
 
 #' @title Run Session

@@ -65,7 +65,9 @@ add_graph <- function() {
   
   out <- Sigmoid(neg)
   
-  feedInput(a,c(-0.2,0.42,0.13,-0.54))
+  feed <- data.frame(a=c(-0.2, 0.2),b=c(0.42,-0.42),c=c(0.13,-0.13),d=c(-0.54,0.54))
+
+  feedInput(a,feed)
   feedInput(b,c(0.3))
   
   output <- runSession(c(out,neg))

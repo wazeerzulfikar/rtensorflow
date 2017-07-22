@@ -15,8 +15,11 @@ train = optimizer.minimize(loss, name='train')
 
 init = tf.variables_initializer(tf.global_variables(), name='init')
 
-directory = 'saved-models/saved-regression-model'
-builder = SavedModelBuilder(directory)
+EXPORT_DIR = 'saved-models/saved-regression-model'
+builder = SavedModelBuilder(EXPORT_DIR)
+
+if os.path.exists(EXPORT_DIR):
+    shutil.rmtree(EXPORT_DIR)
 
 with tf.Session(graph=tf.get_default_graph()) as sess:
     sess.run(init)

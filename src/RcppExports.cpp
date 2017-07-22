@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // initializeSessionVariables
 int initializeSessionVariables();
-RcppExport SEXP rtensorflow_initializeSessionVariables() {
+RcppExport SEXP _rtensorflow_initializeSessionVariables() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,7 +17,7 @@ END_RCPP
 }
 // loadGraphFromFile
 int loadGraphFromFile(std::string path);
-RcppExport SEXP rtensorflow_loadGraphFromFile(SEXP pathSEXP) {
+RcppExport SEXP _rtensorflow_loadGraphFromFile(SEXP pathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -28,7 +28,7 @@ END_RCPP
 }
 // setFeedInput
 int setFeedInput(std::string op_name, List inp);
-RcppExport SEXP rtensorflow_setFeedInput(SEXP op_nameSEXP, SEXP inpSEXP) {
+RcppExport SEXP _rtensorflow_setFeedInput(SEXP op_nameSEXP, SEXP inpSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -40,7 +40,7 @@ END_RCPP
 }
 // runInternalSession
 List runInternalSession(std::vector<std::string> op_names);
-RcppExport SEXP rtensorflow_runInternalSession(SEXP op_namesSEXP) {
+RcppExport SEXP _rtensorflow_runInternalSession(SEXP op_namesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -51,7 +51,7 @@ END_RCPP
 }
 // deleteSessionVariables
 int deleteSessionVariables();
-RcppExport SEXP rtensorflow_deleteSessionVariables() {
+RcppExport SEXP _rtensorflow_deleteSessionVariables() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -61,7 +61,7 @@ END_RCPP
 }
 // getPlaceholder
 std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::string unique_name);
-RcppExport SEXP rtensorflow_getPlaceholder(SEXP shapeSEXP, SEXP dtypeSEXP, SEXP unique_nameSEXP) {
+RcppExport SEXP _rtensorflow_getPlaceholder(SEXP shapeSEXP, SEXP dtypeSEXP, SEXP unique_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -74,7 +74,7 @@ END_RCPP
 }
 // getConstant
 std::string getConstant(List val, std::vector<int64_t> dim, std::string dtype, std::string unique_name);
-RcppExport SEXP rtensorflow_getConstant(SEXP valSEXP, SEXP dimSEXP, SEXP dtypeSEXP, SEXP unique_nameSEXP) {
+RcppExport SEXP _rtensorflow_getConstant(SEXP valSEXP, SEXP dimSEXP, SEXP dtypeSEXP, SEXP unique_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -88,7 +88,7 @@ END_RCPP
 }
 // getUnaryOp
 std::string getUnaryOp(std::string inp, std::string op_name, std::string unique_name);
-RcppExport SEXP rtensorflow_getUnaryOp(SEXP inpSEXP, SEXP op_nameSEXP, SEXP unique_nameSEXP) {
+RcppExport SEXP _rtensorflow_getUnaryOp(SEXP inpSEXP, SEXP op_nameSEXP, SEXP unique_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -101,7 +101,7 @@ END_RCPP
 }
 // getBinaryOp
 std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name, std::string unique_name);
-RcppExport SEXP rtensorflow_getBinaryOp(SEXP l_opSEXP, SEXP r_opSEXP, SEXP op_nameSEXP, SEXP unique_nameSEXP) {
+RcppExport SEXP _rtensorflow_getBinaryOp(SEXP l_opSEXP, SEXP r_opSEXP, SEXP op_nameSEXP, SEXP unique_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -115,7 +115,7 @@ END_RCPP
 }
 // loadSavedModel
 void loadSavedModel(std::string path, CharacterVector tags);
-RcppExport SEXP rtensorflow_loadSavedModel(SEXP pathSEXP, SEXP tagsSEXP) {
+RcppExport SEXP _rtensorflow_loadSavedModel(SEXP pathSEXP, SEXP tagsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
@@ -126,7 +126,7 @@ END_RCPP
 }
 // printNodeList
 void printNodeList();
-RcppExport SEXP rtensorflow_printNodeList() {
+RcppExport SEXP _rtensorflow_printNodeList() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     printNodeList();
@@ -135,7 +135,7 @@ END_RCPP
 }
 // locateError
 void locateError();
-RcppExport SEXP rtensorflow_locateError() {
+RcppExport SEXP _rtensorflow_locateError() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     locateError();
@@ -144,18 +144,18 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"rtensorflow_initializeSessionVariables", (DL_FUNC) &rtensorflow_initializeSessionVariables, 0},
-    {"rtensorflow_loadGraphFromFile", (DL_FUNC) &rtensorflow_loadGraphFromFile, 1},
-    {"rtensorflow_setFeedInput", (DL_FUNC) &rtensorflow_setFeedInput, 2},
-    {"rtensorflow_runInternalSession", (DL_FUNC) &rtensorflow_runInternalSession, 1},
-    {"rtensorflow_deleteSessionVariables", (DL_FUNC) &rtensorflow_deleteSessionVariables, 0},
-    {"rtensorflow_getPlaceholder", (DL_FUNC) &rtensorflow_getPlaceholder, 3},
-    {"rtensorflow_getConstant", (DL_FUNC) &rtensorflow_getConstant, 4},
-    {"rtensorflow_getUnaryOp", (DL_FUNC) &rtensorflow_getUnaryOp, 3},
-    {"rtensorflow_getBinaryOp", (DL_FUNC) &rtensorflow_getBinaryOp, 4},
-    {"rtensorflow_loadSavedModel", (DL_FUNC) &rtensorflow_loadSavedModel, 2},
-    {"rtensorflow_printNodeList", (DL_FUNC) &rtensorflow_printNodeList, 0},
-    {"rtensorflow_locateError", (DL_FUNC) &rtensorflow_locateError, 0},
+    {"_rtensorflow_initializeSessionVariables", (DL_FUNC) &_rtensorflow_initializeSessionVariables, 0},
+    {"_rtensorflow_loadGraphFromFile", (DL_FUNC) &_rtensorflow_loadGraphFromFile, 1},
+    {"_rtensorflow_setFeedInput", (DL_FUNC) &_rtensorflow_setFeedInput, 2},
+    {"_rtensorflow_runInternalSession", (DL_FUNC) &_rtensorflow_runInternalSession, 1},
+    {"_rtensorflow_deleteSessionVariables", (DL_FUNC) &_rtensorflow_deleteSessionVariables, 0},
+    {"_rtensorflow_getPlaceholder", (DL_FUNC) &_rtensorflow_getPlaceholder, 3},
+    {"_rtensorflow_getConstant", (DL_FUNC) &_rtensorflow_getConstant, 4},
+    {"_rtensorflow_getUnaryOp", (DL_FUNC) &_rtensorflow_getUnaryOp, 3},
+    {"_rtensorflow_getBinaryOp", (DL_FUNC) &_rtensorflow_getBinaryOp, 4},
+    {"_rtensorflow_loadSavedModel", (DL_FUNC) &_rtensorflow_loadSavedModel, 2},
+    {"_rtensorflow_printNodeList", (DL_FUNC) &_rtensorflow_printNodeList, 0},
+    {"_rtensorflow_locateError", (DL_FUNC) &_rtensorflow_locateError, 0},
     {NULL, NULL, 0}
 };
 
