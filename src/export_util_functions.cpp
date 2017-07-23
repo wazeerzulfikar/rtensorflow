@@ -121,7 +121,7 @@ int setFeedInput(std::string op_name, List inp) {
 //' 
 // [[Rcpp::export]]
 List runInternalSession(std::vector<std::string> op_names) {
-  cout << "Running the Session.. " << endl;
+//  cout << "Running the Session.. " << endl;
   List output;
   vector<pair<string, TF_Operation*>>output_operations;
   for (string op_name : op_names){

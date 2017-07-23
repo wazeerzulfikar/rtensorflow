@@ -94,3 +94,48 @@ check_load_saved_model <- function(path){
   deleteSessionVariables()
   return (output[["y_hat"]])
 }
+
+check_mnist <- function(model_path, csv_path) {
+  initializeSessionVariables()
+  loadSavedModel(model_path, c("train", "serve"))
+  
+  data <- read.csv(file=csv_path, header=TRUE, sep=',')
+  print ("Data read successful")
+  
+  y_train <- data[,"label"]
+  col <- 10
+  row <- length(y_train)
+  ans <- array(data=rep(0,col*row),dim=c(row,col))
+  i <- 1
+  for (j in y_train) {
+    ans[i,j+1] <- 1
+    i=i+1
+  }
+  y_train <- ans
+
+  drops <- c("label")
+  X_train <- data[ , !(names(data) %in% drops)]
+  X_train <- X_train/255
+  step <- 0
+  for (i in seq(1, 10000, by = 128)) {
+     
+      feedInput("x",X_train[c(i:i+128),])
+      feedInput("y",y_train[c(i:i+128),])
+      feedInput("keep_prob",c(0.75))
+      runSession(c("train"))
+    if (step%%10==0) {
+      feedInput("x",X_train[c(i:i+128),])
+      feedInput("y",y_train[c(i:i+128),])
+      feedInput("keep_prob",c(1.))
+      display <- runSession(c("cost","accuracy"))
+    
+      cat("Iter ",i, ",  ")
+      cat("Cost=", display[["cost"]])
+      cat(",  Accuracy=", display[["accuracy"]],"\n")
+    }
+      step <- step+1
+  }
+  
+  deleteSessionVariables()
+  
+}

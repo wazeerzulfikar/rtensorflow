@@ -55,8 +55,8 @@ runSession <- function(op_names) {
       if (length(output[[op]][["dim"]])==0) {
         output[[op]][["dim"]] <- length(output[[op]][["val"]])
       }
-      output_array <- array(data = output[[op]][["val"]], dim = rev(output[[op]][["dim"]]))
-      output_list[[op]] <- t(output_array)
+      output_array <- aperm(array(data = output[[op]][["val"]], dim = rev(output[[op]][["dim"]])))
+      output_list[[op]] <- output_array
     }
   }
   return (output_list)
