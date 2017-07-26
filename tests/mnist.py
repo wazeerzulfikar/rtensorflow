@@ -95,7 +95,7 @@ biases = {
 pred = conv_net(x, weights, biases, keep_prob)
 
 # Define loss and optimizer
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y), name="cost")
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y, name="softmax"), name="cost")
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost, name="train")
 
 # Evaluate model

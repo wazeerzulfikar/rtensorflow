@@ -127,7 +127,6 @@ List runInternalSession(std::vector<std::string> op_names) {
   for (string op_name : op_names){
     TF_Operation* op = TF_GraphOperationByName(graph, op_name.c_str());
     const char* type = TF_OperationOpType(op);
-  
     if (strcmp(type,"NoOp")==0) {
       output_operations.emplace_back(op_name, setTargetNode(op_name, graph));
     } else {

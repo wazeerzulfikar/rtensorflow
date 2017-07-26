@@ -14,7 +14,179 @@ rtensorflow is a language binding for TensorFlow, an open source library for Mac
 
 Tensorflow, essentially, is a graph computational library. Nodes in the graph represent operations that must be performed. Edges in the graph represent either data or control dependencies. 
 
-## Import Graph and Run with Custom Input (With Example)
+Currently, using this package you can :
+
+- Load a Saved TensorFlow model and train it further.
+- Import and Run a TensorFlow Protobuf graph
+- Build a Custom Graph and Run it (Not trainable, yet)
+
+## Load a saved model and Train it with MNIST Dataset
+
+A TensorFlow graph can be built and saved in Python, and then load it in R for further `Training` or `Serving`. Here we will load a saved Convolutional Neural Network from Python into R and train it with the popular MNIST Hand-Written Digits dataset. For further information on convolutional neural networks, have a look at the following references: 
+
+- http://neuralnetworksanddeeplearning.com/
+- http://cs231n.github.io/convolutional-networks/
+
+The first step is to initialize all the global variables associated with a Session. A session is a runtime object representing a launched graph. This is a necessary step for any type of usage of rtensorflow. This can be done by,
+
+`initializeSessionVariables()`
+
+We, then, load the saved model. I have included the python script for creating such a graph and saving it in my [github repository](https://github.com/wazeerzulfikar/rtensorflow/blob/master/tests/mnist.py). We also pass the tags for training and serving the saved model.
+
+`loadSavedModel(model_path, c("train", "serve"))`
+
+Next, the data has to be read from the CSV file.
+
+```
+data <- read.csv(file=csv_path, header=TRUE, sep=',')
+print ("Data read successful")
+```
+
+The data has to be preprocessed before moving to the actual deep learning part. Here we first extract the "labels" column from the training dataset, this will act as the y_train subset. The labels are [one hot encoded](https://www.quora.com/What-is-one-hot-encoding-and-when-is-it-used-in-data-science). Then to obtain the features subset, we drop the labels column from the dataset and store in X_train. The X_train subset is then [feature scaled](https://en.wikipedia.org/wiki/Feature_scaling) for uniformity and easier training.
+
+```
+y_train <- data[,"label"]
+
+# One hot Encoder for the labels
+col <- 10
+row <- length(y_train)
+onehot <- array(data=rep(0,col*row),dim=c(row,col))
+i <- 1
+for (j in y_train) {
+  onehot[i,j+1] <- 1
+  i=i+1
+}
+y_train <- onehot
+
+# Drop label for getting X training data
+
+drops <- c("label")
+X_train <- data[ , !(names(data) %in% drops)]
+X_train <- X_train/255
+```
+
+Time to set a few parameters..
+
+- training_iters - Number of iterations to train the model for
+- batch_size - Number of samples to include in one batch
+- display_step - Number of steps after which cost and training accuracy should be calculated.
+
+```
+training_iters <- 2000
+batch_size <- 128
+display_step <- 10
+```
+
+The crux of the problem. We now add the training loop. Namely for `training_iters` times, we randomly sample `batch_size` data points and train the model on those data points. Every `display_step` step, we calculate the current cost function value and training accuracy, and print it to the user.
+
+```
+step <- 0
+  for (i in 1:training_iters) {
+      samples <- sample(1:nrow(X_train), batch_size, replace=FALSE)
+      feedInput("x",X_train[samples,])
+      feedInput("y",y_train[samples,])
+      feedInput("keep_prob",c(0.75))
+      runSession(c("train"))
+    if (step%%display_step==0) {
+      feedInput("x",X_train[samples,])
+      feedInput("y",y_train[samples,])
+      feedInput("keep_prob",c(1.))
+      display <- runSession(c("cost","accuracy"))
+    
+      cat("Iter ",i, ",  ")
+      cat("Cost=", display[["cost"]])
+      cat(",  Training Accuracy=", display[["accuracy"]],"\n")
+    }
+      step <- step+1
+  }
+```
+
+### The full code example for Loading a Saved model and Training on MNIST dataset
+
+```{r}
+check_mnist <- function(model_path, csv_path) {
+  initializeSessionVariables()
+  loadSavedModel(model_path, c("train", "serve"))
+  
+  training_iters <- 2000
+  batch_size <- 128
+  display_step <- 10
+  
+  # Read MNIST data CSV file
+  
+  data <- read.csv(file=csv_path, header=TRUE, sep=',')
+  print ("Data read successful")
+  
+  # Extract label column
+  y_train <- data[,"label"]
+  
+  # One hot Encoder for the labels
+  col <- 10
+  row <- length(y_train)
+  onehot <- array(data=rep(0,col*row),dim=c(row,col))
+  i <- 1
+  for (j in y_train) {
+    onehot[i,j+1] <- 1
+    i=i+1
+  }
+  y_train <- onehot
+  
+  # Drop label for getting X training data
+  
+  drops <- c("label")
+  X_train <- data[ , !(names(data) %in% drops)]
+  X_train <- X_train/255
+  
+  step <- 0
+  for (i in 1:training_iters) {
+    samples <- sample(1:nrow(X_train), batch_size, replace=FALSE)
+    feedInput("x",X_train[samples,])
+    feedInput("y",y_train[samples,])
+    feedInput("keep_prob",c(0.75))
+    runSession(c("train"))
+    if (step%%display_step==0) {
+      feedInput("x",X_train[samples,])
+      feedInput("y",y_train[samples,])
+      feedInput("keep_prob",c(1.))
+      display <- runSession(c("cost","accuracy"))
+      
+      cat("Iter ",i, ",  ")
+      cat("Cost=", display[["cost"]])
+      cat(",  Training Accuracy=", display[["accuracy"]],"\n")
+    }
+    step <- step+1
+  }
+  
+  print ("Optimization Finished!")
+  
+  deleteSessionVariables()
+  
+}
+```
+
+A piece of the output when I ran the above code on my machine : 
+
+```
+output <- check_mnist("./tests/saved-models/mnist-model/", "../mnist_data/train.csv")
+Sucessfully instantiated session variables
+2017-07-26 21:24:22.743126: I tensorflow/cc/saved_model/loader.cc:226] Loading SavedModel from: ./tests/saved-models/mnist-model/
+2017-07-26 21:24:22.824430: I tensorflow/cc/saved_model/loader.cc:145] Restoring SavedModel bundle.
+2017-07-26 21:24:23.088057: I tensorflow/cc/saved_model/loader.cc:180] Running LegacyInitOp on SavedModel bundle.
+2017-07-26 21:24:23.091432: I tensorflow/cc/saved_model/loader.cc:274] Loading SavedModel: success. Took 349744 microseconds.
+[1] "Data read successful"
+Iter  1 ,  Cost= 35768.9,  Accuracy= 0.140625 
+Iter  11 ,  Cost= 15368.95,  Accuracy= 0.4375 
+Iter  21 ,  Cost= 8505.903,  Accuracy= 0.546875 
+Iter  31 ,  Cost= 4891.014,  Accuracy= 0.7109375 
+Iter  41 ,  Cost= 4558.614,  Accuracy= 0.78125 
+Iter  51 ,  Cost= 3553.501,  Accuracy= 0.8046875 
+Iter  61 ,  Cost= 3334.56,  Accuracy= 0.8046875 
+Iter  71 ,  Cost= 1881.623,  Accuracy= 0.8828125 
+Iter  81 ,  Cost= 2856.09,  Accuracy= 0.8671875 
+...
+```
+
+## Import Protobuf Graph and Run with Custom Input (With Example)
 
 The first step is to initialize all the global variables associated with a Session. A session is a runtime object representing a launched graph. This is a necessary step for any type of usage of rtensorflow. This can be done by,
 
@@ -36,7 +208,7 @@ To wrap things up, after all the computations have been finished, the session ne
 
 `deleteSessionVariables()`
 
-### The full code example for Importing and Running Graph
+### The full code example for Importing and Running Protobuf Graph
 
 ```{r}
   library(rtensorflow)
@@ -44,10 +216,10 @@ To wrap things up, after all the computations have been finished, the session ne
   initializeSessionVariables()
   loadGraphFromFile("../tests/models/feed_forward_graph.pb")
   feedInput("input", c(1,2,3))
-  output <- runSession("output")
+  output_list <- runSession("output")
   
   deleteSessionVariables()
-  return(output)
+  return(output_list[["output"]])
   }
   
   import_run_graph()
@@ -131,7 +303,7 @@ build_run_graph <- function(feed) {
   output <- runSession(output_layer)
   
   deleteSessionVariables()
-  return (output)
+  return(output[[output_layer]])
 }
 
 build_run_graph(c(-4.1,-1.3,3.98))
