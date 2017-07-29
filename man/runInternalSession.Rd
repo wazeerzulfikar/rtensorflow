@@ -4,10 +4,10 @@
 \alias{runInternalSession}
 \title{Run Internal Session}
 \usage{
-runInternalSession(op_name)
+runInternalSession(op_names)
 }
 \arguments{
-\item{op_name}{Node to be set as output of graph}
+\item{op_names}{Node to be set as output of graph}
 }
 \value{
 R List containing output tensor and dimensions

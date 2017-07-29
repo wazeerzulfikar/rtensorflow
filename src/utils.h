@@ -51,7 +51,7 @@ template <typename T> std::vector<T>  getOutputs(int output_index);
 
 std::pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vector<int64_t> shape, TF_DataType dtype, TF_Graph* graph, TF_Status* status);
 
-std::pair<string, TF_Operation*> Constant(string op_name, string unique_name, TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
+std::pair<string, TF_Operation*> SourceOp(string op_name, string unique_name, TF_Tensor* tensor, TF_Graph* graph, TF_Status* status);
 
 std::pair<string, TF_Operation*> Unary_Op(string op_name, string unique_name, TF_Operation* inp, TF_Graph* graph, TF_Status* status);
 

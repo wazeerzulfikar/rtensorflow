@@ -72,6 +72,36 @@ int loadGraphFromFile(std::string path) {
   return 0;
 }
 
+//' @title Load Saved Model
+//' 
+//' @description Loads a saved TensorFlow model built in python
+//' 
+//' @param path Path to the saved model
+//' @param tags Tags associated with the graph (from {"serve", "train, "gpu"})
+//' 
+//' @return Integer Status
+//' 
+// [[Rcpp::export]]
+int loadSavedModel(std::string path, CharacterVector tags) {
+  TF_Buffer* run_options = TF_NewBufferFromString("", 0);
+  TF_Buffer* metagraph = TF_NewBuffer();
+  char** tags_ptr = new char*[tags.size()];
+  for (int i=0; i < tags.size(); ++i){
+    tags_ptr[i]=tags[i];
+  }
+  
+  session = TF_LoadSessionFromSavedModel(
+    options, run_options, path.c_str(), tags_ptr, tags.size(), graph, metagraph, status);
+  
+  if (TF_GetCode(status)!=TF_OK) {
+    cout << "Error: ";
+    cout << TF_Message(status) << endl;
+    return -1;
+  }
+  
+  return 0;
+}
+
 //' @title Feed Input Ops
 //' 
 //' @description Sets the input node of graph, and feeds a tensor to it
@@ -115,7 +145,7 @@ int setFeedInput(std::string op_name, List inp) {
 //' 
 //' @description Runs the Current Session
 //' 
-//' @param op_name Node to be set as output of graph
+//' @param op_names Node to be set as output of graph
 //' 
 //' @return R List containing output tensor and dimensions
 //' 
@@ -167,6 +197,18 @@ List runInternalSession(std::vector<std::string> op_names) {
   return output;
 }
 
+//' @title Reset Graph
+//' 
+//' @description Resets the graph by clearing all nodes created
+//' 
+//' @return Integer status
+//' 
+// [[Rcpp::export]]
+int resetGraph() {
+  op_list.clear();
+  return 0;
+}
+
 //' @title Close and Delete Session Variables
 //' 
 //' @description Closes session and frees all memory associated with it
@@ -211,22 +253,23 @@ std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::s
   return op.first;
 }
 
-//' @title Constant
+//' @title Source Op
 //' 
-//' @description Adds a constant operation to the graph
+//' @description Adds a source operation to the graph
 //' 
 //' @param val Tensor to be initialized as Constant
 //' @param dim Vector indicating dimensions of val
 //' @param dtype Datatype of input
+//' @param op_name Type of operation for node
 //' @param unique_name Unique name for the node
 //' 
 //' @return Unique node name
 //' 
 // [[Rcpp::export]]
-std::string getConstant(List val, std::vector<int64_t> dim, std::string dtype, std::string unique_name) {
+std::string getSourceOp(List val, std::vector<int64_t> dim, std::string dtype, std::string op_name, std::string unique_name) {
   TF_Tensor* val_t = parseInputs(val, dim, getDataType(dtype));
   pair<string, TF_Operation*> op;
-  op = Constant("Const", unique_name, val_t, graph, status);
+  op = SourceOp(op_name, unique_name, val_t, graph, status);
   op_list.emplace(op.first, op.second);
   return op.first;
 }
@@ -271,24 +314,6 @@ std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name,
   return op.first;
 }
 
-// [[Rcpp::export]]
-void loadSavedModel(std::string path, CharacterVector tags) {
-  TF_Buffer* run_options = TF_NewBufferFromString("", 0);
-  TF_Buffer* metagraph = TF_NewBuffer();
-  char** tags_ptr = new char*[tags.size()];
-  for (int i=0; i < tags.size(); ++i){
-    tags_ptr[i]=tags[i];
-  }
-
-  session = TF_LoadSessionFromSavedModel(
-    options, run_options, path.c_str(), tags_ptr, tags.size(), graph, metagraph, status);
-  
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Here is the error :"<< endl;
-    cout << TF_Message(status) << endl;
-  }
-}
-
 //Debug Helpers
 
 //' @title Print Node List
@@ -322,4 +347,12 @@ void locateError() {
     cout << "Here is the error :"<< endl;
     cout << TF_Message(status) << endl;
   }
+}
+
+// [[Rcpp::export]]
+void getOpDetails(std::string op_name) {
+  TF_Operation* op = op_list.at(op_name);
+  cout<<"Num inputs : "<<TF_OperationNumInputs(op)<<endl;
+  cout<<"Type inputs : "<<TF_OperationInputType({op,0})<<endl;
+  cout<<"Num outputs : "<<TF_OperationNumOutputs(op)<<endl;
 }

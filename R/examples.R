@@ -45,7 +45,7 @@ build_run_graph <- function(feed, dtype="float") {
   feedInput(input, feed)
   output <- runSession("out")
   
-  deleteSessionVariables()
+  resetGraph()
   
   return(output[[output_layer]])
 }
@@ -71,6 +71,9 @@ add_graph <- function() {
   feedInput(b,c(0.3))
   
   output <- runSession(c(out,neg))
+  
+  getOpDetails(Add(a,b))
+  getOpDetails(out)
   deleteSessionVariables()
   return (output[[out]])
 }

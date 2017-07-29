@@ -4,7 +4,7 @@
 \alias{Constant}
 \title{Constant Wrapper}
 \usage{
-Constant(val, dtype = "float", shape = c(length(val)), name = "Const")
+Constant(val, dtype = "float32", shape = c(length(val)), name = "Const")
 }
 \arguments{
 \item{val}{Vector for value of Constant node}

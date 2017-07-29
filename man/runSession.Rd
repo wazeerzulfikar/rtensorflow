@@ -4,10 +4,10 @@
 \alias{runSession}
 \title{Run Session}
 \usage{
-runSession(op_name)
+runSession(op_names)
 }
 \arguments{
-\item{op_name}{Node to be set as output of graph}
+\item{op_names}{Node to be set as output of graph}
 }
 \value{
 Multidimensional output matrix

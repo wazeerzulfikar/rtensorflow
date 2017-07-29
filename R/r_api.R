@@ -42,7 +42,7 @@ feedInput <- function(input_node, feed) {
 #'
 #' @description Runs the current Tensorflow session
 #' 
-#' @param op_name Node to be set as output of graph
+#' @param op_names Node to be set as output of graph
 #' 
 #' @return Multidimensional output matrix
 runSession <- function(op_names) {
@@ -92,13 +92,13 @@ Placeholder <- function(dtype, shape = NULL, name = "Placeholder") {
 #' @param name Optional custom name for node
 #' 
 #' @return Unique name of node
-Constant <- function(val, dtype = "float", shape = c(length(val)), name = "Const") {
+Constant <- function(val, dtype = "float32", shape = c(length(val)), name = "Const") {
   
   if(identical(name,"Const")){
     name <- generateUniqueName(op_name = name)
   }
   
-  return (getConstant(val, shape, dtype, name))
+  return (getSourceOp(val, shape, dtype,"Const", name))
 }
 
 #' @title Add Op

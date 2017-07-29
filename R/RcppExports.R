@@ -29,6 +29,19 @@ loadGraphFromFile <- function(path) {
     .Call('_rtensorflow_loadGraphFromFile', PACKAGE = 'rtensorflow', path)
 }
 
+#' @title Load Saved Model
+#' 
+#' @description Loads a saved TensorFlow model built in python
+#' 
+#' @param path Path to the saved model
+#' @param tags Tags associated with the graph (from {"serve", "train, "gpu"})
+#' 
+#' @return Integer Status
+#' 
+loadSavedModel <- function(path, tags) {
+    .Call('_rtensorflow_loadSavedModel', PACKAGE = 'rtensorflow', path, tags)
+}
+
 #' @title Feed Input Ops
 #' 
 #' @description Sets the input node of graph, and feeds a tensor to it
@@ -46,12 +59,22 @@ setFeedInput <- function(op_name, inp) {
 #' 
 #' @description Runs the Current Session
 #' 
-#' @param op_name Node to be set as output of graph
+#' @param op_names Node to be set as output of graph
 #' 
 #' @return R List containing output tensor and dimensions
 #' 
 runInternalSession <- function(op_names) {
     .Call('_rtensorflow_runInternalSession', PACKAGE = 'rtensorflow', op_names)
+}
+
+#' @title Reset Graph
+#' 
+#' @description Resets the graph by clearing all nodes created
+#' 
+#' @return Integer status
+#' 
+resetGraph <- function() {
+    .Call('_rtensorflow_resetGraph', PACKAGE = 'rtensorflow')
 }
 
 #' @title Close and Delete Session Variables
@@ -82,19 +105,20 @@ getPlaceholder <- function(shape, dtype, unique_name) {
     .Call('_rtensorflow_getPlaceholder', PACKAGE = 'rtensorflow', shape, dtype, unique_name)
 }
 
-#' @title Constant
+#' @title Source Op
 #' 
-#' @description Adds a constant operation to the graph
+#' @description Adds a source operation to the graph
 #' 
 #' @param val Tensor to be initialized as Constant
 #' @param dim Vector indicating dimensions of val
 #' @param dtype Datatype of input
+#' @param op_name Type of operation for node
 #' @param unique_name Unique name for the node
 #' 
 #' @return Unique node name
 #' 
-getConstant <- function(val, dim, dtype, unique_name) {
-    .Call('_rtensorflow_getConstant', PACKAGE = 'rtensorflow', val, dim, dtype, unique_name)
+getSourceOp <- function(val, dim, dtype, op_name, unique_name) {
+    .Call('_rtensorflow_getSourceOp', PACKAGE = 'rtensorflow', val, dim, dtype, op_name, unique_name)
 }
 
 #' @title Unary Op
@@ -126,10 +150,6 @@ getBinaryOp <- function(l_op, r_op, op_name, unique_name) {
     .Call('_rtensorflow_getBinaryOp', PACKAGE = 'rtensorflow', l_op, r_op, op_name, unique_name)
 }
 
-loadSavedModel <- function(path, tags) {
-    invisible(.Call('_rtensorflow_loadSavedModel', PACKAGE = 'rtensorflow', path, tags))
-}
-
 #' @title Print Node List
 #' 
 #' @description Debug helper, prints all nodes currently in the graph
@@ -154,5 +174,9 @@ printNodeList <- function() {
 #' 
 locateError <- function() {
     invisible(.Call('_rtensorflow_locateError', PACKAGE = 'rtensorflow'))
+}
+
+getOpDetails <- function(op_name) {
+    invisible(.Call('_rtensorflow_getOpDetails', PACKAGE = 'rtensorflow', op_name))
 }
 

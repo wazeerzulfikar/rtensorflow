@@ -248,7 +248,7 @@ pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vect
   return {unique_name,op};
 }
 
-pair<string, TF_Operation*> Constant(string op_name, string unique_name, TF_Tensor* tensor, TF_Graph* graph, TF_Status* status) {
+pair<string, TF_Operation*> SourceOp(string op_name, string unique_name, TF_Tensor* tensor, TF_Graph* graph, TF_Status* status) {
   TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name.c_str());
   TF_SetAttrTensor(desc, "value", tensor, status);
   
