@@ -2,7 +2,7 @@
 % Please edit documentation in R/r_api.R
 \name{runSession}
 \alias{runSession}
-\title{Run Session}
+\title{Run Interactive Session}
 \usage{
 runSession(op_names)
 }

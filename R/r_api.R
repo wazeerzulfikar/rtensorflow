@@ -38,7 +38,7 @@ feedInput <- function(input_node, feed) {
   return (setFeedInput(input_node, feed_vector))
 }
 
-#' @title Run Session
+#' @title Run Interactive Session
 #'
 #' @description Runs the current Tensorflow session
 #' 

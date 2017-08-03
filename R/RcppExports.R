@@ -3,7 +3,7 @@
 
 #' @title Initialize Session Variables
 #' 
-#' @description Initializes all global variables and allocate space for each
+#' @description Initializes all global variables for an interactive session
 #' 
 #' @return Integer status 
 #' 
@@ -57,7 +57,7 @@ setFeedInput <- function(op_name, inp) {
 
 #' @title Run Internal Session
 #' 
-#' @description Runs the Current Session
+#' @description Runs the Current Interactive Session
 #' 
 #' @param op_names Node to be set as output of graph
 #' 
@@ -176,6 +176,14 @@ locateError <- function() {
     invisible(.Call('_rtensorflow_locateError', PACKAGE = 'rtensorflow'))
 }
 
+#' @title Op Details
+#' 
+#' @description Get properties of the operation
+#' 
+#' @param op_name Unique identifier of operation
+#' 
+#' @return NULL
+#' 
 getOpDetails <- function(op_name) {
     invisible(.Call('_rtensorflow_getOpDetails', PACKAGE = 'rtensorflow', op_name))
 }

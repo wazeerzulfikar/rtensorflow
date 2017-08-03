@@ -13,5 +13,5 @@ runInternalSession(op_names)
 R List containing output tensor and dimensions
 }
 \description{
-Runs the Current Session
+Runs the Current Interactive Session
 }

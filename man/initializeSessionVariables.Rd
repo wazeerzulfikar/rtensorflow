@@ -10,7 +10,7 @@ initializeSessionVariables()
 Integer status
 }
 \description{
-Initializes all global variables and allocate space for each
+Initializes all global variables for an interactive session
 }
 \examples{
 initializeSessionVariables()

@@ -10,7 +10,7 @@ std::map <string, TF_Operation*> op_list;
 
 //' @title Initialize Session Variables
 //' 
-//' @description Initializes all global variables and allocate space for each
+//' @description Initializes all global variables for an interactive session
 //' 
 //' @return Integer status 
 //' 
@@ -143,7 +143,7 @@ int setFeedInput(std::string op_name, List inp) {
 
 //' @title Run Internal Session
 //' 
-//' @description Runs the Current Session
+//' @description Runs the Current Interactive Session
 //' 
 //' @param op_names Node to be set as output of graph
 //' 
@@ -349,6 +349,14 @@ void locateError() {
   }
 }
 
+//' @title Op Details
+//' 
+//' @description Get properties of the operation
+//' 
+//' @param op_name Unique identifier of operation
+//' 
+//' @return NULL
+//' 
 // [[Rcpp::export]]
 void getOpDetails(std::string op_name) {
   TF_Operation* op = op_list.at(op_name);

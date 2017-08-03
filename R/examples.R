@@ -1,5 +1,6 @@
 #' @useDynLib rtensorflow
 #' @importFrom Rcpp sourceCpp
+#' @importFrom utils read.csv
 #' @exportPattern "^[[:alpha:]]+"
 #' 
 #' @title Import and Run Graph
@@ -78,25 +79,12 @@ add_graph <- function() {
   return (output[[out]])
 }
 
-check_load_saved_model <- function(path){
-  initializeSessionVariables()
-  loadSavedModel(path, c("train", "serve"))
-  # Training the regressor
-  for (i in 1:10) {
-    feedInput("x",rep(i,1))
-    feedInput("y", rep(i,1))
-    output <- runSession(c("train", "loss"))
-    cat("Loss: ",output[["loss"]],"\n")
-  }
-  
-  # Testing the regressor
-  feedInput("x", rep(4,1))
-  feedInput("y", rep(4,1))
-  output <- runSession("y_hat")
-  
-  deleteSessionVariables()
-  return (output[["y_hat"]])
-}
+#' @title Load Saved Model
+#' @description Load an MNIST graph and Train it
+#' @param model_path Path to saved model
+#' @param csv_path Path to csv file with training data
+#' @return Output Value of Network 
+
 check_mnist <- function(model_path, csv_path) {
   initializeSessionVariables()
   loadSavedModel(model_path, c("train", "serve"))

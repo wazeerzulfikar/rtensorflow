@@ -2,4 +2,5 @@
 
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp,sourceCpp)
+importFrom(utils,read.csv)
 useDynLib(rtensorflow)

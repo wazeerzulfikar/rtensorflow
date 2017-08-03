@@ -103,7 +103,7 @@ step <- 0
 
 ### The full code example for Loading a Saved model and Training on MNIST dataset
 
-```{r}
+```
 check_mnist <- function(model_path, csv_path) {
   initializeSessionVariables()
   loadSavedModel(model_path, c("train", "serve"))
@@ -210,7 +210,7 @@ To wrap things up, after all the computations have been finished, the session ne
 
 ### The full code example for Importing and Running Protobuf Graph
 
-```{r}
+```
   library(rtensorflow)
   import_run_graph <- function() {
   initializeSessionVariables()
