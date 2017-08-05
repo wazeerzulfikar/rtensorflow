@@ -4,7 +4,7 @@
 \alias{Constant}
 \title{Constant Wrapper}
 \usage{
-Constant(val, dtype = "float32", shape = c(length(val)), name = "Const")
+Constant(val, dtype = "float32", shape = length(val), name = NULL)
 }
 \arguments{
 \item{val}{Vector for value of Constant node}
@@ -13,7 +13,7 @@ Constant(val, dtype = "float32", shape = c(length(val)), name = "Const")
 
 \item{shape}{Vector indicating dimensions of val}
 
-\item{name}{Optional custom name for node}
+\item{name}{Optional custom name for node. If not specified, a random name is generated}
 }
 \value{
 Unique name of node

@@ -10,5 +10,5 @@ add_graph()
 Output Value of Network
 }
 \description{
-Function to build and run graph using C API
+Graph to add two vectors and output the complement
 }

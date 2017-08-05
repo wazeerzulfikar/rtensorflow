@@ -4,18 +4,18 @@
 \alias{Placeholder}
 \title{Placeholder Wrapper}
 \usage{
-Placeholder(dtype, shape = NULL, name = "Placeholder")
+Placeholder(dtype, shape = NULL, name = NULL)
 }
 \arguments{
 \item{dtype}{Shape of Tensor}
 
 \item{shape}{Datatype of Tensor}
 
-\item{name}{Optional custom name for node}
+\item{name}{Optional custom name for node. If not specified, a random name is generated}
 }
 \value{
 Unique name of node
 }
 \description{
-Easy-to-use wrapper for getPlaceholder. Sets a placeholder op for a value that will be fed into the computation.
+Sets a placeholder op for a value that will be fed into the computation.
 }

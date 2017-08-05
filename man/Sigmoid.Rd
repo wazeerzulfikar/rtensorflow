@@ -4,12 +4,12 @@
 \alias{Sigmoid}
 \title{Sigmoid Op}
 \usage{
-Sigmoid(inp, name = "Sigmoid")
+Sigmoid(inp, name = NULL)
 }
 \arguments{
 \item{inp}{Input node}
 
-\item{name}{Optional custom name for node}
+\item{name}{Optional custom name for node. If not specified, a random name is generated}
 }
 \value{
 Unique name of node

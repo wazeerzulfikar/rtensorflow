@@ -4,14 +4,14 @@
 \alias{Add}
 \title{Add Op}
 \usage{
-Add(l_op, r_op, name = "Add")
+Add(l_op, r_op, name = NULL)
 }
 \arguments{
 \item{l_op}{Input node}
 
 \item{r_op}{Input node}
 
-\item{name}{Optional custom name for node}
+\item{name}{Optional custom name for node, If not specified, a random name is generated}
 }
 \value{
 Unique name of node

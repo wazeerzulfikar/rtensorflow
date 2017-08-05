@@ -18,7 +18,6 @@ import_run_graph <- function(path, feed){
   
   deleteSessionVariables()
   return(output_list[["output"]])
-  
 }
 
 #' @title Build and Run Graph
@@ -33,26 +32,27 @@ build_run_graph <- function(feed, dtype="float") {
   
   input <- Placeholder(dtype, shape = c(1,3), name="input")
 
-  w1 <- Constant(rep(1,12), dtype = dtype, shape = c(3,4))
-  b1 <- Constant(rep(1,4),  dtype = dtype, shape = c(4))
-  w2 <- Constant(rep(1,4),  dtype = dtype, shape = c(4,1))
-  b2 <- Constant(rep(1,1),  dtype = dtype, shape = c(1))
+  w1 <- Constant(rep(1,12), dtype=dtype, shape=c(3,4))
+  b1 <- Constant(rep(1,4), dtype=dtype, shape=c(4))
+  w2 <- Constant(rep(1,4), dtype=dtype, shape=c(4,1))
+  b2 <- Constant(rep(1,1), dtype=dtype, shape=c(1))
   
   hidden_matmul <- MatMul(input, w1)
   hidden_layer <- Add(hidden_matmul, b1)
   output_matmul <- MatMul(hidden_layer, w2)
   output_layer <- Add(output_matmul, b2, name="out")
-  
+
   feedInput(input, feed)
   output <- runSession("out")
   
   resetGraph()
+  deleteSessionVariables()
   
   return(output[[output_layer]])
 }
 
 #' @title Build an Add graph
-#' @description Function to build and run graph using C API
+#' @description Graph to add two vectors and output the complement
 #' @return Output Value of Network 
 add_graph <- function() {
   
@@ -60,23 +60,18 @@ add_graph <- function() {
   
   a <- Placeholder("double", shape=c(-1,4))
   b <- Placeholder("double", shape=c(1))
-  c <- Constant(c(3,4,3,6), dtype="double")
-  
+
   neg <- Neg(Add(a,b))
-  
-  out <- Sigmoid(neg)
-  
+
   feed <- data.frame(a=c(-0.2, 0.2),b=c(0.42,-0.42),c=c(0.13,-0.13),d=c(-0.54,0.54))
 
-  feedInput(a,feed)
-  feedInput(b,c(0.3))
+  feedInput(a, feed)
+  feedInput(b, 0.3)
   
-  output <- runSession(c(out,neg))
-  
-  getOpDetails(Add(a,b))
-  getOpDetails(out)
+  output <- runSession(neg)
+
   deleteSessionVariables()
-  return (output[[out]])
+  return (output[[neg]])
 }
 
 #' @title Load Saved Model
@@ -86,6 +81,7 @@ add_graph <- function() {
 #' @return Output Value of Network 
 
 check_mnist <- function(model_path, csv_path) {
+  
   initializeSessionVariables()
   loadSavedModel(model_path, c("train", "serve"))
   
@@ -99,43 +95,39 @@ check_mnist <- function(model_path, csv_path) {
   print ("Data read successful")
   
   # Extract label column
-  y_train <- data[,"label"]
+  y_train <- data[, "label"]
   
   # One hot Encoder for the labels
   col <- 10
   row <- length(y_train)
-  onehot <- array(data=rep(0,col*row),dim=c(row,col))
-  i <- 1
-  for (j in y_train) {
-    onehot[i,j+1] <- 1
-    i=i+1
-  }
+  onehot <- array(data=rep(0, col * row),dim=c(row, col))
+  onehot[cbind(1:row, y_train + 1)] <- 1
   y_train <- onehot
   
   # Drop label for getting X training data
   
-  drops <- c("label")
-  X_train <- data[ , !(names(data) %in% drops)]
-  X_train <- X_train/255
+  drops <- "label"
+  X_train <- data[, !(names(data) %in% drops)]
+  X_train <- X_train / 255
   
   step <- 0
   for (i in 1:training_iters) {
     samples <- sample(1:nrow(X_train), batch_size, replace=FALSE)
-    feedInput("x",X_train[samples,])
-    feedInput("y",y_train[samples,])
-    feedInput("keep_prob",c(0.75))
-    runSession(c("train"))
-    if (step%%display_step==0) {
-      feedInput("x",X_train[samples,])
-      feedInput("y",y_train[samples,])
-      feedInput("keep_prob",c(1.))
-      display <- runSession(c("cost","accuracy"))
+    feedInput("x", X_train[samples,])
+    feedInput("y", y_train[samples,])
+    feedInput("keep_prob", 0.75)
+    runSession("train")
+    if (step %% display_step == 0) {
+      feedInput("x", X_train[samples,])
+      feedInput("y", y_train[samples,])
+      feedInput("keep_prob", 1.)
+      display <- runSession(c("cost", "accuracy"))
       
-      cat("Iter ",i, ",  ")
-      cat("Cost=", display[["cost"]])
-      cat(",  Training Accuracy=", display[["accuracy"]],"\n")
+      cat(sprintf(
+        "Iter %d, Cost=%f, Training Accuracy=%f\n",
+        i, display[["cost"]], display[["accuracy"]]))
     }
-    step <- step+1
+    step <- step + 1
   }
   
   print ("Optimization Finished!")

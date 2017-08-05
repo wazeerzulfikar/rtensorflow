@@ -4,14 +4,14 @@
 \alias{Equal}
 \title{Equal Op}
 \usage{
-Equal(l_op, r_op, name = "Equal")
+Equal(l_op, r_op, name = NULL)
 }
 \arguments{
 \item{l_op}{Input node}
 
 \item{r_op}{Input node}
 
-\item{name}{Optional custom name for node}
+\item{name}{Optional custom name for node. If not specified, a random name is generated}
 }
 \value{
 Unique name of node

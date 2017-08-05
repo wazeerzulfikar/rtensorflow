@@ -34,7 +34,7 @@ feedInput <- function(input_node, feed) {
   } else {
     feed_vector <- feed
   }
-  
+
   return (setFeedInput(input_node, feed_vector))
 }
 
@@ -49,10 +49,10 @@ runSession <- function(op_names) {
   output <- runInternalSession(op_names)
   output_list <- list()
   for (op in op_names) {
-    if (identical(output[[op]],"No Output")) {
+    if (identical(output[[op]], "No Output")) {
       output_list[[op]] <- 0
     } else {
-      if (length(output[[op]][["dim"]])==0) {
+      if (length(output[[op]][["dim"]]) == 0) {
         output[[op]][["dim"]] <- length(output[[op]][["val"]])
       }
       output_array <- aperm(array(data = output[[op]][["val"]], dim = rev(output[[op]][["dim"]])))
@@ -66,17 +66,17 @@ runSession <- function(op_names) {
 
 #' @title Placeholder Wrapper
 #'
-#' @description  Easy-to-use wrapper for getPlaceholder. Sets a placeholder op for a value that will be fed into the computation.
+#' @description Sets a placeholder op for a value that will be fed into the computation.
 #' 
 #' @param dtype Shape of Tensor
 #' @param shape Datatype of Tensor
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Placeholder <- function(dtype, shape = NULL, name = "Placeholder") {
-  
-  if(identical(name,"Placeholder")){
-    name <- generateUniqueName(op_name = name)
+Placeholder <- function(dtype, shape=NULL, name=NULL) {
+
+  if(is.null(name)){
+    name <- generateUniqueName(op_name = "Placeholder")
   }
   
   return (getPlaceholder(shape, dtype, name))
@@ -89,13 +89,13 @@ Placeholder <- function(dtype, shape = NULL, name = "Placeholder") {
 #' @param val Vector for value of Constant node
 #' @param dtype Datatype of val
 #' @param shape Vector indicating dimensions of val
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Constant <- function(val, dtype = "float32", shape = c(length(val)), name = "Const") {
+Constant <- function(val, dtype="float32", shape=length(val), name=NULL) {
   
-  if(identical(name,"Const")){
-    name <- generateUniqueName(op_name = name)
+   if (is.null(name)){
+    name <- generateUniqueName(op_name = "Const")
   }
   
   return (getSourceOp(val, shape, dtype,"Const", name))
@@ -107,13 +107,13 @@ Constant <- function(val, dtype = "float32", shape = c(length(val)), name = "Con
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node, If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Add <- function(l_op, r_op, name="Add") {
+Add <- function(l_op, r_op, name=NULL) {
   
-  if(identical(name,"Add")){
-    name <- generateUniqueName(op_name = name)
+  if (is.null(name)){
+    name <- generateUniqueName(op_name = "Add")
   }
   
   return (getBinaryOp(l_op,r_op,"Add",name))
@@ -125,13 +125,13 @@ Add <- function(l_op, r_op, name="Add") {
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node, If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-MatMul <- function(l_op, r_op, name="MatMul") {
-  
-  if(identical(name,"MatMul")){
-    name <- generateUniqueName(op_name = name)
+MatMul <- function(l_op, r_op, name=NULL) {
+
+  if (is.null(name)){
+    name <- generateUniqueName(op_name = "MatMul")
   }
   
   return (getBinaryOp(l_op,r_op,"MatMul",name))
@@ -143,13 +143,13 @@ MatMul <- function(l_op, r_op, name="MatMul") {
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Pow <- function(l_op, r_op, name="Pow") {
+Pow <- function(l_op, r_op, name=NULL) {
   
-  if(identical(name,"Pow")){
-    name <- generateUniqueName(op_name = name)
+  if (is.null(name)){
+    name <- generateUniqueName(op_name = "Pow")
   }
   
   return (getBinaryOp(l_op,r_op,"Pow",name))
@@ -160,13 +160,13 @@ Pow <- function(l_op, r_op, name="Pow") {
 #' @description Computes numerical negative value element-wise.
 #' 
 #' @param inp Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Neg <- function(inp, name="Neg") {
+Neg <- function(inp, name=NULL) {
   
-  if (identical(name, "Neg")){
-    name <- generateUniqueName(op_name = name)
+  if (is.null(name)){
+    name <- generateUniqueName(op_name = "Neg")
   }
   
   return (getUnaryOp(inp, "Neg", name))
@@ -177,13 +177,13 @@ Neg <- function(inp, name="Neg") {
 #' @description Computes hyperbolic tangent of `x` element-wise.
 #' 
 #' @param inp Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Tanh <- function(inp, name="Tanh") {
+Tanh <- function(inp, name=NULL) {
   
-  if (identical(name, "Tanh")){
-    name <- generateUniqueName(op_name = name)
+  if (is.null(name)){
+    name <- generateUniqueName(op_name = "Tanh")
   }
   
   return (getUnaryOp(inp, "Tanh", name))
@@ -194,13 +194,13 @@ Tanh <- function(inp, name="Tanh") {
 #' @description Computes sigmoid of `x` element-wise.
 #' 
 #' @param inp Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Sigmoid <- function(inp, name="Sigmoid") {
+Sigmoid <- function(inp, name=NULL) {
   
-  if (identical(name, "Sigmoid")){
-    name <- generateUniqueName(op_name = name)
+  if (is.null(name)) {
+    name <- generateUniqueName(op_name = "Sigmoid")
   }
   
   return (getUnaryOp(inp, "Sigmoid", name))
@@ -211,13 +211,13 @@ Sigmoid <- function(inp, name="Sigmoid") {
 #' @description Computes rectified linear: `max(features, 0)`.
 #' 
 #' @param inp Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Relu <- function(inp, name="Relu") {
+Relu <- function(inp, name=NULL) {
   
-  if (identical(name, "Relu")){
-    name <- generateUniqueName(op_name = name)
+  if(is.null(name)) {
+    name <- generateUniqueName(op_name = "Relu")
   }
   
   return (getUnaryOp(inp, "Relu", name))
@@ -228,13 +228,13 @@ Relu <- function(inp, name="Relu") {
 #' @description Computes cos of x element-wise.
 #' 
 #' @param inp Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Cos <- function(inp, name="Cos") {
+Cos <- function(inp, name=NULL) {
   
-  if (identical(name, "Cos")){
-    name <- generateUniqueName(op_name = name)
+  if (is.null(name)) {
+    name <- generateUniqueName(op_name = "Cos")
   }
   
   return (getUnaryOp(inp, "Cos", name))
@@ -245,13 +245,13 @@ Cos <- function(inp, name="Cos") {
 #' @description Computes softmax activations.
 #' 
 #' @param inp Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Softmax <- function(inp, name="Softmax") {
+Softmax <- function(inp, name=NULL) {
   
-  if (identical(name, "Softmax")){
-    name <- generateUniqueName(op_name = name)
+  if(is.null(name)){
+    name <- generateUniqueName(op_name = "Softmax")
   }
   
   return (getUnaryOp(inp, "Softmax", name))
@@ -263,13 +263,13 @@ Softmax <- function(inp, name="Softmax") {
 #' 
 #' @param l_op Input node
 #' @param r_op Input node
-#' @param name Optional custom name for node
+#' @param name Optional custom name for node. If not specified, a random name is generated
 #' 
 #' @return Unique name of node
-Equal <- function(l_op, r_op, name="Equal") {
+Equal <- function(l_op, r_op, name=NULL) {
   
-  if (identical(name,"Equal")){
-    name <- generateUniqueName(op_name = name)
+  if(is.null(name)){
+    name <- generateUniqueName(op_name = "Equal")
   }
   
   return (getBinaryOp(l_op, r_op, "Equal", name))

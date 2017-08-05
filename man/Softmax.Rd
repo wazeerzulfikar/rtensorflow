@@ -4,12 +4,12 @@
 \alias{Softmax}
 \title{Softmax Op}
 \usage{
-Softmax(inp, name = "Softmax")
+Softmax(inp, name = NULL)
 }
 \arguments{
 \item{inp}{Input node}
 
-\item{name}{Optional custom name for node}
+\item{name}{Optional custom name for node. If not specified, a random name is generated}
 }
 \value{
 Unique name of node
