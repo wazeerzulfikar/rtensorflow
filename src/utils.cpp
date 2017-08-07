@@ -130,13 +130,13 @@ template <typename T> TF_Tensor* getTensor(List inp, int64_t* shape, int ndims, 
 }
 
 TF_Tensor* parseInputs(List inp, int64_t* dimensions, int ndims, TF_DataType dtype) {
-  if (dtype == 1) {
+  if (dtype == TF_FLOAT) {
     return getTensor<float>(inp, dimensions, ndims, dtype);
-  } else if (dtype == 2) {
+  } else if (dtype == TF_DOUBLE) {
     return getTensor<double>(inp, dimensions, ndims, dtype);
-  } else if (dtype == 3) {
+  } else if (dtype == TF_INT32) {
     return getTensor<int>(inp, dimensions, ndims, dtype);
-  } else if (dtype == 10) {
+  } else if (dtype == TF_BOOL) {
     return getTensor<bool>(inp, dimensions, ndims, dtype);
   }
   return nullptr;
@@ -189,16 +189,16 @@ std::vector<int64_t> getOutputDimensions(int output_index) {
 List fetchOutput(TF_DataType dtype, int output_index) {
   List output;
   
-  if (dtype == 1) {
+  if (dtype == TF_FLOAT) {
     vector<float> output_val = getOutputs<float>(output_index);
     output["val"] = output_val;
-  } else if (dtype == 2) {
+  } else if (dtype == TF_DOUBLE) {
     vector<double> output_val = getOutputs<double>(output_index);
     output["val"] = output_val;
-  } else if (dtype == 3) {
+  } else if (dtype == TF_INT32) {
     vector<int> output_val = getOutputs<int>(output_index);
     output["val"] = output_val;
-  } else if (dtype == 10) {
+  } else if (dtype == TF_BOOL) {
     vector<bool> output_val = getOutputs<bool>(output_index);
     output["val"] = output_val;
   }
