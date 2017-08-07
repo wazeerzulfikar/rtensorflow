@@ -54,17 +54,17 @@ TF_Buffer* read_file(const char* path) {
 }
 
 void resetInputValues() {
-  for (int i = 0; i < input_values_.size(); ++i) {
-    TF_DeleteTensor(input_values_[i]);
+  for (auto item : input_values_) {
+    TF_DeleteTensor(item);
   }
   input_values_.clear();
   inputs_.clear();
 }
 
 void resetOutputValues() {
-  for (int i = 0; i < output_values_.size(); ++i) {
-    if (output_values_[i] != nullptr){
-      TF_DeleteTensor(output_values_[i]);
+  for (auto item : output_values_) {
+    if(item != nullptr) {
+      TF_DeleteTensor(item);
     }
   }
   output_values_.clear();
@@ -212,8 +212,8 @@ template <typename T> std::vector<T> getOutputs(int output_index) {
   
   vector<int64_t> dim = getOutputDimensions(output_index);
   int64_t length = 1;
-  for (int i = 0; i < dim.size(); ++i) {
-    length *= dim[i];
+  for (auto& d : dim) {
+    length *= d;
   }
   
   void* output_contents = TF_TensorData(out);
@@ -232,7 +232,6 @@ template <typename T> std::vector<T> getOutputs(int output_index) {
 // Operation Helpers
 
 pair<string, TF_Operation*> Placeholder(string op_name, string unique_name, vector<int64_t> shape, TF_DataType dtype, TF_Graph* graph, TF_Status* status) {
-  
   TF_OperationDescription* desc = TF_NewOperation(graph, op_name.c_str(), unique_name.c_str());
   TF_SetAttrType(desc, "dtype", dtype);
   int64_t* dim = new int64_t[shape.size()];
