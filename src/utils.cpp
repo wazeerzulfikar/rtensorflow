@@ -102,21 +102,20 @@ TF_DataType getDataType (string dtype) {
   return TF_FLOAT;
 }
 
-template <typename T> TF_Tensor* getTensor(List inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
-  int no_dims = dimensions.size();
+template <typename T> TF_Tensor* getTensor(List inp, int64_t* shape, int ndims, TF_DataType dtype) {
   int unknown_dim = -1;
   int64_t length = 1;
   
-  for (int i = 0; i < dimensions.size(); ++i) {
-    if (dimensions.at(i)==-1) {
+  for (int i = 0; i < ndims; ++i) {
+    if (shape[i]==-1) {
       unknown_dim = i;
     } else {
-      length *= dimensions.at(i);
+      length *= shape[i];
     }
   }
   
   if (unknown_dim > -1) {
-    dimensions[unknown_dim] = static_cast<int>(inp.size()/length);
+    shape[unknown_dim] = static_cast<int>(inp.size()/length);
   }
   
   T* c_inp = new T[inp.size()];
@@ -125,20 +124,20 @@ template <typename T> TF_Tensor* getTensor(List inp, std::vector<int64_t> dimens
   }
 
   return TF_NewTensor(
-    dtype, &dimensions[0], no_dims, c_inp, sizeof(T)*inp.size(),
+    dtype, shape, ndims, c_inp, sizeof(T)*inp.size(),
     &tensor_deallocator<T>,
     nullptr);
 }
 
-TF_Tensor* parseInputs(List inp, std::vector<int64_t> dimensions, TF_DataType dtype) {
+TF_Tensor* parseInputs(List inp, int64_t* dimensions, int ndims, TF_DataType dtype) {
   if (dtype == 1) {
-    return getTensor<float>(inp, dimensions, dtype);
+    return getTensor<float>(inp, dimensions, ndims, dtype);
   } else if (dtype == 2) {
-    return getTensor<double>(inp, dimensions, dtype);
+    return getTensor<double>(inp, dimensions, ndims, dtype);
   } else if (dtype == 3) {
-    return getTensor<int>(inp, dimensions, dtype);
+    return getTensor<int>(inp, dimensions, ndims, dtype);
   } else if (dtype == 10) {
-    return getTensor<bool>(inp, dimensions, dtype);
+    return getTensor<bool>(inp, dimensions, ndims, dtype);
   }
   return nullptr;
 }

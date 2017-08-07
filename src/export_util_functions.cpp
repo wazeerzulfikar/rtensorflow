@@ -1,5 +1,4 @@
 #include <Rcpp.h>
-using namespace Rcpp;
 #include "utils.h"
 
 TF_Status* status;
@@ -35,7 +34,6 @@ int initializeSessionVariables() {
     return -1;
   }
   
-  cout << "Sucessfully instantiated session variables" << endl;
   return 0;
 }
 
@@ -68,7 +66,6 @@ int loadGraphFromFile(std::string path) {
     return -1;
   }
   
-  cout << "Sucessfully imported graph\n" << endl;
   return 0;
 }
 
@@ -118,24 +115,19 @@ int setFeedInput(std::string op_name, List inp) {
 
   TF_DataType dtype = TF_OperationOutputType({input,0});
 
-  int num_dims = TF_GraphGetTensorNumDims(graph, {input, 0}, status);
+  int ndims = TF_GraphGetTensorNumDims(graph, {input, 0}, status);
   int64_t* shape;
   
-  if (num_dims==-1) {
-    num_dims = 1;
-    shape = new int64_t[num_dims];
+  if (ndims==-1) {
+    ndims = 1;
+    shape = new int64_t[ndims];
     shape[0] = -1;
   } else {
-    shape = new int64_t[num_dims];
-    TF_GraphGetTensorShape(graph, {input,0}, shape, num_dims, status);
+    shape = new int64_t[ndims];
+    TF_GraphGetTensorShape(graph, {input,0}, shape, ndims, status);
   }
   
-  vector<int64_t> shape_vector;
-  for (int i=0; i < num_dims; ++i){
-    shape_vector.emplace_back(shape[i]);
-
-  }
-  TF_Tensor* feed = parseInputs(inp,shape_vector,dtype);
+  TF_Tensor* feed = parseInputs(inp,shape, ndims, dtype);
   setInputs({{input,feed}});
   
   return 0;
@@ -151,8 +143,6 @@ int setFeedInput(std::string op_name, List inp) {
 //' 
 // [[Rcpp::export]]
 List runInternalSession(std::vector<std::string> op_names) {
-//  cout << "Running the Session.. " << endl;
-  List output;
   vector<pair<string, TF_Operation*>>output_operations;
   for (string op_name : op_names){
     TF_Operation* op = TF_GraphOperationByName(graph, op_name.c_str());
@@ -164,22 +154,23 @@ List runInternalSession(std::vector<std::string> op_names) {
     }
   }
 
-    setPointers();
+  setPointers();
   
-    if (TF_GetCode(status)!=TF_OK) {
-      cout << "Error in graph" << endl;
-      cout << TF_Message(status) << endl;
-      return -1;
-    }
+  if (TF_GetCode(status)!=TF_OK) {
+    cout << "Error in graph" << endl;
+    cout << TF_Message(status) << endl;
+    return -1;
+  }
   
-    runSession(session, status);
+  runSession(session, status);
+
+  if (TF_GetCode(status)!=TF_OK) {
+    cout << "Error running session" << endl;
+    cout << TF_Message(status) << endl;
+    return -1;
+  }
   
-    if (TF_GetCode(status)!=TF_OK) {
-      cout << "Error running session" << endl;
-      cout << TF_Message(status) << endl;
-      return -1;
-    }
-  
+  List output;
   int output_index = 0;
   for (auto op : output_operations) {
     const char* type = TF_OperationOpType(op.second);
@@ -267,7 +258,8 @@ std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::s
 //' 
 // [[Rcpp::export]]
 std::string getSourceOp(List val, std::vector<int64_t> dim, std::string dtype, std::string op_name, std::string unique_name) {
-  TF_Tensor* val_t = parseInputs(val, dim, getDataType(dtype));
+  
+  TF_Tensor* val_t = parseInputs(val, &dim[0], dim.size(), getDataType(dtype));
   pair<string, TF_Operation*> op;
   op = SourceOp(op_name, unique_name, val_t, graph, status);
   op_list.emplace(op.first, op.second);
