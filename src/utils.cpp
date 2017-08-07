@@ -3,7 +3,6 @@
 using namespace Rcpp;
 #include <stdio.h>
 #include <iostream>
-using namespace std;
 #include <tensorflow/c/c_api.h>
 #include <stdlib.h>   
 #include <vector>  
@@ -12,7 +11,7 @@ using namespace std;
 
 std::vector<TF_Operation*> targets_;
 std::vector<TF_Output> inputs_;
-vector<TF_Tensor*> input_values_;
+std::vector<TF_Tensor*> input_values_;
 std::vector<TF_Output> outputs_;
 std::vector<TF_Tensor*> output_values_;
 
