@@ -82,15 +82,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // getPlaceholder
-std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::string unique_name);
-RcppExport SEXP _rtensorflow_getPlaceholder(SEXP shapeSEXP, SEXP dtypeSEXP, SEXP unique_nameSEXP) {
+std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::string op_name, std::string unique_name);
+RcppExport SEXP _rtensorflow_getPlaceholder(SEXP shapeSEXP, SEXP dtypeSEXP, SEXP op_nameSEXP, SEXP unique_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::vector<int64_t> >::type shape(shapeSEXP);
     Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
     Rcpp::traits::input_parameter< std::string >::type unique_name(unique_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(getPlaceholder(shape, dtype, unique_name));
+    rcpp_result_gen = Rcpp::wrap(getPlaceholder(shape, dtype, op_name, unique_name));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -173,7 +174,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rtensorflow_runInternalSession", (DL_FUNC) &_rtensorflow_runInternalSession, 1},
     {"_rtensorflow_resetGraph", (DL_FUNC) &_rtensorflow_resetGraph, 0},
     {"_rtensorflow_deleteSessionVariables", (DL_FUNC) &_rtensorflow_deleteSessionVariables, 0},
-    {"_rtensorflow_getPlaceholder", (DL_FUNC) &_rtensorflow_getPlaceholder, 3},
+    {"_rtensorflow_getPlaceholder", (DL_FUNC) &_rtensorflow_getPlaceholder, 4},
     {"_rtensorflow_getSourceOp", (DL_FUNC) &_rtensorflow_getSourceOp, 5},
     {"_rtensorflow_getUnaryOp", (DL_FUNC) &_rtensorflow_getUnaryOp, 3},
     {"_rtensorflow_getBinaryOp", (DL_FUNC) &_rtensorflow_getBinaryOp, 4},

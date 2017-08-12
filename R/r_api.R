@@ -64,7 +64,7 @@ runSession <- function(op_names) {
 
 # Wrappers to create mathematical ops for graph
 
-#' @title Placeholder Wrapper
+#' @title Placeholder Op
 #'
 #' @description Sets a placeholder op for a value that will be fed into the computation.
 #' 
@@ -79,10 +79,32 @@ Placeholder <- function(dtype, shape=NULL, name=NULL) {
     name <- generateUniqueName(op_name = "Placeholder")
   }
   
-  return (getPlaceholder(shape, dtype, name))
+  return (getPlaceholder(shape, dtype, "Placeholder", name))
 }
 
-#' @title Constant Wrapper
+#' @title Variable Op
+#'
+#' @description Sets a variable op
+#' 
+#' @param val Vector for value of Constant node
+#' @param dtype Shape of Tensor
+#' @param shape Datatype of Tensor
+#' @param name Optional custom name for node. If not specified, a random name is generated
+#' 
+#' @return Unique name of node
+Variable <- function(val, dtype, shape=length(val), name=NULL) {
+  
+  if(is.null(name)){
+    name <- generateUniqueName(op_name = "Variable")
+  }
+  
+  op <- getPlaceholder(shape, dtype, "VariableV2", name)
+  
+  return (op)
+}
+
+
+#' @title Constant Op
 #'
 #' @description  Easy-to-use wrapper for getConstant. Returns a constant tensor.
 #' 

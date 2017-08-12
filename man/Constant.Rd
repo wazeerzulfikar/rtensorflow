@@ -2,7 +2,7 @@
 % Please edit documentation in R/r_api.R
 \name{Constant}
 \alias{Constant}
-\title{Constant Wrapper}
+\title{Constant Op}
 \usage{
 Constant(val, dtype = "float32", shape = length(val), name = NULL)
 }

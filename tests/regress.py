@@ -1,6 +1,13 @@
 import tensorflow as tf
+import os
+import shutil
 from tensorflow.python.saved_model.builder import SavedModelBuilder
 from tensorflow.python.saved_model.tag_constants import TRAINING, SERVING
+
+EXPORT_DIR = 'saved-models/saved-regression-model'
+
+if os.path.exists(EXPORT_DIR):
+    shutil.rmtree(EXPORT_DIR)
 
 x = tf.placeholder(tf.float32,shape=[None,1], name='x')
 y = tf.placeholder(tf.float32,shape=[None,1], name='y')
@@ -15,7 +22,6 @@ train = optimizer.minimize(loss, name='train')
 
 init = tf.variables_initializer(tf.global_variables(), name='init')
 
-EXPORT_DIR = 'saved-models/saved-regression-model'
 builder = SavedModelBuilder(EXPORT_DIR)
 
 if os.path.exists(EXPORT_DIR):

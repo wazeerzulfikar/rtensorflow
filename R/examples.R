@@ -135,3 +135,8 @@ check_mnist <- function(model_path, csv_path) {
   deleteSessionVariables()
   
 }
+
+check_variable <- function() {
+  initializeSessionVariables()
+  a <- Variable(1, "float")
+}

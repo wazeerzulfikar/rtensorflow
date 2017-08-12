@@ -4,7 +4,7 @@
 \alias{getPlaceholder}
 \title{Placeholder}
 \usage{
-getPlaceholder(shape, dtype, unique_name)
+getPlaceholder(shape, dtype, op_name, unique_name)
 }
 \arguments{
 \item{shape}{Shape of Tensor}

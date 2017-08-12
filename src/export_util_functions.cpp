@@ -237,9 +237,9 @@ int deleteSessionVariables() {
 //' @return Unique node name
 //' 
 // [[Rcpp::export]]
-std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::string unique_name) {
+std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::string op_name, std::string unique_name) {
   pair<string, TF_Operation*> op;
-  op = Placeholder("Placeholder", unique_name, shape, getDataType(dtype), graph, status);
+  op = Placeholder(op_name, unique_name, shape, getDataType(dtype), graph, status);
   op_list.emplace(op.first, op.second);
   return op.first;
 }

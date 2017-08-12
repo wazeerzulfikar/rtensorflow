@@ -101,8 +101,8 @@ deleteSessionVariables <- function() {
 #' 
 #' @return Unique node name
 #' 
-getPlaceholder <- function(shape, dtype, unique_name) {
-    .Call('_rtensorflow_getPlaceholder', PACKAGE = 'rtensorflow', shape, dtype, unique_name)
+getPlaceholder <- function(shape, dtype, op_name, unique_name) {
+    .Call('_rtensorflow_getPlaceholder', PACKAGE = 'rtensorflow', shape, dtype, op_name, unique_name)
 }
 
 #' @title Source Op
