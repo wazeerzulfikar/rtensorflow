@@ -97,6 +97,7 @@ deleteSessionVariables <- function() {
 #' 
 #' @param shape Shape of Tensor
 #' @param dtype Datatype of input
+#' @param op_name Type of operation for node
 #' @param unique_name Unique name for the node
 #' 
 #' @return Unique node name
@@ -152,15 +153,15 @@ getBinaryOp <- function(l_op, r_op, op_name, unique_name) {
 
 #' @title Print Node List
 #' 
-#' @description Debug helper, prints all nodes currently in the graph
+#' @description Debug helper, returns all nodes currently in the graph
 #' 
-#' @return NULL 
+#' @return Dictionary of nodes 
 #' 
 #' @examples
 #' printNodeList()
 #' 
-printNodeList <- function() {
-    invisible(.Call('_rtensorflow_printNodeList', PACKAGE = 'rtensorflow'))
+getNodeList <- function() {
+    .Call('_rtensorflow_getNodeList', PACKAGE = 'rtensorflow')
 }
 
 #' @title Locate Error
@@ -172,19 +173,19 @@ printNodeList <- function() {
 #' @examples
 #' locateError()
 #' 
-locateError <- function() {
-    invisible(.Call('_rtensorflow_locateError', PACKAGE = 'rtensorflow'))
+checkError <- function() {
+    .Call('_rtensorflow_checkError', PACKAGE = 'rtensorflow')
 }
 
-#' @title Op Details
+#' @title Op Properties
 #' 
 #' @description Get properties of the operation
 #' 
 #' @param op_name Unique identifier of operation
 #' 
-#' @return NULL
+#' @return List with properties of op
 #' 
-getOpDetails <- function(op_name) {
-    invisible(.Call('_rtensorflow_getOpDetails', PACKAGE = 'rtensorflow', op_name))
+getOpProperties <- function(op_name) {
+    .Call('_rtensorflow_getOpProperties', PACKAGE = 'rtensorflow', op_name)
 }
 

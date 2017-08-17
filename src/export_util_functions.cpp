@@ -7,6 +7,8 @@ TF_SessionOptions* options;
 TF_Session* session;
 std::map <string, TF_Operation*> op_list;
 
+int checkError();
+
 //' @title Initialize Session Variables
 //' 
 //' @description Initializes all global variables for an interactive session
@@ -29,12 +31,7 @@ int initializeSessionVariables() {
   resetTargets();
   op_list.clear();
   
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error instantiating variables" << endl;
-    return -1;
-  }
-  
-  return 0;
+  return checkError();
 }
 
 //' @title Load Graph from File
@@ -52,7 +49,7 @@ int initializeSessionVariables() {
 int loadGraphFromFile(std::string path) {
   TF_Buffer* graph_def = read_file(path.c_str()); 
   if (graph_def == nullptr) {
-    cout << "File not found" << endl;
+ //   cout << "File not found" << endl;
     return -1;
   }
   TF_ImportGraphDefOptions* opts = TF_NewImportGraphDefOptions();
@@ -61,12 +58,7 @@ int loadGraphFromFile(std::string path) {
   TF_DeleteImportGraphDefOptions(opts);
   TF_DeleteBuffer(graph_def);
   
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error importing graph" << endl;
-    return -1;
-  }
-  
-  return 0;
+  return checkError();
 }
 
 //' @title Load Saved Model
@@ -90,13 +82,7 @@ int loadSavedModel(std::string path, CharacterVector tags) {
   session = TF_LoadSessionFromSavedModel(
     options, run_options, path.c_str(), tags_ptr, tags.size(), graph, metagraph, status);
   
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error: ";
-    cout << TF_Message(status) << endl;
-    return -1;
-  }
-  
-  return 0;
+  return checkError();
 }
 
 //' @title Feed Input Ops
@@ -130,7 +116,7 @@ int setFeedInput(std::string op_name, List inp) {
   TF_Tensor* feed = parseInputs(inp,shape, ndims, dtype);
   setInputs({{input,feed}});
   
-  return 0;
+  return checkError();
 }
 
 //' @title Run Internal Session
@@ -156,19 +142,12 @@ List runInternalSession(std::vector<std::string> op_names) {
 
   setPointers();
   
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error in graph" << endl;
-    cout << TF_Message(status) << endl;
-    return -1;
-  }
+  if (checkError() == -1) return -1;
   
   runSession(session, status);
 
-  if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error running session" << endl;
-    cout << TF_Message(status) << endl;
-    return -1;
-  }
+  if (checkError() == -1) return -1;
+  
   
   List output;
   int output_index = 0;
@@ -197,7 +176,7 @@ List runInternalSession(std::vector<std::string> op_names) {
 // [[Rcpp::export]]
 int resetGraph() {
   op_list.clear();
-  return 0;
+  return checkError();
 }
 
 //' @title Close and Delete Session Variables
@@ -232,6 +211,7 @@ int deleteSessionVariables() {
 //' 
 //' @param shape Shape of Tensor
 //' @param dtype Datatype of input
+//' @param op_name Type of operation for node
 //' @param unique_name Unique name for the node
 //' 
 //' @return Unique node name
@@ -310,18 +290,20 @@ std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name,
 
 //' @title Print Node List
 //' 
-//' @description Debug helper, prints all nodes currently in the graph
+//' @description Debug helper, returns all nodes currently in the graph
 //' 
-//' @return NULL 
+//' @return Dictionary of nodes 
 //' 
 //' @examples
 //' printNodeList()
 //' 
 // [[Rcpp::export]]
-void printNodeList() {
+List getNodeList() {
+  List NodeList;
   for (auto const& op : op_list) {
-    cout << op.first << ':' << op.second << endl ;
+    NodeList[op.first] = TF_OperationOpType(op.second);
   }
+  return NodeList;
 }
 
 //' @title Locate Error
@@ -334,25 +316,29 @@ void printNodeList() {
 //' locateError()
 //' 
 // [[Rcpp::export]]
-void locateError() {
+int checkError() {
   if (TF_GetCode(status)!=TF_OK) {
-    cout << "Here is the error :"<< endl;
-    cout << TF_Message(status) << endl;
+    cout << "Error : "<<TF_Message(status) << endl;
+    return -1;
   }
+  return 0;
 }
 
-//' @title Op Details
+//' @title Op Properties
 //' 
 //' @description Get properties of the operation
 //' 
 //' @param op_name Unique identifier of operation
 //' 
-//' @return NULL
+//' @return List with properties of op
 //' 
 // [[Rcpp::export]]
-void getOpDetails(std::string op_name) {
+List getOpProperties(std::string op_name) {
   TF_Operation* op = op_list.at(op_name);
-  cout<<"Num inputs : "<<TF_OperationNumInputs(op)<<endl;
-  cout<<"Type inputs : "<<TF_OperationInputType({op,0})<<endl;
-  cout<<"Num outputs : "<<TF_OperationNumOutputs(op)<<endl;
+  List properties;
+  properties["op_type"] = TF_OperationOpType(op);
+  properties["num_inputs"] = TF_OperationNumInputs(op);
+  properties["num_outputs"] = TF_OperationNumOutputs(op);
+  
+  return properties;
 }

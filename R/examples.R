@@ -46,8 +46,7 @@ build_run_graph <- function(feed, dtype="float") {
   output <- runSession("out")
   
   resetGraph()
-  deleteSessionVariables()
-  
+
   return(output[[output_layer]])
 }
 
@@ -134,9 +133,4 @@ check_mnist <- function(model_path, csv_path) {
   
   deleteSessionVariables()
   
-}
-
-check_variable <- function() {
-  initializeSessionVariables()
-  a <- Variable(1, "float")
 }

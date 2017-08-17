@@ -1,8 +1,5 @@
 test_that("Check Import Run Graph", {
   
-  library(reticulate)
-  py_run_file("../regress.py")
-  
   path <- "../models/feed_forward_graph.pb"
   
   result <- import_run_graph(path,c(1,2,3))

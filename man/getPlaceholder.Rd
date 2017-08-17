@@ -11,6 +11,8 @@ getPlaceholder(shape, dtype, op_name, unique_name)
 
 \item{dtype}{Datatype of input}
 
+\item{op_name}{Type of operation for node}
+
 \item{unique_name}{Unique name for the node}
 }
 \value{

@@ -137,32 +137,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// printNodeList
-void printNodeList();
-RcppExport SEXP _rtensorflow_printNodeList() {
+// getNodeList
+List getNodeList();
+RcppExport SEXP _rtensorflow_getNodeList() {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    printNodeList();
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(getNodeList());
+    return rcpp_result_gen;
 END_RCPP
 }
-// locateError
-void locateError();
-RcppExport SEXP _rtensorflow_locateError() {
+// checkError
+int checkError();
+RcppExport SEXP _rtensorflow_checkError() {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    locateError();
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(checkError());
+    return rcpp_result_gen;
 END_RCPP
 }
-// getOpDetails
-void getOpDetails(std::string op_name);
-RcppExport SEXP _rtensorflow_getOpDetails(SEXP op_nameSEXP) {
+// getOpProperties
+List getOpProperties(std::string op_name);
+RcppExport SEXP _rtensorflow_getOpProperties(SEXP op_nameSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type op_name(op_nameSEXP);
-    getOpDetails(op_name);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(getOpProperties(op_name));
+    return rcpp_result_gen;
 END_RCPP
 }
 
@@ -178,9 +181,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rtensorflow_getSourceOp", (DL_FUNC) &_rtensorflow_getSourceOp, 5},
     {"_rtensorflow_getUnaryOp", (DL_FUNC) &_rtensorflow_getUnaryOp, 3},
     {"_rtensorflow_getBinaryOp", (DL_FUNC) &_rtensorflow_getBinaryOp, 4},
-    {"_rtensorflow_printNodeList", (DL_FUNC) &_rtensorflow_printNodeList, 0},
-    {"_rtensorflow_locateError", (DL_FUNC) &_rtensorflow_locateError, 0},
-    {"_rtensorflow_getOpDetails", (DL_FUNC) &_rtensorflow_getOpDetails, 1},
+    {"_rtensorflow_getNodeList", (DL_FUNC) &_rtensorflow_getNodeList, 0},
+    {"_rtensorflow_checkError", (DL_FUNC) &_rtensorflow_checkError, 0},
+    {"_rtensorflow_getOpProperties", (DL_FUNC) &_rtensorflow_getOpProperties, 1},
     {NULL, NULL, 0}
 };
 
