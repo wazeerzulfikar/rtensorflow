@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{setFeedInput}
 \alias{setFeedInput}
-\title{Feed Input Ops}
+\title{Internal Feed Input Ops}
 \usage{
 setFeedInput(op_name, inp)
 }

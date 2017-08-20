@@ -12,7 +12,3 @@ Dictionary of nodes
 \description{
 Debug helper, returns all nodes currently in the graph
 }
-\examples{
-printNodeList()
-
-}

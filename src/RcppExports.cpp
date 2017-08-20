@@ -5,36 +5,36 @@
 
 using namespace Rcpp;
 
-// initializeSessionVariables
-int initializeSessionVariables();
-RcppExport SEXP _rtensorflow_initializeSessionVariables() {
+// c_initializeSessionVariables
+int c_initializeSessionVariables();
+RcppExport SEXP _rtensorflow_c_initializeSessionVariables() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(initializeSessionVariables());
+    rcpp_result_gen = Rcpp::wrap(c_initializeSessionVariables());
     return rcpp_result_gen;
 END_RCPP
 }
-// loadGraphFromFile
-int loadGraphFromFile(std::string path);
-RcppExport SEXP _rtensorflow_loadGraphFromFile(SEXP pathSEXP) {
+// c_loadGraphFromFile
+int c_loadGraphFromFile(std::string path);
+RcppExport SEXP _rtensorflow_c_loadGraphFromFile(SEXP pathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(loadGraphFromFile(path));
+    rcpp_result_gen = Rcpp::wrap(c_loadGraphFromFile(path));
     return rcpp_result_gen;
 END_RCPP
 }
-// loadSavedModel
-int loadSavedModel(std::string path, CharacterVector tags);
-RcppExport SEXP _rtensorflow_loadSavedModel(SEXP pathSEXP, SEXP tagsSEXP) {
+// c_loadSavedModel
+int c_loadSavedModel(std::string path, CharacterVector tags);
+RcppExport SEXP _rtensorflow_c_loadSavedModel(SEXP pathSEXP, SEXP tagsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type tags(tagsSEXP);
-    rcpp_result_gen = Rcpp::wrap(loadSavedModel(path, tags));
+    rcpp_result_gen = Rcpp::wrap(c_loadSavedModel(path, tags));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -50,14 +50,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// runInternalSession
-List runInternalSession(std::vector<std::string> op_names);
-RcppExport SEXP _rtensorflow_runInternalSession(SEXP op_namesSEXP) {
+// c_runSession
+List c_runSession(std::vector<std::string> op_names);
+RcppExport SEXP _rtensorflow_c_runSession(SEXP op_namesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::vector<std::string> >::type op_names(op_namesSEXP);
-    rcpp_result_gen = Rcpp::wrap(runInternalSession(op_names));
+    rcpp_result_gen = Rcpp::wrap(c_runSession(op_names));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -147,13 +147,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// checkError
-int checkError();
-RcppExport SEXP _rtensorflow_checkError() {
+// catchError
+int catchError();
+RcppExport SEXP _rtensorflow_catchError() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(checkError());
+    rcpp_result_gen = Rcpp::wrap(catchError());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -170,11 +170,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rtensorflow_initializeSessionVariables", (DL_FUNC) &_rtensorflow_initializeSessionVariables, 0},
-    {"_rtensorflow_loadGraphFromFile", (DL_FUNC) &_rtensorflow_loadGraphFromFile, 1},
-    {"_rtensorflow_loadSavedModel", (DL_FUNC) &_rtensorflow_loadSavedModel, 2},
+    {"_rtensorflow_c_initializeSessionVariables", (DL_FUNC) &_rtensorflow_c_initializeSessionVariables, 0},
+    {"_rtensorflow_c_loadGraphFromFile", (DL_FUNC) &_rtensorflow_c_loadGraphFromFile, 1},
+    {"_rtensorflow_c_loadSavedModel", (DL_FUNC) &_rtensorflow_c_loadSavedModel, 2},
     {"_rtensorflow_setFeedInput", (DL_FUNC) &_rtensorflow_setFeedInput, 2},
-    {"_rtensorflow_runInternalSession", (DL_FUNC) &_rtensorflow_runInternalSession, 1},
+    {"_rtensorflow_c_runSession", (DL_FUNC) &_rtensorflow_c_runSession, 1},
     {"_rtensorflow_resetGraph", (DL_FUNC) &_rtensorflow_resetGraph, 0},
     {"_rtensorflow_deleteSessionVariables", (DL_FUNC) &_rtensorflow_deleteSessionVariables, 0},
     {"_rtensorflow_getPlaceholder", (DL_FUNC) &_rtensorflow_getPlaceholder, 4},
@@ -182,7 +182,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rtensorflow_getUnaryOp", (DL_FUNC) &_rtensorflow_getUnaryOp, 3},
     {"_rtensorflow_getBinaryOp", (DL_FUNC) &_rtensorflow_getBinaryOp, 4},
     {"_rtensorflow_getNodeList", (DL_FUNC) &_rtensorflow_getNodeList, 0},
-    {"_rtensorflow_checkError", (DL_FUNC) &_rtensorflow_checkError, 0},
+    {"_rtensorflow_catchError", (DL_FUNC) &_rtensorflow_catchError, 0},
     {"_rtensorflow_getOpProperties", (DL_FUNC) &_rtensorflow_getOpProperties, 1},
     {NULL, NULL, 0}
 };

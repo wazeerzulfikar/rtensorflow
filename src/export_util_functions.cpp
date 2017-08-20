@@ -7,19 +7,16 @@ TF_SessionOptions* options;
 TF_Session* session;
 std::map <string, TF_Operation*> op_list;
 
-int checkError();
+int catchError();
 
-//' @title Initialize Session Variables
+//' @title Internal Initialize Session Variables
 //' 
-//' @description Initializes all global variables for an interactive session
+//' @description Use initializeSessionVariables() instead!
 //' 
 //' @return Integer status 
 //' 
-//' @examples
-//' initializeSessionVariables()
-//' 
 // [[Rcpp::export]]
-int initializeSessionVariables() {
+int c_initializeSessionVariables() {
   status = TF_NewStatus();
   graph = TF_NewGraph();
   options = TF_NewSessionOptions();
@@ -31,39 +28,37 @@ int initializeSessionVariables() {
   resetTargets();
   op_list.clear();
   
-  return checkError();
+  return catchError();
 }
 
-//' @title Load Graph from File
+//' @title Internal Load Graph from File
 //' 
-//' @description Assigns graph variable with one indicated by path
+//' @description Use loadGraphFromFile() instead!
 //' 
 //' @param path Path to the graph
 //' 
-//' @return Integer status
-//' 
-//' @examples
-//' loadGraphFromFile("/tests/models/feed_forward_graph.pb")
+//' @return Integer status 
 //' 
 // [[Rcpp::export]]
-int loadGraphFromFile(std::string path) {
+int c_loadGraphFromFile(std::string path) {
   TF_Buffer* graph_def = read_file(path.c_str()); 
+  
   if (graph_def == nullptr) {
- //   cout << "File not found" << endl;
     return -1;
   }
+  
   TF_ImportGraphDefOptions* opts = TF_NewImportGraphDefOptions();
   TF_GraphImportGraphDef(graph, graph_def, opts, status);
   
   TF_DeleteImportGraphDefOptions(opts);
   TF_DeleteBuffer(graph_def);
   
-  return checkError();
+  return catchError();
 }
 
-//' @title Load Saved Model
+//' @title Internal Function: Load Saved Model
 //' 
-//' @description Loads a saved TensorFlow model built in python
+//' @description Use loadSavedModel() instead!
 //' 
 //' @param path Path to the saved model
 //' @param tags Tags associated with the graph (from {"serve", "train, "gpu"})
@@ -71,7 +66,7 @@ int loadGraphFromFile(std::string path) {
 //' @return Integer Status
 //' 
 // [[Rcpp::export]]
-int loadSavedModel(std::string path, CharacterVector tags) {
+int c_loadSavedModel(std::string path, CharacterVector tags) {
   TF_Buffer* run_options = TF_NewBufferFromString("", 0);
   TF_Buffer* metagraph = TF_NewBuffer();
   char** tags_ptr = new char*[tags.size()];
@@ -82,10 +77,10 @@ int loadSavedModel(std::string path, CharacterVector tags) {
   session = TF_LoadSessionFromSavedModel(
     options, run_options, path.c_str(), tags_ptr, tags.size(), graph, metagraph, status);
   
-  return checkError();
+  return catchError();
 }
 
-//' @title Feed Input Ops
+//' @title Internal Feed Input Ops
 //' 
 //' @description Sets the input node of graph, and feeds a tensor to it
 //' 
@@ -116,7 +111,7 @@ int setFeedInput(std::string op_name, List inp) {
   TF_Tensor* feed = parseInputs(inp,shape, ndims, dtype);
   setInputs({{input,feed}});
   
-  return checkError();
+  return catchError();
 }
 
 //' @title Run Internal Session
@@ -128,7 +123,7 @@ int setFeedInput(std::string op_name, List inp) {
 //' @return R List containing output tensor and dimensions
 //' 
 // [[Rcpp::export]]
-List runInternalSession(std::vector<std::string> op_names) {
+List c_runSession(std::vector<std::string> op_names) {
   vector<pair<string, TF_Operation*>>output_operations;
   for (string op_name : op_names){
     TF_Operation* op = TF_GraphOperationByName(graph, op_name.c_str());
@@ -142,11 +137,11 @@ List runInternalSession(std::vector<std::string> op_names) {
 
   setPointers();
   
-  if (checkError() == -1) return -1;
+  if (catchError() == -1) return -1;
   
   runSession(session, status);
 
-  if (checkError() == -1) return -1;
+  if (catchError() == -1) return -1;
   
   
   List output;
@@ -176,7 +171,7 @@ List runInternalSession(std::vector<std::string> op_names) {
 // [[Rcpp::export]]
 int resetGraph() {
   op_list.clear();
-  return checkError();
+  return catchError();
 }
 
 //' @title Close and Delete Session Variables
@@ -238,7 +233,6 @@ std::string getPlaceholder(std::vector<int64_t> shape, std::string dtype, std::s
 //' 
 // [[Rcpp::export]]
 std::string getSourceOp(List val, std::vector<int64_t> dim, std::string dtype, std::string op_name, std::string unique_name) {
-  
   TF_Tensor* val_t = parseInputs(val, &dim[0], dim.size(), getDataType(dtype));
   pair<string, TF_Operation*> op;
   op = SourceOp(op_name, unique_name, val_t, graph, status);
@@ -294,9 +288,6 @@ std::string getBinaryOp(std::string l_op, std::string r_op, std::string op_name,
 //' 
 //' @return Dictionary of nodes 
 //' 
-//' @examples
-//' printNodeList()
-//' 
 // [[Rcpp::export]]
 List getNodeList() {
   List NodeList;
@@ -306,22 +297,34 @@ List getNodeList() {
   return NodeList;
 }
 
-//' @title Locate Error
+//' @title Catch Error
 //' 
-//' @description Debug helper, Locates the error and prints description of the error
+//' @description Debug helper, Catches the error if present
 //' 
-//' @return NULL
-//' 
-//' @examples
-//' locateError()
+//' @return Integer Status
 //' 
 // [[Rcpp::export]]
-int checkError() {
+int catchError() {
   if (TF_GetCode(status)!=TF_OK) {
-    cout << "Error : "<<TF_Message(status) << endl;
     return -1;
   }
   return 0;
+}
+
+//' @title Get Error Message
+//' 
+//' @description Debug helper, Gets the error message if present
+//' 
+//' @return Integer Status
+//' 
+std::string getErrorMessage() {
+  if (status==NULL) {
+    return "Initialize Session Variable first!";
+  }
+  else if (TF_GetCode(status)!=TF_OK) {
+    return TF_Message(status);
+  }
+  return "No Error";
 }
 
 //' @title Op Properties

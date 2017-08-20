@@ -1,3 +1,50 @@
+#' @title Initialize Session Variables
+#' 
+#' @description Initializes all global variables for an interactive session
+#' 
+#' @return Integer status 
+initializeSessionVariables <- function() {
+  status <- c_initializeSessionVariables()
+  if (status == -1) {
+    printError()
+    return (-1)
+  }
+  return (0)
+} 
+
+#' @title Load Graph from File
+#' 
+#' @description Load graph from the file in the path specified
+#' 
+#' @param path Path to the graph
+#' 
+#' @return Integer status 
+loadGraphFromFile <- function(path) {
+  status <- c_loadGraphFromFile(path)
+  if (status == -1) {
+    print("File Not Found!")
+    return (-1)
+  }
+  return (0)
+}
+
+#' @title Load Saved Model
+#' 
+#' @description Loads a saved TensorFlow model built in python
+#' 
+#' @param path Path to the saved model
+#' @param tags Tags associated with the graph (from {"serve", "train, "gpu"})
+#' 
+#' @return Integer status 
+loadSavedModel <- function(path, tags) {
+  status <- c_loadSavedModel(path, tags)
+  if (status == -1) {
+    printError()
+    return (-1)
+  }
+  return (0)
+}
+
 #' @title Generate Unique Name
 #'
 #' @description Generates a unique name for the node in the graph
@@ -14,6 +61,15 @@ generateUniqueName <- function(extra_length=5, op_name="") {
   randomString <- paste(op_name,randomString, sep="")
 
   return(randomString)
+}
+
+#' @title Print Error
+#'
+#' @description Debug helper, prints the error if present
+#' 
+#' @return NULL
+printError <- function() {
+  print(paste("Error : ", getErrorMessage(), sep=""))
 }
 
 #' @title Feed Input
@@ -34,8 +90,12 @@ feedInput <- function(input_node, feed) {
   } else {
     feed_vector <- feed
   }
-
-  return (setFeedInput(input_node, feed_vector))
+  
+  if (setFeedInput(input_node, feed_vector) == -1) {
+    printError()
+    return (-1)
+  }
+  return (0)
 }
 
 #' @title Run Interactive Session
@@ -46,7 +106,13 @@ feedInput <- function(input_node, feed) {
 #' 
 #' @return Multidimensional output matrix
 runSession <- function(op_names) {
-  output <- runInternalSession(op_names)
+  output <- c_runSession(op_names)
+
+  if (typeof(output) != "list") {
+    printError()
+    return (-1)
+  }
+  
   output_list <- list()
   for (op in op_names) {
     if (identical(output[[op]], "No Output")) {
@@ -59,6 +125,7 @@ runSession <- function(op_names) {
       output_list[[op]] <- output_array
     }
   }
+  
   return (output_list)
 }
 

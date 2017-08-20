@@ -14,7 +14,7 @@ test_that("Check Import Run Graph", {
 
   file <- loadGraphFromFile("./wrong_path")
   
-  expect_that( file, is_a("integer") )
+  expect_that( file, is_a("numeric") )
   expect_equal( file, -1 )
   
 })
