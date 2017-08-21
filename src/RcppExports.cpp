@@ -157,6 +157,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getErrorMessage
+std::string getErrorMessage();
+RcppExport SEXP _rtensorflow_getErrorMessage() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(getErrorMessage());
+    return rcpp_result_gen;
+END_RCPP
+}
 // getOpProperties
 List getOpProperties(std::string op_name);
 RcppExport SEXP _rtensorflow_getOpProperties(SEXP op_nameSEXP) {
@@ -183,6 +193,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rtensorflow_getBinaryOp", (DL_FUNC) &_rtensorflow_getBinaryOp, 4},
     {"_rtensorflow_getNodeList", (DL_FUNC) &_rtensorflow_getNodeList, 0},
     {"_rtensorflow_catchError", (DL_FUNC) &_rtensorflow_catchError, 0},
+    {"_rtensorflow_getErrorMessage", (DL_FUNC) &_rtensorflow_getErrorMessage, 0},
     {"_rtensorflow_getOpProperties", (DL_FUNC) &_rtensorflow_getOpProperties, 1},
     {NULL, NULL, 0}
 };

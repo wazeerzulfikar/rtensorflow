@@ -11,3 +11,4 @@ inst/doc
 ./tests/MNIST_data/
 /tests/MNIST_data/
 /tests/saved-models/mnist-model/
+.DS_Store

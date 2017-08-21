@@ -317,6 +317,7 @@ int catchError() {
 //' 
 //' @return Integer Status
 //' 
+// [[Rcpp::export]]
 std::string getErrorMessage() {
   if (status==NULL) {
     return "Initialize Session Variable first!";
