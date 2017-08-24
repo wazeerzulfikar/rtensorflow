@@ -39,12 +39,13 @@ build_run_graph <- function(feed, dtype="float") {
   
   hidden_matmul <- MatMul(input, w1)
   hidden_layer <- Add(hidden_matmul, b1)
+  
   output_matmul <- MatMul(hidden_layer, w2)
   output_layer <- Add(output_matmul, b2, name="out")
 
   feedInput(input, feed)
   output <- runSession("out")
-  
+
   resetGraph()
 
   return(output[[output_layer]])

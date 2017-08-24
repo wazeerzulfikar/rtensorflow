@@ -127,8 +127,11 @@ List c_runSession(std::vector<std::string> op_names) {
   vector<pair<string, TF_Operation*>>output_operations;
   for (string op_name : op_names){
     TF_Operation* op = TF_GraphOperationByName(graph, op_name.c_str());
+    if (op == NULL) {
+      return -1;
+      }
     const char* type = TF_OperationOpType(op);
-    if (strcmp(type,"NoOp")==0) {
+    if (strcmp(type,"NoOp") == 0) {
       output_operations.emplace_back(op_name, setTargetNode(op_name, graph));
     } else {
       output_operations.emplace_back(op_name, setOutputNode(op_name, graph));

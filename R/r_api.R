@@ -69,7 +69,13 @@ generateUniqueName <- function(extra_length=5, op_name="") {
 #' 
 #' @return NULL
 printError <- function() {
-  print(paste("Error : ", getErrorMessage(), sep=""))
+  errorMessage <- getErrorMessage()
+  if (errorMessage != "No Error") {
+    print(paste("Error : ", getErrorMessage(), sep=""))
+  } else {
+    print (errorMessage)
+  }
+  return(errorMessage)
 }
 
 #' @title Feed Input
@@ -107,8 +113,8 @@ feedInput <- function(input_node, feed) {
 #' @return Multidimensional output matrix
 runSession <- function(op_names) {
   output <- c_runSession(op_names)
-
   if (typeof(output) != "list") {
+    print("Error : Operation does not exist in graph")
     printError()
     return (-1)
   }
