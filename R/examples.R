@@ -75,7 +75,7 @@ add_graph <- function() {
 }
 
 #' @title Load Saved Model
-#' @description Load an MNIST graph and Train it
+#' @description Load an MNIST graph and Train it. But first run mnist.py to create a saved model before running this function.
 #' @param model_path Path to saved model
 #' @param csv_path Path to csv file with training data
 #' @return Output Value of Network 

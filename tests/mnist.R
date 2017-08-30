@@ -19,12 +19,8 @@ check_mnist <- function(model_path, csv_path) {
   # One hot Encoder for the labels
   col <- 10
   row <- length(y_train)
-  onehot <- array(data=rep(0,col*row),dim=c(row,col))
-  i <- 1
-  for (j in y_train) {
-    onehot[i,j+1] <- 1
-    i=i+1
-  }
+  onehot <- array(data=rep(0, col * row),dim=c(row, col))
+  onehot[cbind(1:row, y_train + 1)] <- 1
   y_train <- onehot
 
   # Drop label for getting X training data
