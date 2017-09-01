@@ -15,5 +15,5 @@ check_mnist(model_path, csv_path)
 Output Value of Network
 }
 \description{
-Load an MNIST graph and Train it
+Load an MNIST graph and Train it. But first run mnist.py to create a saved model before running this function.
 }
