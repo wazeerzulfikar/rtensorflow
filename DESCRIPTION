@@ -6,7 +6,6 @@ Author: Wazeer Zulfikar
 Maintainer: Wazeer Zulfikar <wazeer.zulfikar@gmail.com>
 Description: Native R API for tensorflow. Wrapped over core of tensorflow which is exposed through a C API.
 License: GPL (>=2)
-Encoding: UTF-8
 LazyData: true
 Suggests: testthat, roxygen2,
     knitr,
