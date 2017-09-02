@@ -3,7 +3,7 @@ title: "An Introduction to rtensorflow"
 author: "Wazeer Zulfikar"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{An Introduction to rtensorflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
