@@ -3,3 +3,4 @@
 ^tests/MNIST_data$
 ^tests/saved-models$
 cran-comments.md
+^NEWS\.md$
