@@ -15,3 +15,4 @@ LinkingTo: Rcpp
 Imports: Rcpp
 VignetteBuilder: knitr
 OS_type: unix
+SystemRequirements: libtensorflow.so (Method to obtain is explained in README)
