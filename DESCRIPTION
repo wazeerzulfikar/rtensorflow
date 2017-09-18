@@ -15,4 +15,6 @@ LinkingTo: Rcpp
 Imports: Rcpp
 VignetteBuilder: knitr
 OS_type: unix
-SystemRequirements: libtensorflow.so (Method to obtain is explained in README)
+SystemRequirements: libtensorflow.so (https://www.tensorflow.org/install/install_c)
+  If further assistance is required, then look at README.md (https://github.com/wazeerzulfikar/rtensorflow/blob/master/README.md)
+URL: https://github.com/wazeerzulfikar/rtensorflow
